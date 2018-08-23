@@ -1,0 +1,101 @@
+import * as api from '../config/api'
+import {get,post} from '../config/request'
+
+const getHomePageBooks = get({url:api.homePageRecommended},true)
+
+const getBookClass=get({url:api.book_class},true)
+
+const getFreeBook=get({url:api.book_freetime},true)
+
+const getNewBooks=(page,size)=>{
+    return get({url:`${api.new_book}${page}/${size}`},true)
+}
+const getBookInfo = bookid=>{
+    return post({
+        url: api.book_Info,
+        params:{
+            bookid
+        }
+    })
+}
+const getRecommendBook=(page=1,size=10)=>{
+    return post({
+        url:api.recommend_book,
+        params:{   
+            page:page,
+            size:size
+        }
+   })
+}
+const getHotComments=bookid=>{
+    return post({
+        url: api.hot_comment,
+        params:{
+            bookid
+        }
+    })
+}
+const getReplyComment = (commentId,startPage)=>{
+    return post({
+        url:api.reply_comment,
+        params:{
+            commentid:commentId,
+            startPage:startPage
+        }
+    })
+}
+const getNewComments = (bookId,startPage, type = 1) => {
+    return post({
+        url: api.get_comment,
+        params:{
+            id:bookId,
+            type:type,
+            startPage:startPage
+        }
+    })
+}
+const updateLike=commentId=>{
+    return post({
+        url: api.give_thumbs,
+        params:{
+            commentId
+        }
+    })
+}
+const wxLogin = (code, terminal=1, userCode = 'LG20180608000') => {
+    return post({
+        url:api.wxCode,
+        params:{
+            code:code,
+            userCode:userCode,
+            terminal: terminal
+        }
+    })
+}
+const filterBook = (bookClassificationid, startPage,order = 0,bookCheckStatus = 0, updateTime = 0, bookWorldCount = 0) => {
+    return post({
+        url:api.filter_book,
+        params:{
+            bookClassificationid:bookClassificationid,
+            order:order,
+            startPage:startPage,
+            bookCheckStatus:bookCheckStatus,
+            updateTime:updateTime,
+            bookWorldCount:bookWorldCount
+        }
+    })
+}
+module.exports = {
+    getHomePageBooks,
+    getBookClass,
+    getFreeBook,
+    getNewBooks,
+    getBookInfo,
+    getHotComments,
+    updateLike,
+    wxLogin,
+    getRecommendBook,
+    getNewComments,
+    getReplyComment,
+    filterBook
+}

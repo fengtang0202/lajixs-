@@ -1,0 +1,62 @@
+<style lang="less">
+ .recommend_wrap{
+    overflow: hidden; 
+    width:100%; 
+    height:720rpx;
+}
+.book{
+    width: 250rpx;
+    height: 360rpx;
+    float: left;
+    text{
+       display: block;
+       font-size:28rpx;
+       white-space: nowrap;
+       text-overflow: ellipsis;
+       overflow: hidden;
+    }
+    image{
+      width: 192rpx;
+      height: 254rpx;
+      border-radius: 10rpx;
+    }
+}
+</style>
+<template>
+  <view class='recommend_wrap' >
+        <block wx:for-items="{{list}}" wx:key="{{item.bookId}}">
+               <view class='book' bindtap='handleGo' data-id="{{item.bookId}}">
+                      <image src="{{item.bookImage}}"/>
+                      <text>{{item.bookName}}</text>
+                      <text style='color:#999'>{{item.writerName}}</text>
+               </view>
+        </block> 
+ </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class bookItem extends wepy.component {
+    props = {
+       list:{
+           type:Array,
+           default:[],
+       }
+    }
+    data = {
+    }
+    events = {
+    }
+
+    watch = {
+      
+    }
+
+    methods = {
+      handleGo(e){
+           wx.navigateTo({
+             url:`bookDetail?bookId=${e.currentTarget.dataset.id}`
+          })
+        }
+    }
+  }
+</script>

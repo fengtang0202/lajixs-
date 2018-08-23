@@ -1,0 +1,126 @@
+
+<style lang="less">
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+import {wxLogin} from './config/getData'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/bookrack',
+      'pages/message',
+      'pages/person',
+      'pages/bookDetail',
+      'pages/recommendBooks',
+      'pages/comment',
+      'pages/commentDetail',
+      'pages/categoryDetail'
+    ],
+    window: {
+      backgroundTextStyle: '#fff',
+      navigationBarBackgroundColor: '#F73D51',
+      navigationBarTitleText: '辣鸡小说',
+      navigationBarTextStyle: '#fff',
+      enablePullDownRefresh: true
+    },
+     "tabBar": {  
+      "selectedColor": "#F77583",
+      "list": [
+                {      
+                   "pagePath": "pages/index",    
+                   "text": "首页" ,
+                    "iconPath": "./images/1@3x.png",
+                    "selectedIconPath": "./images/1-1@3x.png" 
+                },
+              {    
+                    "pagePath": "pages/bookrack",   
+                     "text": "书架",
+                     "iconPath": "./images/2@3x.png",
+                     "selectedIconPath": "./images/2-2@3x.png"     
+              },
+              {
+                "pagePath":"pages/message",
+                "text":"消息",
+                "iconPath": "./images/3@3x.png",
+                "selectedIconPath": "./images/3-3@3x.png" 
+              },
+              {
+                "pagePath":"pages/person",
+                "text":"我的",
+                "iconPath": "./images/4@3x.png",
+                 "selectedIconPath": "./images/4-4@3x.png" 
+              }
+          ] 
+  },
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+  }
+
+  onLaunch() {
+    this.testAsync()
+    var that=this;
+    wx.getSetting({
+      success:function(res){
+        console.log(res,1)
+      },
+      fail:function(res){
+        console.log(res)
+      } 
+    })
+    wx.login({
+      success: function(res) {
+        if (res.code) {
+          wxLogin(res.code).then(res=>{
+            console.log(res)
+          })
+        } else {
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    });
+  }
+
+  sleep (s) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise resolved')
+      }, s * 1000)
+    })
+  }
+
+  async testAsync () {
+    const data = await this.sleep(3)
+  }
+
+   getUserInfo(cb) {
+     const that = this
+    if (this.globalData.userInfo) {
+      return this.globalData.userInfo
+    }
+    wepy.getUserInfo({
+      success (res) {
+        that.globalData.userInfo = res.userInfo
+        cb && cb(res.userInfo)
+      }
+    })
+  }
+}
+</script>

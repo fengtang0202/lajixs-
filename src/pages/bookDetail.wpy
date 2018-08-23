@@ -1,0 +1,288 @@
+<template>
+     <view>
+         <scroll-view scroll-y>
+            <view class='book_wrap'>
+                <image src='{{bookInfo.bookListInfo.bookImage}}' class='book_img'/> 
+                <view class='book_info'>
+                    <view style='font-size:32rpx;'>{{bookInfo.bookListInfo.bookName}}</view>
+                    <view class='font24'>作者:{{bookInfo.bookListInfo.writerName}}</view>
+                    <view class='font24'>字数:{{bookInfo.bookListInfo.bookWorldCount}}</view>
+                    <view class='font24'>分类:{{bookInfo.bookListInfo.classificationName}} <text>|</text> {{
+                      bookInfo.bookListInfo.bookStatus==0?"连载中":"已完结"  
+                    }}</view>
+                    <BookLabel :list.sync="bookLables"></BookLabel>
+                </view>
+             </view>
+                <view class='btn'>
+                    <block wx:for="{{btns}}" wx:key='{{item.key}}}' >
+                       <text class="{{activeBtnIndex==item.key&&'active'}}" bindtap="hanldeTapBtn({{item.key}})">{{item.btnName}}</text>
+                    </block>
+                </view>
+                <view class='reward_wrap'>
+                    <block wx:for="{{reward}}" wx:key='{{item.key}}'>
+                        <view class="reward" style="border:{{item.key==2&&'0'}}">
+                            <image src="{{item.img}}"/>
+                            <text>{{item.text}}</text>
+                        </view>
+                    </block>
+                </view>
+                <view class='bookIntroduction' bindtap="handleShowtext">
+                     <view class="{{showText&&'add'}}" style="text-indent: 2em;letter-spacing: .2em;">
+                         {{bookInfo.bookListInfo.bookIntroduction}}
+                     </view>
+                     <view style='height:40rpx;width:100%;marin-top:20rpx'>
+                         <image class='arrow' style="transform: rotate({{showText?'180':'0'}}deg);" src="../images/d-38@3x.png"/>
+                     </view>
+                </view>
+                <view class='directory'>
+                   <text>目录</text>
+                   <text style='margin-left: 100rpx;color:rgb(153, 153, 153);'>共{{bookInfo.chapterCount}}章</text>
+                   <text style='margin-left:100rpx;color:rgb(247, 117, 131);'>{{myWxs.leadTime(leadTime,updateTime)}}</text>
+                   <image src="../images/d-58@3x.png" style='width:40rpx;height:40rpx;margin-top:28rpx;float:right'/>
+                </view>
+                <view class='coments'>
+                     <view class='top_p'>评论区</view>
+                     <CommentItem :commentList.sync="HotComments"></CommentItem>
+                     <view class='more' bindtap="handleGo('comment')">
+                         <view>
+                            <text>更多书评</text>
+                          </view>
+                     </view>
+                </view>
+                <view style='height:100rpx;font-size:32rpx;color: #666;line-height:100rpx;padding:0 28rpx;'>同类热门书籍</view>
+                <scroll-view scroll-x="true">  
+                    <view class="uploadWrap" scroll-x="true"> 
+                        <block wx:for="{{similarRecommendation}}" wx:key="{{item.bookId}}"> 
+                            <view class="upload_Item" data-id="{{item.bookId}}">  
+                               <image class="upload_Item_img"  src="{{item.bookImage}}"/>  
+                               <text>{{myWxs.strSlice(item.bookName,5)}}</text>
+                            </view>
+                        </block>  
+                    </view>  
+                </scroll-view>
+         </scroll-view>
+     </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import {connect} from "wepy-redux"
+    import {getBookInfo,getHotComments,updateLike} from '../config/getData'
+    import BookLabel from '../components/bookLabel'
+    import myWxs from '../filter/myWxs.wxs'
+    import CommentItem from '../components/commentItem'
+    @connect({
+        //state
+    },
+        // reducers
+    )
+  export default class BookDetail extends wepy.page {
+      config = {
+        navigationBarTitleText: '书籍详情'
+      }
+      wxs = {
+        myWxs
+      }
+      components = {
+          BookLabel,
+          CommentItem
+      }
+      data = {
+         bookInfo:{},
+         bookLables:[],
+         btns:[
+             {btnName:"立即阅读",key:0},
+             {btnName:"自动订阅",key:1},
+             {btnName:"放入书架",key:2}
+         ],
+        activeBtnIndex:0,
+        reward:[
+            {text:"投喂金椒",img:"../images/d_18@3x.png",key:0},
+            {text:"打赏辣椒",img:"../images/d-28@3x.png",key:1},
+            {text:"投喂小米椒",img:"../images/d-48@3x.png",key:2}
+        ],
+        showText:true,
+        updateTime:0,
+        leadTime:0,
+        HotComments:[],
+        similarRecommendation:[]
+      }
+      watch = {
+          
+      }
+      methods = {
+          hanldeTapBtn(res){
+              this.activeBtnIndex=res
+          },
+          handleShowtext(){
+              this.showText=!this.showText
+          },
+          handleGo(res){
+              wx.navigateTo({
+                  url:res+'?bookId='+this.bookInfo.bookListInfo.bookId
+              })
+          }
+      }
+      onLoad (options) {
+           let bookId=options.bookId
+           getBookInfo(bookId).then(data=>{
+               this.bookInfo=data
+               this.bookLables=data.bookLable
+               this.similarRecommendation=data.similarRecommendation
+               this.updateTime=data.bookListInfo.lastUpdateTime
+               this.leadTime=new Date().getTime()-this.updateTime
+               this.$apply()
+           })
+           getHotComments(bookId).then(data=>{
+               this.HotComments=data
+               this.$apply()
+           })
+      }     
+}
+</script>
+<style lang="less" scoped>
+@import '../css/main';
+.book_wrap {
+   width:100%;
+   height:264rpx;
+   padding:32rpx 28rpx 16rpx 28rpx;
+}
+.book_img{
+    width:192rpx;
+    height:264rpx;
+    border-radius:10rpx;
+    float: left;
+    margin-right:40rpx;
+}
+.book_info{
+    float: left;
+    view{
+        margin-bottom: 18rpx;
+    }
+}
+.font24{
+    .font(24rpx,#666666);
+    margin-top:5rpx;
+}
+.btn{
+   display: flex;
+   justify-content:space-between;
+   width: 100%;
+   padding:0  28rpx 16rpx 28rpx;
+   box-sizing: border-box;
+   text{
+    width: 192rpx;
+    height: 68rpx;
+    border: 2rpx solid #f77583;
+    border-radius: 8rpx;
+    font-size: 32rpx;
+    line-height: 68rpx;
+    text-align: center;
+    color: #f77583;
+   }
+   .active{
+       background: #f77583;
+       color:#fff;
+   }
+}
+.reward_wrap{
+    height: 100rpx;
+    margin-top: 20rpx;
+    border-top: 2rpx solid #e9e9e9;
+    border-bottom: 2rpx solid #e9e9e9;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 12rpx 28rpx;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    .reward{
+        width:246rpx;
+        height: 100%;
+        border-right: 4rpx solid #f77583;
+        color: #333;
+        font-size: 24rpx;
+        text-align: center;
+        line-height: 76rpx;
+        image{
+            width: 32rpx;
+            height: 44rpx;
+            vertical-align: middle;
+        }
+        text{
+            margin-left:12rpx;
+        }
+    }
+}
+.bookIntroduction{
+    .font(28rpx,#333);
+    box-sizing: border-box;
+    padding: 20rpx 28rpx;
+    border-bottom: 2rpx solid #e9e9e9;
+    .add{
+        height:77rpx;
+        overflow: hidden;
+    }
+    .arrow{
+        transition: all 0.3s ease 0s;
+        width:40rpx;
+        height:40rpx;
+        float:right
+    }
+}
+.directory{
+    height: 100rpx;
+    box-sizing: border-box;
+    padding: 0 28rpx;
+    border-bottom: 2rpx solid #e9e9e9;
+    color: #333;
+    font-size: 28rpx;
+    line-height:100rpx;
+}
+.top_p{
+    box-sizing: border-box;
+    padding: 0 28rpx;
+    color: #666;
+    font-size: 32rpx;
+    margin-top: 28rpx;
+}
+.more{
+    height:88rpx;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 2rpx solid #e9e9e9;
+    padding-top: 24rpx;
+    background: #FCEAEC;
+    view{
+        height: 38rpx;
+        color: #333;
+        font-size: 32rpx;
+        text-align: center;
+        line-height: 38rpx;
+        margin: 0 auto;
+    }
+}
+.uploadWrap {
+    width:100%; 
+    height:316rpx;
+    display: flex; 
+    display: -webkit-box; 
+    flex-direction: column;
+    padding:20rpx;
+    font-size: 28rpx;
+    text-align: center;
+}  
+.upload_Item{ 
+      width: 192rpx;
+      height:256rpx; 
+      flex: 1;
+      margin-right:20rpx;
+}  
+.upload_Item_img{ 
+    width: 192rpx;
+    height:256rpx;
+    border-radius: 8rpx;
+ }  
+</style>

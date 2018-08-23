@@ -1,0 +1,133 @@
+<template>
+    <view>
+        <block wx:for="{{commentList}}" wx:key="{{item.id}}">
+                        <view class='book_comment_item' data-id="{{item.id}}">
+                               <image  src='{{item.userHeadPortraitURL}}' class='comment_avatar'/>
+                               <view class='comment_item'>
+                                   <view style="overflow:hidden;">
+                                        <view style="float:left">
+                                            <text style="font-size:32rpx">{{item.pseudonym}}</text>
+                                            <image class='sex' wx:if="{{item.userSex==0}}" src="../images/sex-02_03@3x.png"/>
+                                            <image class='sex' wx:if="{{item.userSex==1}}" src="../images/sex-03@3x.png" />
+                                            <text class='grade'>LV{{item.userGrade}}</text>
+                                        </view>
+                                        <view style="color:#666;font-size:24rpx;float:right">
+                                            {{myWxs.getToString(item.commentDateTime,"-")}}
+                                        </view>
+                                    </view>
+                                    <view style='font-size:28rpx;margin:4rpx 0;'>
+                                        {{item.commentContext}}
+                                    </view>
+                                    <view class='btn_wrap'>
+                                        <view class="reply" bindtap='handleGO({{item.id}})'>
+                                              <image src="../images/message@3x.png"/>
+                                              <text>{{item.replyCount}}</text>
+                                        </view>
+                                        <view class='zan' bindtap="handleLike({{item.id}})">
+                                            <image wx:if="{{item.isthumbs==0}}" src='../images/zan@3x.png'/>
+                                            <image wx:if="{{item.isthumbs==1}}" src='../images/goodzan@3x.png'/>
+                                            <text>{{item.thumbsCount}}</text>                                            
+                                        </view>
+                                    </view>
+                               </view>
+                        </view>
+           </block>
+    </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import {updateLike} from '../config/getData'
+  import myWxs from '../filter/myWxs.wxs'
+  export default class bookItem extends wepy.component {
+        props = {
+          commentList:{
+              type:Array,
+              default:[]
+          } 
+        }
+        wxs = {
+            myWxs
+        }
+        methods = {
+           handleLike(id){
+               this.commentList.forEach((el,index) => {
+                     if(el.id==id){
+                        if(el.isthumbs==0){
+                            this.commentList[index].isthumbs=1
+                        }else{
+                            this.commentList[index].isthumbs=0
+                        }         
+                    }
+               });
+            // updateLike(item.id).then(res=>{
+                    // if (item.isthumbs==0) {
+                    //      item.isthumbs=1
+                    //      item.thumbsCount+=1
+                    //       this.$apply();
+                    //     } else {
+                    //     item.isthumbs=0                 
+                    //     item.thumbsCount-=1
+                    //       this.$apply();
+                    //  }
+            // })
+          },
+          handleGO(id){
+             wx.navigateTo({
+                url:'commentDetail?commentId='+id
+            })
+          }
+        }
+    }
+</script>
+<style lang="less" scoped>
+.book_comment_item{
+    padding:20rpx 28rpx 0 28rpx;
+    border-bottom: 2rpx solid #efefef;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+.comment_item{
+    overflow: hidden;
+    line-height:60rpx;
+}
+.comment_avatar{
+   width:104rpx;
+   height:104rpx;
+   border-radius: 50%;
+   float: left;
+   margin-right:40rpx;
+}
+.grade{
+   background-color: #74f3fe;
+    font-size: 22rpx;
+    color: #fff;
+    border-radius:6rpx;
+    padding:0 6rpx;
+}
+.sex{
+   width:24rpx;
+   height:24rpx;
+   vertical-align: middle;
+   margin:0 6rpx;
+}
+.btn_wrap{
+    overflow: hidden;
+    font-size: 24rpx;
+    margin-top:32rpx;
+    view{
+        float: right;
+        margin-right: 32rpx;
+        padding: 20rpx 0;
+    }
+    image{
+        width:32rpx;
+        height:32rpx;
+        vertical-align: middle;
+    }
+    text{
+        margin-left: 10rpx;
+        margin-right: 72rpx;
+    }
+}
+</style>

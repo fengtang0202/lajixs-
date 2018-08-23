@@ -1,0 +1,53 @@
+<template>
+    <scroll-view scroll-y bindscrolltolower="loadMore" style='height:100vh'>
+       <bookDetailItem :list.sync='bookList'></bookDetailItem>  
+   </scroll-view>      
+</template>
+<script>
+  import wepy from 'wepy' 
+  import {filterBook} from '../config/getData'
+  import bookDetailItem from '../components/bookDetailItem'
+  export default class CategoryDetail extends wepy.page{
+      config={
+          navigationBarTitleText:''
+      }
+      data = {
+         categoryId:0,
+         bookList:[],
+         page:1,
+         lastPage:0,
+      }
+      methods = {
+          loadMore(){
+            this.page++
+            if(this.page>this.lastPage){
+                wx.showToast({
+                    title:'没有更多了'
+                })
+                return;
+            }
+            filterBook(this.categoryId,this.page).then(res=>{
+                this.bookList=this.bookList.concat(res.list)
+                this.$apply()
+            })
+          }
+      }
+      components = {
+         bookDetailItem
+      }
+      onLoad(option){
+          this.categoryId=option.categoryId
+          filterBook(this.categoryId,this.page).then(res=>{
+              this.bookList=res.list
+              this.lastPage=res.pages
+              this.$apply()
+          })
+           wx.setNavigationBarTitle({
+              title: option.categoryName
+          })
+      }
+  }  
+</script>
+<style lang="less" scoped>
+
+</style>

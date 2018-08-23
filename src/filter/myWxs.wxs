@@ -1,0 +1,41 @@
+  function getToString(time, splitStr) {
+    if (!time) return '';
+    var date = getDate(time);
+    var M = date.getMonth() + 1;
+    var y = date.getFullYear();
+    var d = date.getDate();
+    if (M < 10) M = "0" + M;
+    if (d < 10) d = "0" + d;
+    if (splitStr)
+      return y + splitStr + M + splitStr + d;
+    else
+      return {
+        y: y,
+        M: M,
+        d: d
+      };
+  }
+  function leadTime(date3, oldTime) {
+      var days = Math.floor(date3 / (24 * 3600 * 1000))
+      var leave1 = date3 % (24 * 3600 * 1000)
+      var hours = Math.floor(leave1 / (3600 * 1000))
+      var leave2 = leave1 % (3600 * 1000)
+      var minutes = Math.floor(leave2 / (60 * 1000))
+      var leave3 = leave2 % (60 * 1000)
+      var seconds = Math.round(leave3 / 1000)
+      if (days >= 1) {
+        return getToString(oldTime,'-')
+      } else if (hours > 0) {
+         return  (hours + '小时前更新')
+      } else if (minutes>0) {
+         return (minutes + '分钟前更新')
+      }
+  }
+ function strSlice(str, length) {
+    return  str.length>length?str.slice(0,length)+"...":str
+  }
+module.exports = {
+  getToString: getToString,
+  leadTime:leadTime,
+  strSlice: strSlice
+}

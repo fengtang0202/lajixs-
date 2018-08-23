@@ -1,0 +1,36 @@
+<template>
+  <view>
+      <bookDetailItem :list.sync="recommendBook"></bookDetailItem>  
+  </view>    
+</template>
+<script>
+  import wepy from 'wepy'
+  import { getRecommendBook } from '../config/getData'
+  import bookDetailItem from '../components/bookDetailItem'
+  export default class RecommendBooks extends wepy.page {
+      data = {
+          recommendBook:[]
+      }
+      config = {
+        navigationBarTitleText: '小编推荐',
+        usingComponents: {
+           
+        }
+      }
+      components={
+          bookDetailItem:bookDetailItem
+      }
+      methods={
+
+      }
+      onLoad(){
+          getRecommendBook().then(res=>{
+                this.recommendBook=res
+                this.$apply()
+          })
+      }
+  }
+</script>
+<style lang="less" scoped>
+
+</style>

@@ -1,0 +1,95 @@
+<template>
+     <block wx:for-items="{{list}}" wx:key='{{item.bookId}}'>
+              <view class='new_book' data-id="{{item.bookId}}" bindtap='handle'>
+                      <image src="{{item.bookImage}}"/>
+                      <view class='book_detail'>
+                              <view style='font-size:32rpx'>{{item.bookName}}</view>
+                              <view style='font-size:24rpx;color:#999999'>
+                                <view style="overflow:hidden">
+                                  <text style='float:left'>作者:{{item.writerName}}</text>
+                                  <text class='book_class'>{{item.classificationName}}</text>
+                                  <text class='book_class' style="color:{{item.bookStatus==0?'rgb(71, 178, 216)':'#FF6F00'}}">{{
+                                        item.bookStatus==0?"连载中":"已完结"
+                                  }}</text>
+                                </view>
+                              </view>
+                           <view style='overflow:hidden;clear:both;'>
+                              <block wx:for-items="{{item.booklableList}}" wx:key="{{item.id}}">
+                                <text class='label' wx:if="{{index<4}}" style='color:{{item.bookColor}};border:2rpx solid {{item.bookColor}}'>{{item.bookLableName}}</text>
+                               </block>
+                           </view>
+                           <view class='bookIntroduction'>
+                                {{item.bookIntroduction}}
+                           </view>
+                      </view>   
+              </view>
+           </block>
+</template>
+<script>
+ import wepy from 'wepy' 
+ export default class BookDetailItem extends wepy.component{
+     props={
+         list:{
+             type:Array,
+             default:[]
+         }
+     }
+     methods={
+       handle(e){
+         wx.navigateTo({
+           url:'bookDetail?bookId='+e.currentTarget.dataset.id
+         })
+       }
+     }
+ }   
+</script>
+<style lang="less" scoped>
+.new_book{
+  height:248rpx;
+  width:100%;
+  border-bottom:2rpx solid #EFEFEF;
+  padding:20rpx  28rpx  0;
+  image{
+    width:156rpx;
+    height:207rpx;
+    float:left;
+    border-radius: 10rpx;
+  }
+}
+.book_detail{
+   float:left;
+   margin-left:20rpx;
+   text-align: left;
+   view{
+     margin-bottom:10rpx;
+   }
+   .label{
+      float: left;
+      margin-right: 20rpx;
+      padding:0 10rpx;
+      border-radius: 40rpx;
+      font-size: 24rpx;
+   }
+}
+.bookIntroduction{
+    font-size:28rpx;
+    width:500rpx;
+    height:77rpx;
+    overflow: hidden;
+    color:#666;
+}
+.book_class{
+  float: left;
+  overflow: hidden;
+}
+.book_class::before{
+    content:'';
+    width: 4rpx;
+    float: left;
+    height:20rpx;
+    background: #faa;
+    margin: 10rpx 20rpx 0;
+}
+
+</style>
+

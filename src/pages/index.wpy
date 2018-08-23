@@ -1,0 +1,377 @@
+<template>
+<view>
+  <view   class="weui-navbar">
+     <block wx:for-items="{{tabs}}"  wx:key="tabs">
+        <view id="{{index}}"   class="default-item" bindtap="tabClick" style="width:{{tabW}}px;height:61rpx">
+          <text style='padding-bottom:2rpx;' class="{{activeIndex == index ?'item_on':''}}">{{item}}</text>
+        </view>
+     </block>
+  </view>
+<swiper current="{{activeIndex}}"  class="swiper-box"  style='height:{{mtabH}}rpx' duration="500" bindchange="bindChange">
+    <swiper-item class="swiper-item">
+       <scroll-view style='height:100%' scroll-y bindscrolltolower="loadMore">
+         <!-- <view  scroll-y> -->
+          <swiper class='swiper' indicator-dots="{{indicatorDots}}"
+             autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
+              <block wx:for="{{homeInfo.pictureCarousel}}" wx:key="{{item.bookId}}">
+                <swiper-item style='margin:10rpx 0' bindtap="handle" data-id='{{item.bookId}}' >
+                  <image src="{{item.bookImage}}"  style='border-radius:10rpx;width:90%;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
+                </swiper-item> 
+              </block>
+           </swiper>
+           <!-- 小编推荐 -->
+            <view class='floor_title'>
+              <view class='floor_left'>
+                <image src='../images/recommend@3x.png' />
+                <span>小编推荐</span>
+              </view>
+              <view class='floor_right' bindtap ="handleGo('recommendBooks')">
+                  <span>更多</span>
+                  <image src='../images/more@3x.png' />
+              </view>
+           </view>
+           <BookItem :list.sync="HostXiaoBianRecommend"></BookItem>
+           <!-- 广告图 -->
+           <view class='adv-img'></view>
+           <!-- 限时免费 -->
+           <view class='floor_title'>
+              <view class='floor_left'>
+                <image src='../images/recommend@3x.png' />
+                <span>限时免费</span>
+              </view>
+              <view class='floor_right timer'>
+                     
+              </view>
+           </view>
+           <view class='new_book_wrap'>
+                  <block wx:for-items="{{FreeBook}}" wx:key="{{item.bookId}}">
+                        <view class='book' bindtap="handle" data-id="{{item.bookId}}">
+                                <image src="{{item.bookImage}}"/>
+                                <text>{{item.bookName}}</text>
+                                <text style='color:#999'>{{item.writerName}}</text>
+                        </view>
+                  </block> 
+          </view>
+          <!-- 换一换 -->
+          <view class='lables_warp'>
+              <view class='lables_content'>
+                 <text style='font-size:32rpx;float:right'>换一换</text>
+              </view>
+          </view>
+           <!-- 最新小说 -->
+           <view class='floor_title'>
+              <view class='floor_left'>
+                <image src='../images/new@3x.png' />
+                <span>最新小说</span>
+              </view>
+           </view>
+          <BookDetailItem :list.sync='newBooks'></BookDetailItem>
+         <!-- </view> -->
+      </scroll-view>
+    </swiper-item>
+     <swiper-item class="swiper-item">
+       <view class="slide-view">
+          <block wx:for="{{bookClass}}" wx:key="{{item.id}}">
+             <view class="category_wrap" bindtap='handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.classificationName}})'>
+                    <image src="{{item.classificationIco}}"/>
+                    <text>{{item.classificationName}}</text>
+             </view>
+          </block>   
+       </view>
+    </swiper-item>
+     <swiper-item class="swiper-item">
+       <zan-button type="primary"  bindtap='togglePopup'>点击 </zan-button>
+       <zan-button open-type="openSetting" plain bindopensetting='handler'>获取用户位置</zan-button>
+       <zan-popup show="{{show}}" type='bottom' bindclose='togglePopup'>
+          <view style='height:200rpx;width:750rpx;background:#fff;border-radius:20rpx 20rpx 0 0;'>
+               
+          </view>
+       </zan-popup>
+    </swiper-item>
+</swiper>
+</view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import { INCREMENT, DECREMENT,LOGIN_STATE } from '../store/types/counter'
+  import {getHomePageBooks,getBookClass,getFreeBook,getNewBooks} from '../config/getData'
+  import BookItem from '../components/bookItem'
+  import BookDetailItem from '../components/bookDetailItem'
+  @connect({
+    login(state){
+      return state.counter.loginState
+    },
+    num (state) {
+      return state.counter.num
+    },
+    asyncNum (state) {
+      return state.counter.asyncNum
+    },
+    sumNum (state) {
+      return state.counter.num + state.counter.asyncNum
+    }
+  },
+      {
+        increment:INCREMENT,
+        loginState:LOGIN_STATE
+      }
+  )
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '辣鸡小说',
+      usingComponents: {
+          //  "zan-button": "../vant/btn/index",
+          //  "zan-popup": "../vant/popup/index"
+       },
+    }
+    components = {
+      BookItem:BookItem,
+      BookDetailItem:BookDetailItem
+    }
+    data = {
+     tabs:["热门","分类","排行"],
+     activeIndex:0,
+     slideOffset:0,
+     tabW:0,
+     mtabW:0,
+     mtabH:0,
+     homeInfo:{},
+     indicatorDots: false,
+     autoplay: true,
+     interval: 2000,
+     duration: 1000,
+     circular:true,
+     imgheights: [],
+     imgwidth: 750,
+     current: 0,
+     HostXiaoBianRecommend:[],
+     bookClass:[],
+     FreeBook:[],
+     page:1,
+     lastPage:1,
+     size:10,
+     newBooks:[],
+     show:false,
+     password:"请输入密码"
+    }
+    computed = {
+     
+    }
+   methods = {
+     togglePopup() {
+         this.show=!this.show
+         this.$apply()
+    },
+    handleGo(res){
+       wx.navigateTo({
+         url:res
+       })
+    },
+    handler(e){
+     console.log(e)
+    },
+    colse(){
+      this.show=false
+      this.$apply()
+    },
+    searchChange(e){
+         console.log(e.detail)
+    },
+    tabClick:e=>{
+      var idIndex = e.currentTarget.id;
+      var offsetW = e.currentTarget.offsetLeft;  //2种方法获取距离文档左边有多少距离
+      this.activeIndex=idIndex
+      this.slideOffset=offsetW
+    },
+    bindChange(e){
+      var current = e.detail.current; 
+      if((current+1)%3 == 0){
+      }
+        var offsetW = current * this.mtabW;    //2种方法获取距离文档左边有多少距离
+        this.activeIndex=current
+        this.slideOffset=offsetW
+    },
+    imageLoad (e) {//获取图片真实宽度  
+        var imgwidth = e.detail.width,
+        imgheight = e.detail.height,
+        ratio = imgwidth / imgheight;
+        var viewHeight = 750 / ratio;
+        this.imgheights=viewHeight
+      },
+      loadMore(){
+        this.page++
+        if(this.page>this.lastPage){
+          wx.showToast({
+            title:'没有更多了'
+          })
+          return;
+        }
+        getNewBooks(this.page,this.size).then(data=>{
+              this.newBooks=this.newBooks.concat(data.list)
+              this.$apply()
+           })
+      },
+      handle(e){
+          this.$invoke('BookItem','handleGo',e)
+      }
+    }
+    events = {
+      
+    }
+    onLoad() {
+     wx.getSystemInfo({
+        success:res=>{                
+            this.mtabW = res.windowWidth
+            var rpxR=750/res.windowWidth
+            this.mtabH=res.windowHeight*rpxR
+            this.tabW=this.mtabW/this.tabs.length
+        }
+      })
+      getHomePageBooks.then(data=>{
+        this.homeInfo=data
+        this.HostXiaoBianRecommend=data.HostXiaoBianRecommend
+        this.$apply()
+      })
+      getBookClass.then(data=>{
+        this.bookClass=data
+      })
+      getFreeBook.then(data=>{
+        this.FreeBook=data.data
+      })
+      getNewBooks(this.page,this.size).then(data=>{
+          this.newBooks=data.list
+          this.lastPage=data.pages
+          this.$apply()
+     })
+    }
+  }
+</script>
+<style lang="less">
+// page{
+//   overflow: hidden;
+// }
+view , scroll-view{
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+.swiper image {
+  width: 100%;
+  height: auto;
+}
+.weui-navbar{
+   width: 100%;
+   position: fixed;
+   box-sizing: border-box;
+   background: #F73D51;
+   white-space: nowrap; 
+   z-index: 100;
+   color:#fff;
+   height:64rpx;
+}
+.rec{
+  width: 100%;
+  height: 64rpx;
+}
+.weui-navbar .default-item{
+  display: inline-block;
+  text-align: center;
+  box-sizing: border-box;
+}
+.item_on{
+   border-bottom:2px solid #fff;
+}
+.swiper-box{
+   text-align: center;
+   overflow: hidden;
+   padding-top:64rpx;
+   box-sizing: border-box;
+}
+.floor_title{
+  width:100%;
+  height:100rpx;
+  padding: 0 28rpx;
+  line-height: 100rpx;
+image{
+    width:48rpx;
+    height:48rpx;
+    vertical-align: middle;
+  }
+}
+.floor_left{
+  float:left;
+  span{
+    font-size: 36rpx;
+  }
+}
+.floor_right{
+  float:right;
+  span{
+    font-size:28rpx;
+    color:#666;
+  }
+}
+.adv-img{
+  width:100%;
+  height:84rpx;
+  background: #F73D51;
+  border-bottom:12rpx solid #EFEFEF;
+  border-top:12rpx solid #EFEFEF;
+}
+.timer{
+  width:218rpx;
+  height:44rpx;
+  background: #E79949;
+  margin-top:28rpx;
+}
+.category_wrap{
+    width: 152rpx;
+    height: 224rpx;
+    float: left;
+    text-align: center;
+    font-size:32rpx;
+    margin: 32rpx 0 0 32rpx;
+    image{
+      width: 148rpx;
+      height: 148rpx;
+    }
+}
+.new_book_wrap{
+   overflow: hidden;
+   width:100%;
+  .book{
+    width:186rpx;
+    height:300rpx;
+    float: left;
+    margin-bottom:20rpx;
+  }
+   image{
+     height:216rpx;
+     width:162rpx;
+    }
+     text{
+       display: block;
+       font-size:28rpx;
+       white-space: nowrap;
+       text-overflow: ellipsis;
+       overflow: hidden;
+    }
+}
+.lables_warp{
+  width:100%;
+  height:248rpx;
+  background:#EFEFEF;
+  padding-top:8rpx;
+}
+.lables_content{
+  width:674rpx;
+  height:232rpx;
+  background: #fff;
+  border-radius: 14rpx;
+  margin:0 auto;
+  padding:8rpx 20rpx;
+}
+
+</style>

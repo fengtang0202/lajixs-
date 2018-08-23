@@ -1,0 +1,65 @@
+<template>
+    <scroll-view scroll-y bindscrolltolower="loadMore" style='height:100vh'>
+         <view style='padding:20rpx 28rpx'>
+             <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
+             <text>热门评论({{hotCommentList.length}})</text>
+         </view>
+             <CommentItemHot :commentList.sync="hotCommentList"></CommentItemHot>
+         <view style='padding:20rpx 28rpx'>
+             <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
+             <text>最新评论({{newCommentCount}})</text>
+         </view>
+             <CommentItem :commentList.sync="newCommentList"></CommentItem>         
+    </scroll-view>  
+</template>
+<script>
+  import wepy from 'wepy'
+  import CommentItem from '../components/commentItem' 
+  import {getHotComments,getNewComments} from '../config/getData'
+  export default class Comment extends wepy.page{
+        data={
+           hotCommentList:[],
+           newCommentList:[],
+           page:1,
+           lastPage:0,
+           newCommentCount:0,
+           bookId:0
+        }
+        methods = {
+            loadMore(){
+                this.page++
+                console.log(this.page)
+                if(this.page>this.lastPage){
+                    wx.showToast({
+                      title: '没有更多了',
+                    })
+                   return
+                }
+               getNewComments(this.bookId,this.page).then(res=>{
+                  this.newCommentList=this.newCommentList.concat(res.list) 
+                  this.$apply()                   
+               })
+            }
+        }
+        components = {
+           CommentItemHot: CommentItem,
+           CommentItem:CommentItem
+        }
+        onLoad(option){
+            this.bookId=option.bookId
+            getHotComments(this.bookId).then(res=>{
+              this.hotCommentList=res
+              this.$apply()
+          })
+            getNewComments(this.bookId,this.page).then(res=>{
+               this.newCommentList=res.list
+               this.newCommentCount=res.total
+               this.lastPage=res.pages
+               this.$apply()
+            })
+        }
+  } 
+</script>
+<style lang="less" scoped>
+  
+</style>

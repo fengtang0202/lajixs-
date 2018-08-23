@@ -1,0 +1,30 @@
+<template>
+        <view class='labels'>
+            <block wx:for="{{list}}" wx:key="{{item.id}}">
+                <text style="border:1px solid {{item.bookColor}};color:{{item.bookColor}}">{{item.bookLableName}}</text>
+            </block>
+       </view>
+</template>
+<script>
+   import wepy from 'wepy'
+   export  default class BookLabel extends wepy.component{
+     props = {
+        list:{
+            type:Array,
+            default:[]
+        }
+      }
+   }
+</script>
+<style lang="less" scoped>
+ .labels{
+     font-size: 24rpx;
+     text{
+         border-radius: 14rpx;
+         padding:2rpx 12rpx;
+         box-sizing: border-box;
+         margin-right:20rpx;
+     }
+ }
+</style>
+

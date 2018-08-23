@@ -1,0 +1,21 @@
+<template>
+     <view>
+        category
+     </view>
+</template>
+<script>
+    import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+
+    @connect({
+        //state
+    },
+        // reducers
+    )
+  export default class Bookrack extends wepy.page {
+         
+  }
+</script>
+<style lang="less" scoped>
+
+</style>

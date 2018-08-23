@@ -1,0 +1,90 @@
+<template>
+    <scroll-view scroll-y bindscrolltolower="loadMore" style='height:100vh'>
+       <commentItem :commentList.sync="commentList"></commentItem>
+       <view style='margin-top: 20rpx;font-size:28rpx;color: #333;margin-left:40rpx'>相关回复</view>
+       <block wx:for='{{replyList}}' wx:key='{{item.id}}'>
+           <view class='reply_wrap'>
+               <image src='{{item.userHeadPortraitURL}}' style='width:76rpx;height:76rpx;margin:0 40rpx;float:left;border-radius:50%'/>
+               <view style='float:left;width:550rpx;'>
+                    <view>
+                        <view>
+                            <text style="font-size:32rpx;color:#666">{{item.pseudonym}}</text>
+                            <image class='sex' wx:if="{{item.userSex==0}}" src="../images/sex-02_03@3x.png"/>
+                            <image class='sex' wx:if="{{item.userSex==1}}" src="../images/sex-03@3x.png" />
+                            <text class='grade'>LV{{item.userGrade}}</text>
+                        </view>
+                        <view style='font-size:28rpx'>
+                            {{item.replyCommentsContent}}
+                        </view>
+                    </view>
+               </view>
+           </view>
+       </block>
+    </scroll-view>    
+</template>
+<script>
+import wepy from 'wepy'
+import commentItem from '../components/commentItem'
+import {getNewComments,getReplyComment} from '../config/getData'
+export default class CommentDetail extends wepy.page{
+    data = {
+       commentId:0,
+       commentList:[],
+       replyList:[],
+       page:1,
+       lastPage:0
+    }
+    components = {
+        commentItem
+    }
+    methods = {
+        loadMore(){
+            this.page++
+            if(this.page>this.lastPage){
+                wx.showToast({
+                    title:"没有更多了"
+                })
+                return;
+            }
+        getReplyComment(this.commentId,this.page).then(res=>{
+           this.replyList=this.replyList.concat(res.list)
+           this.$apply()
+       })
+        }
+    }
+    onLoad(option){
+       this.commentId=option.commentId
+       getNewComments(this.commentId,1,0).then(res=>{
+            this.commentList.push(res)
+            this.$apply()
+       })
+       getReplyComment(this.commentId,this.page).then(res=>{
+           this.replyList=res.list
+           this.lastPage=res.pages
+           this.$apply()
+       })
+    }
+}
+</script>
+<style lang="less" scoped>
+  .reply_wrap {
+      width:100%;
+      overflow: hidden;
+      border-bottom:2rpx solid #efefef;
+      padding:20rpx 0;
+      line-height: 60rpx;
+  }
+  .grade{
+   background-color: #74f3fe;
+    font-size: 22rpx;
+    color: #fff;
+    border-radius:6rpx;
+    padding:0 6rpx;
+}
+.sex{
+   width:24rpx;
+   height:24rpx;
+   vertical-align: middle;
+   margin:0 6rpx;
+}
+</style>
