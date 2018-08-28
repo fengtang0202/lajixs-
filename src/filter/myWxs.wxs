@@ -34,8 +34,49 @@
  function strSlice(str, length) {
     return  str.length>length?str.slice(0,length)+"...":str
   }
+function qdStatus(status){
+  var x=''
+   switch (status) {
+     case 0:
+        x='缺'
+       break;
+     case 1:
+       x= '签'
+       break;
+   }
+   return x
+}
+function weekToString(num){
+  var week=''
+  switch(num){
+    case 1:
+      week='周一'
+      break;
+    case 2:
+      week='周二'
+      break;
+    case 3:
+      week='周三'
+      break;
+    case 4:
+      week='周四'
+      break;
+    case 5:
+      week='周五'
+      break;
+    case 6:
+      week='周六'
+      break;
+    case 7:
+      week='周日'
+      break;     
+  }
+  return week;
+}
 module.exports = {
   getToString: getToString,
   leadTime:leadTime,
-  strSlice: strSlice
+  strSlice: strSlice,
+  qdStatus: qdStatus,
+  weekToString: weekToString
 }

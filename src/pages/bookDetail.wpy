@@ -34,7 +34,7 @@
                          <image class='arrow' style="transform: rotate({{showText?'180':'0'}}deg);" src="../images/d-38@3x.png"/>
                      </view>
                 </view>
-                <view class='directory'>
+                <view class='directory' bindtap="handleGo('directory')">
                    <text>目录</text>
                    <text style='margin-left: 100rpx;color:rgb(153, 153, 153);'>共{{bookInfo.chapterCount}}章</text>
                    <text style='margin-left:100rpx;color:rgb(247, 117, 131);'>{{myWxs.leadTime(leadTime,updateTime)}}</text>
@@ -53,7 +53,7 @@
                 <scroll-view scroll-x="true">  
                     <view class="uploadWrap" scroll-x="true"> 
                         <block wx:for="{{similarRecommendation}}" wx:key="{{item.bookId}}"> 
-                            <view class="upload_Item" data-id="{{item.bookId}}">  
+                            <view class="upload_Item" bindtap="handleGo('bookDetail')" data-id="{{item.bookId}}">  
                                <image class="upload_Item_img"  src="{{item.bookImage}}"/>  
                                <text>{{myWxs.strSlice(item.bookName,5)}}</text>
                             </view>

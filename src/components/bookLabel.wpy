@@ -1,7 +1,7 @@
 <template>
         <view class='labels'>
             <block wx:for="{{list}}" wx:key="{{item.id}}">
-                <text style="border:1px solid {{item.bookColor}};color:{{item.bookColor}}">{{item.bookLableName}}</text>
+                <text wx:if='{{index<3}}' style="border:1px solid {{item.bookColor}};color:{{item.bookColor}}">{{item.bookLableName}}</text>
             </block>
        </view>
 </template>

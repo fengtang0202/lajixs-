@@ -3,7 +3,7 @@ import {get,post} from '../config/request'
 
 const getHomePageBooks = get({url:api.homePageRecommended},true)
 
-const getBookClass=get({url:api.book_class},true)
+const getBookClass=get({url:api.get_label},true)
 
 const getFreeBook=get({url:api.book_freetime},true)
 
@@ -72,16 +72,39 @@ const wxLogin = (code, terminal=1, userCode = 'LG20180608000') => {
         }
     })
 }
-const filterBook = (bookClassificationid, startPage,order = 0,bookCheckStatus = 0, updateTime = 0, bookWorldCount = 0) => {
+const filterBook = (bookLabid, startPage, order = 0, bookCheckStatus = 0, updateTime = 0, bookWorldCount = 0) => {
     return post({
         url:api.filter_book,
         params:{
-            bookClassificationid:bookClassificationid,
+            bookLabid: bookLabid,
             order:order,
             startPage:startPage,
             bookCheckStatus:bookCheckStatus,
             updateTime:updateTime,
             bookWorldCount:bookWorldCount
+        }
+    })
+}
+const getSearchHotWords=get({url:api.hotWords},true)
+const searchBook = (keyWord, startPage=1, isHotWorld=1)=>{
+    return post({
+        url:api.search_book,
+        params:{
+            keyWord:keyWord,
+            startPage:startPage,
+            isHotWorld:isHotWorld
+        }
+    })
+}
+const getBookvolumeChapterList=bookId=>{
+    return get({url:api.get_volume+bookId})
+}
+const bookRead=(chapterId,readType=1)=>{
+    return post({
+        url:api.bookRead,
+        params:{
+            chapterId: chapterId,
+            readType: readType
         }
     })
 }
@@ -97,5 +120,9 @@ module.exports = {
     getRecommendBook,
     getNewComments,
     getReplyComment,
-    filterBook
+    filterBook,
+    getSearchHotWords,
+    searchBook,
+    getBookvolumeChapterList,
+    bookRead
 }

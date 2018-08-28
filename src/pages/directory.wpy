@@ -1,0 +1,54 @@
+<template>
+    <view style='padding:28rpx'>
+        <block wx:for='{{chapterList}}' wx:key="{{index}}">
+            <view style='font-size:32rpx;height:104rpx;line-height:104rpx'>{{item.volumeName}}</view>
+            <van-cell-group>
+                <van-cell value="{{item.chapterLength}}" bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}'>
+                    <view slot="title">
+                        <span class="van-cell-text">{{item.chapterTitle}}</span>
+                        <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
+                    </view>
+                </van-cell>
+            </van-cell-group>
+       </block>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import {getBookvolumeChapterList} from '../config/getData'
+    export default class Directory extends wepy.page{
+        config={
+           navigationBarTitleText:'目录',
+            usingComponents: {
+           "van-cell": "../lib/vant/cell/index",
+            "van-cell-group": "../lib/vant/cell-group/index"
+          },
+        }
+        data={
+           chapterList:[]
+        }
+        methods={
+        handle(chapterId){
+            wx.navigateTo({
+                url:'bookRead?chapterId='+chapterId
+            })
+        }
+        }
+        components={
+
+        }
+        onLoad(option){
+           getBookvolumeChapterList(option.bookId).then(data=>{
+               this.chapterList=data.chapterInfo
+               this.$apply()
+           })
+        }
+   }
+</script>
+<style lang="less" scoped>
+   .vip{
+       width:40rpx;
+       height:40rpx;
+       vertical-align:middle;
+   }
+</style>

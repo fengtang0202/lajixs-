@@ -41,6 +41,10 @@ function request(method, requestHandler, isShowLoading = true) {
                       title: '服务器异常',
                       duration:1500
                     })
+                } else if (res.data.returnCode==2000) {
+                    // wx.showToast({
+                    //   title: '书籍已被删除'
+                    // })                       
                 }else{
                     // reject(res.data.data)
                     throw new Error('Network request success but data state not success')
@@ -50,13 +54,13 @@ function request(method, requestHandler, isShowLoading = true) {
                 // 因为hide会让showToast隐藏
                 isShowLoading && wx.hideLoading && wx.hideLoading()
                 wx.showToast({
-                    title: '网络请求失败',
+                    title: '网络断开',
                     icon: 'success',
-                    image: '../style/images/toast_info.png',
+                    // image: '../style/images/toast_info.png',
                     duration: 1500
                 })
-                reject(new Error('Network request failed'))
-                // throw new Error('Network request failed')
+                // reject(new Error('Network request failed'))
+                throw new Error('Network request failed')
             },
             complete: function () {
             }

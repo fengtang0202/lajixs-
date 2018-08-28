@@ -3,10 +3,10 @@
               <view class='new_book' data-id="{{item.bookId}}" bindtap='handle'>
                       <image src="{{item.bookImage}}"/>
                       <view class='book_detail'>
-                              <view style='font-size:32rpx'>{{item.bookName}}</view>
+                              <view style='font-size:32rpx'>{{myWxs.strSlice(item.bookName,13)}}</view>
                               <view style='font-size:24rpx;color:#999999'>
                                 <view style="overflow:hidden">
-                                  <text style='float:left'>作者:{{item.writerName}}</text>
+                                  <text style='float:left'>作者:{{myWxs.strSlice(item.writerName,7)}}</text>
                                   <text class='book_class'>{{item.classificationName}}</text>
                                   <text class='book_class' style="color:{{item.bookStatus==0?'rgb(71, 178, 216)':'#FF6F00'}}">{{
                                         item.bookStatus==0?"连载中":"已完结"
@@ -15,8 +15,8 @@
                               </view>
                            <view style='overflow:hidden;clear:both;'>
                               <block wx:for-items="{{item.booklableList}}" wx:key="{{item.id}}">
-                                <text class='label' wx:if="{{index<4}}" style='color:{{item.bookColor}};border:2rpx solid {{item.bookColor}}'>{{item.bookLableName}}</text>
-                               </block>
+                                 <text class='label' wx:if="{{index<3}}" style='color:{{item.bookColor}};border:2rpx solid {{item.bookColor}}'>{{item.bookLableName}}</text>
+                              </block>
                            </view>
                            <view class='bookIntroduction'>
                                 {{item.bookIntroduction}}
@@ -27,6 +27,7 @@
 </template>
 <script>
  import wepy from 'wepy' 
+ import myWxs from '../filter/myWxs.wxs'
  export default class BookDetailItem extends wepy.component{
      props={
          list:{
@@ -34,6 +35,9 @@
              default:[]
          }
      }
+      wxs = {
+        myWxs
+      }
      methods={
        handle(e){
          wx.navigateTo({
@@ -45,10 +49,11 @@
 </script>
 <style lang="less" scoped>
 .new_book{
-  height:248rpx;
+  height:266rpx;
   width:100%;
   border-bottom:2rpx solid #EFEFEF;
-  padding:20rpx  28rpx  0;
+  padding:20rpx  28rpx  20rpx;
+  box-sizing: border-box;
   image{
     width:156rpx;
     height:207rpx;

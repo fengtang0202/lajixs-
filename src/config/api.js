@@ -39,10 +39,10 @@ const reply_comment = `${host}/api/comm-replyInfo`
 const give_thumbs = `${host}/api/comm-GiveThumbs`
 const hot_comment = `${host}/api/comm-HotCommentInfo`
 //书籍控制器
-const get_volume = `${host}/api/books-getvolume`
+const get_volume = `${host}/api/books-volumeChapterList/`
 const get_volumeid_chapter = `${host}/api/books-getVolumeById`
 const add_book_rack = `${host}/api/bookshelf-adduserbookshelf`
-const check_book_rack = `${host}/api/bookshelf-bookshelfIsSave/`
+const check_book_rack = `${host}/api/bookshelf-bookshelfIsSave`
 const del_book_rack = `${host}/api/bookshelf-deluserbookshelf`
 const get_book_rack_recommend = `${host}/api/bookshelf-recommendPosition`
 const chapter_subscribe = `${host}/api/book-subscription`
@@ -54,6 +54,11 @@ const hot_lable = ` ${host}/api/stacks-hotLable`
 const search_book = `${host}/api/stacks-search`
 const filter_book = `${host}/api/stacks-bookFiltering`
 const get_book_list = `${host}/api/system/getBooklist`
+const get_label = `${host}/api/stacks-hotLableVersionTow`
+//搜索
+const hotWords = `${host}/api/sys-hotwords`
+//书籍阅读
+const bookRead = `${host}/api/book-read`
 module.exports = {
   login,
   get_user_info,
@@ -102,5 +107,8 @@ module.exports = {
   homePageRecommended,
   book_freetime,
   book_Info,
-  wxCode
+  wxCode,
+  get_label,
+  hotWords,
+  bookRead
 }

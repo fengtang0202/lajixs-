@@ -24,14 +24,16 @@ export default class extends wepy.app {
       'pages/recommendBooks',
       'pages/comment',
       'pages/commentDetail',
-      'pages/categoryDetail'
+      'pages/categoryDetail',
+      'pages/directory',
+      'pages/bookRead'
     ],
     window: {
       backgroundTextStyle: '#fff',
       navigationBarBackgroundColor: '#F73D51',
       navigationBarTitleText: '辣鸡小说',
       navigationBarTextStyle: '#fff',
-      enablePullDownRefresh: true
+      // enablePullDownRefresh: true
     },
      "tabBar": {  
       "selectedColor": "#F77583",

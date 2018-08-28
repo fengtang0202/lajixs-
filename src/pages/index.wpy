@@ -1,9 +1,10 @@
 <template>
 <view>
-  <view   class="weui-navbar">
+  <view  class="weui-navbar">
      <block wx:for-items="{{tabs}}"  wx:key="tabs">
-        <view id="{{index}}"   class="default-item" bindtap="tabClick" style="width:{{tabW}}px;height:61rpx">
-          <text style='padding-bottom:2rpx;' class="{{activeIndex == index ?'item_on':''}}">{{item}}</text>
+        <view id="{{index}}"   class="default-item" bindtap="tabClick" style="width:{{tabW}}px;height:60rpx">
+          <text style='padding-bottom:2rpx;' wx:if='{{item.text}}' class="{{activeIndex == index ?'item_on':''}}">{{item.text}}</text>
+          <zan-icon  wx:if='{{item.icon}}' name="search"/>
         </view>
      </block>
   </view>
@@ -11,11 +12,11 @@
     <swiper-item class="swiper-item">
        <scroll-view style='height:100%' scroll-y bindscrolltolower="loadMore">
          <!-- <view  scroll-y> -->
-          <swiper class='swiper' indicator-dots="{{indicatorDots}}"
+          <swiper class='swiper' previous-margin="28rpx" next-margin="28rpx" indicator-dots="{{indicatorDots}}"
              autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
-              <block wx:for="{{homeInfo.pictureCarousel}}" wx:key="{{item.bookId}}">
-                <swiper-item style='margin:10rpx 0' bindtap="handle" data-id='{{item.bookId}}' >
-                  <image src="{{item.bookImage}}"  style='border-radius:10rpx;width:90%;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
+              <block wx:for="{{homeInfo.pictureCarouselVersionTow}}" wx:key="{{item.bookId}}">
+                <swiper-item style='margin:10rpx 0;text-align:center' bindtap="handle" data-id='{{item.bookId}}' >
+                  <image src="{{item.activityImgURL}}"  style='border-radius:10rpx;width:656rpx;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
                 </swiper-item> 
               </block>
            </swiper>
@@ -23,10 +24,10 @@
             <view class='floor_title'>
               <view class='floor_left'>
                 <image src='../images/recommend@3x.png' />
-                <span>小编推荐</span>
+                <text>小编推荐</text>
               </view>
               <view class='floor_right' bindtap ="handleGo('recommendBooks')">
-                  <span>更多</span>
+                  <text>更多</text>
                   <image src='../images/more@3x.png' />
               </view>
            </view>
@@ -37,11 +38,12 @@
            <view class='floor_title'>
               <view class='floor_left'>
                 <image src='../images/recommend@3x.png' />
-                <span>限时免费</span>
+                <text>限时免费</text>
               </view>
-              <view class='floor_right timer'>
+              <!-- timer -->
+              <!-- <view class='floor_right timer'>
                      
-              </view>
+              </view> -->
            </view>
            <view class='new_book_wrap'>
                   <block wx:for-items="{{FreeBook}}" wx:key="{{item.bookId}}">
@@ -55,38 +57,73 @@
           <!-- 换一换 -->
           <view class='lables_warp'>
               <view class='lables_content'>
-                 <text style='font-size:32rpx;float:right'>换一换</text>
+                 <text bindtap="changeLabel" style='font-size:32rpx;float:right;margin-bottom:30rpx'>换一换</text>
+                 <view class='label_wrap'>
+                    <block wx:for='{{labelList}}' wx:key="{{item.id}}">
+                      <text style='background:{{item.bookColor}}'>{{item.bookLableName}}</text>  
+                    </block>
+                 </view>
               </view>
           </view>
            <!-- 最新小说 -->
            <view class='floor_title'>
               <view class='floor_left'>
                 <image src='../images/new@3x.png' />
-                <span>最新小说</span>
+                <text>最新小说</text>
               </view>
            </view>
-          <BookDetailItem :list.sync='newBooks'></BookDetailItem>
+          <BookDetailItem :list.sync='newBooks' :saveword="1"></BookDetailItem>
          <!-- </view> -->
       </scroll-view>
     </swiper-item>
      <swiper-item class="swiper-item">
-       <view class="slide-view">
-          <block wx:for="{{bookClass}}" wx:key="{{item.id}}">
-             <view class="category_wrap" bindtap='handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.classificationName}})'>
-                    <image src="{{item.classificationIco}}"/>
-                    <text>{{item.classificationName}}</text>
-             </view>
-          </block>   
-       </view>
+       <scroll-view style='height:100%' scroll-y>
+          <view class='biaoqian'>
+              <view style='font-size:32rpx;margin-top:16rpx;margin-bottom:34rpx;'>
+                <text>本周热门</text>
+              </view>
+              <view style='overflow:hidden'>
+                <view wx:for="{{hots}}" class='hots' bindtap='handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.bookLableName}})' style="margin-right:{{index==2?'0':'46rpx'}}" wx:key='{{index}}'>
+                    <image src="{{item.img}}" alt=""/>
+                    <text style="width:{{item.bookLableName.length==3?'86rpx':'60rpx'}};top:{{item.bookLableName.length!=4?'36rpx':'24rpx'}}">{{item.bookLableName}}</text>
+                </view>
+              </view>
+              <view style='font-size:32rpx;;clear:both;margin-top:47rpx;margin-bottom:28rpx;'>
+                  <text>更多标签</text>
+              </view>
+              <view class='tabs' wx:for='{{lables}}' bindtap='handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.bookLableName}})' style="border:4rpx  solid {{item.bookColor}};margin-right:{{(index+1)%4==0?'0':'16rpx'}};color:{{item.bookColor}}" wx:key='{{index}}'>
+                {{item.bookLableName}}
+                <text class='gl' style="color:{{item.bookColor}}">.></text>
+              </view>
+          </view>
+       </scroll-view>
     </swiper-item>
      <swiper-item class="swiper-item">
-       <zan-button type="primary"  bindtap='togglePopup'>点击 </zan-button>
-       <zan-button open-type="openSetting" plain bindopensetting='handler'>获取用户位置</zan-button>
-       <zan-popup show="{{show}}" type='bottom' bindclose='togglePopup'>
-          <view style='height:200rpx;width:750rpx;background:#fff;border-radius:20rpx 20rpx 0 0;'>
-               
-          </view>
-       </zan-popup>
+          <van-search
+            value="{{ keyWord }}"
+            placeholder="搜索作者或作品..."
+            background="#F73D51"
+            bind:change='onSearch'
+            maxlength='20'  
+          />
+       <scroll-view class='hot_wrap'  style='height:100%' scroll-y bindscrolltolower="loadSearchBookList">
+        <!-- 搜索模块 -->
+         <veiw wx:if='{{showSearch}}'>
+           <view class='t'>热门搜索</view>
+              <block wx:for="{{hotWords}}" wx:key='{{index}}'>
+                    <view class='search_hot' bindtap='handleLabel({{item.hotWords}})'  wx:if='{{item.hotWords}}' style="color:{{item.color}};border:2rpx solid {{item.color}}">{{item.hotWords}}</view>
+              </block>
+            <view class='t' style=' border-top:8rpx solid #EFEFEF'>历史搜索</view>
+            <van-cell-group>
+               <block wx:for="{{historySearch}}" wx:key="{{index}}">
+                 <van-cell title="{{item}}" icon="clock" border="{{ historySearch.length-1==index?false:true}}" />
+               </block>
+            </van-cell-group>
+         </veiw>
+         <view wx:if='{{!showSearch}}'>
+             <searchBookList :list.sync="searchBookList"></searchBookList>
+         </view>
+       </scroll-view>
     </swiper-item>
 </swiper>
 </view>
@@ -95,7 +132,7 @@
   import wepy from 'wepy'
   import { connect } from 'wepy-redux'
   import { INCREMENT, DECREMENT,LOGIN_STATE } from '../store/types/counter'
-  import {getHomePageBooks,getBookClass,getFreeBook,getNewBooks} from '../config/getData'
+  import {getHomePageBooks,getBookClass,getFreeBook,getNewBooks,getSearchHotWords,searchBook} from '../config/getData'
   import BookItem from '../components/bookItem'
   import BookDetailItem from '../components/bookDetailItem'
   @connect({
@@ -117,21 +154,28 @@
         loginState:LOGIN_STATE
       }
   )
-
+//  localStorage.setItem(this.userInfo.userId,JSON.stringify(Array.from(new Set(this.hotwordList))))
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '辣鸡小说',
       usingComponents: {
-          //  "zan-button": "../vant/btn/index",
-          //  "zan-popup": "../vant/popup/index"
+           "zan-icon": "../lib/vant/icon/index",
+           "van-search": "../lib/vant/search/index",
+           "van-cell": "../lib/vant/cell/index",
+           "van-cell-group": "../lib/vant/cell-group/index"
        },
     }
     components = {
       BookItem:BookItem,
-      BookDetailItem:BookDetailItem
+      BookDetailItem:BookDetailItem,
+      searchBookList:BookDetailItem
     }
     data = {
-     tabs:["热门","分类","排行"],
+     tabs:[
+       {text:'热门',icon:''},
+       {text:'分类',icon:''},
+       {text:'',icon:'search'}
+     ],
      activeIndex:0,
      slideOffset:0,
      tabW:0,
@@ -147,19 +191,66 @@
      imgwidth: 750,
      current: 0,
      HostXiaoBianRecommend:[],
-     bookClass:[],
+     labelList:[],
+     booklableList:[],
+     hotImg:[
+        '../images/Group 11@3x.png',
+        '../images/Group 15@3x.png',
+        '../images/Group 16@3x.png',
+      ],
+     hots:[],
+     lables:[],
      FreeBook:[],
      page:1,
      lastPage:1,
      size:10,
      newBooks:[],
      show:false,
-     password:"请输入密码"
+     focus:false,
+     hotWords:[],
+     showSearch:true,
+     keyWord:'',
+     searchBookList:[],
+     searchPage:1,
+     searchLastPage:1,
+     historySearch:[1,2,3,4,5,6,7],
     }
     computed = {
      
     }
+    search(){
+      searchBook(this.keyWord,this.searchPage).then(data=>{
+            if(data.list.length>0){
+              this.searchBookList=data.list
+              this.searchLastPage=data.pages
+              this.showSearch=false
+              this.$apply()
+       }
+      })
+    }
    methods = {
+     handleLabel(word){
+       this.keyWord=word
+       this.search()
+     },
+     loadSearchBookList(){
+         if(this.searchBookList.length>0){
+            this.searchPage++
+            if(this.searchPage>this.searchLastPage){
+                wx.showToast({
+                title:'没有更多了'
+              })
+              return;
+            }
+            searchBook(this.keyWord,this.searchPage).then(data=>{
+                  this.searchBookList=this.searchBookList.concat(data.list)
+                  this.$apply()
+            })
+         }
+     },
+     changeLabel(){
+       this.labelList=this.getRandomArrayElements(this.booklableList,10)
+     },
      togglePopup() {
          this.show=!this.show
          this.$apply()
@@ -169,27 +260,39 @@
          url:res
        })
     },
-    handler(e){
-     console.log(e)
-    },
     colse(){
       this.show=false
       this.$apply()
     },
-    searchChange(e){
-         console.log(e.detail)
+    onSearch(e){
+         this.keyWord=e.detail.replace(/\s+/g,"")
+         if(this.keyWord){
+            this.search()             
+        }else{
+           this.showSearch=true
+           this.searchBookList=[]
+        }
     },
-    tabClick:e=>{
+    tabClick(e){
       var idIndex = e.currentTarget.id;
-      var offsetW = e.currentTarget.offsetLeft;  //2种方法获取距离文档左边有多少距离
+      var offsetW = e.currentTarget.offsetLeft; 
       this.activeIndex=idIndex
       this.slideOffset=offsetW
     },
     bindChange(e){
       var current = e.detail.current; 
+      if(current==2&&this.hotWords.length==0){
+         getSearchHotWords.then(data=>{
+           data.forEach(value => {
+              value.color=`#${Math.floor(Math.random()*0xffffff).toString(16)}`
+           });
+           this.hotWords=data
+           this.$apply()
+         })
+      }
       if((current+1)%3 == 0){
       }
-        var offsetW = current * this.mtabW;    //2种方法获取距离文档左边有多少距离
+        var offsetW = current * this.mtabW;
         this.activeIndex=current
         this.slideOffset=offsetW
     },
@@ -217,6 +320,16 @@
           this.$invoke('BookItem','handleGo',e)
       }
     }
+    getRandomArrayElements(arr, count) {
+    var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+    while (i-- > min) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+      }
+      return shuffled.slice(min);
+    }
     events = {
       
     }
@@ -229,13 +342,20 @@
             this.tabW=this.mtabW/this.tabs.length
         }
       })
-      getHomePageBooks.then(data=>{
-        this.homeInfo=data
-        this.HostXiaoBianRecommend=data.HostXiaoBianRecommend
+       getBookClass.then(data=>{
+        this.hots=data.slice(0,3)
+        for(var i=0;i<this.hots.length;i++){
+            this.hots[i].img=this.hotImg[i]
+        }
+        this.lables=data.slice(3)
         this.$apply()
       })
-      getBookClass.then(data=>{
-        this.bookClass=data
+      getHomePageBooks.then(data=>{
+        this.homeInfo=data
+        this.booklableList=data.booklableList
+        this.labelList=this.getRandomArrayElements(data.booklableList,10)
+        this.HostXiaoBianRecommend=data.HostXiaoBianRecommend
+        this.$apply()
       })
       getFreeBook.then(data=>{
         this.FreeBook=data.data
@@ -249,9 +369,6 @@
   }
 </script>
 <style lang="less">
-// page{
-//   overflow: hidden;
-// }
 view , scroll-view{
   padding: 0px;
   margin: 0px;
@@ -284,7 +401,6 @@ view , scroll-view{
    border-bottom:2px solid #fff;
 }
 .swiper-box{
-   text-align: center;
    overflow: hidden;
    padding-top:64rpx;
    box-sizing: border-box;
@@ -294,21 +410,22 @@ view , scroll-view{
   height:100rpx;
   padding: 0 28rpx;
   line-height: 100rpx;
+  overflow:hidden;
 image{
     width:48rpx;
     height:48rpx;
     vertical-align: middle;
   }
 }
-.floor_left{
+.floor_left {
   float:left;
-  span{
+  text{
     font-size: 36rpx;
   }
 }
 .floor_right{
   float:right;
-  span{
+  text{
     font-size:28rpx;
     color:#666;
   }
@@ -325,18 +442,6 @@ image{
   height:44rpx;
   background: #E79949;
   margin-top:28rpx;
-}
-.category_wrap{
-    width: 152rpx;
-    height: 224rpx;
-    float: left;
-    text-align: center;
-    font-size:32rpx;
-    margin: 32rpx 0 0 32rpx;
-    image{
-      width: 148rpx;
-      height: 148rpx;
-    }
 }
 .new_book_wrap{
    overflow: hidden;
@@ -361,17 +466,98 @@ image{
 }
 .lables_warp{
   width:100%;
-  height:248rpx;
   background:#EFEFEF;
-  padding-top:8rpx;
+  padding:8rpx 0rpx;
 }
 .lables_content{
   width:674rpx;
-  height:232rpx;
+  overflow:hidden;
   background: #fff;
   border-radius: 14rpx;
   margin:0 auto;
   padding:8rpx 20rpx;
 }
+.label_wrap{
+  clear:both;
+  width:100%;
+  overflow:hidden;
+  text {
+    font-size:24rpx;
+    color:#fff;
+    float:left;
+    margin-right:30rpx;
+    margin-bottom:44rpx;
+    border-radius: 72rpx;
+    padding:6rpx 26rpx;
+    text-align: center;
+  }
+}
 
+ .biaoqian{
+        padding:16rpx 28rpx;
+        overflow:hidden;
+    }
+       .hots{
+           float: left;
+           width:200rpx;
+           height:88rpx;
+           position: relative;
+           text{
+               position: absolute;
+               left:24rpx;
+               font-size:28rpx;
+               line-height: 1;
+               color:#fff;
+           }
+        }
+        image{
+            width:200rpx;
+            height:88rpx;  
+        }
+       .tabs {
+            list-style: none;
+            float: left;
+            width: 160rpx;
+            height:66rpx;
+            padding-top:10rpx;
+            text-align: center;
+            border-radius:66rpx;
+            margin-top:36rpx;
+            position: relative;
+            font-size:28rpx;
+      }
+    .arrow{
+        width:40rpx;
+        height:40rpx;
+        text-align: center;
+        line-height: 40rpx;
+        position: absolute;
+        top:-20rpx;
+        left:28rpx;
+        background: #fff;
+    }
+   .gl{
+       position: absolute;
+       background: #fff;
+       top:-26rpx;
+       left:40rpx;
+       transform: rotate(50deg);
+       font-weight: 600;
+   }
+   .t{
+    font-size:32rpx;
+    padding:28rpx;
+    box-sizing:border-box;
+    }
+   .search_hot{
+      display: inline-block;
+      font-size: 28rpx;
+      padding: 0 36rpx;
+      margin-left: 28rpx;
+      border-radius:44rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      text-align: center;
+      margin-bottom: 40rpx;
+   }
 </style>

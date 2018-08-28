@@ -1,11 +1,34 @@
 <template>
      <view>
-        category
+         <view class='qiandao'>
+             <block wx:for='{{days}}' wx:key="{{index}}">
+                 <view>
+                     <view  class="day {{index==2&&'yq'}}">
+                        <text>{{myWxs.qdStatus(item.status)}}</text>
+                     </view>
+                     <text style='font-size:20rpx;'>{{myWxs.weekToString(item.day)}}</text>
+                 </view>
+             </block>
+                <view class='qdbtn'>立即签到</view>
+         </view>
+         <!-- adv -->
+         <view>
+             <swiper class='swiper' indicator-dots="{{indicatorDots}}"
+             autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
+              <block wx:for="{{imgUrls}}" wx:key="{{item.bookId}}">
+                <swiper-item style='margin:10rpx 0'>
+                  <image src="{{item}}"  style='width:100%;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
+                </swiper-item> 
+              </block>
+           </swiper>
+         </view>
+         <!-- 正在阅读 -->
      </view>
 </template>
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
   import { connect } from 'wepy-redux'
+  import myWxs from '../filter/myWxs.wxs'
 
     @connect({
         //state
@@ -13,9 +36,83 @@
         // reducers
     )
   export default class Bookrack extends wepy.page {
-         
+                config = {
+                    navigationBarTitleText: '书架',
+                    usingComponents: {
+                    },
+            }
+            wxs={
+              myWxs  
+            }
+          data ={
+             days:[
+                 {day:1,status:0},
+                 {day:2,status:1},
+                 {day:3,status:0},
+                 {day:4,status:0},
+                 {day:5,status:0},
+                 {day:6,status:0},
+                 {day:7,status:0},
+             ],
+              imgUrls: [
+                'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+                'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+                'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+                ],
+                indicatorDots: false,
+                autoplay: true,
+                interval: 2000,
+                duration: 1000,
+                circular:true,
+            }
+          methods = {
+
+          }
   }
 </script>
 <style lang="less" scoped>
+ .qiandao{
+     width:100%;
+     height:128rpx;
+     text-align: center;
+     padding:22rpx 28rpx;
+     box-sizing: border-box;
+     view {
+        width:56rpx;
+        float:left;
+        margin-right:22rpx;
+     }
+     .qdbtn{
+        border:1px solid #FB5E6F;
+        background:#fff;
+        color:#FB5E6F;
+        font-size:28rpx;
+        width:144rpx;
+        height:56rpx;
+        line-height:56rpx;
+        border-radius: 38rpx;
+        margin-right:0;
+   }
+ }
+ .day{
+     width:56rpx;
+     height:56rpx;
+     border:1px solid #8C8C8C;
+     line-height:56rpx;
+     border-radius: 50%;
+     font-size: 28rpx;
+     text-align: center;
+     color:#999999;
+ }
+ .now{
+     border-color:#FB5E6F;
+     color:#000;
+ }
+ .yq{
+     border:0;
+     background:#FB5E6F;
+     color:#fff;
+    
+ }
 
 </style>
