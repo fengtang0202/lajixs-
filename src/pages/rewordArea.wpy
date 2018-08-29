@@ -1,0 +1,23 @@
+<template>
+ <view>212121</view>    
+</template>
+<script>
+    import wepy from 'wepy'
+  export default class RewordArea extends wepy.page{
+      config={
+
+      }
+      data={
+
+      }
+      methods={
+
+      }
+      onLoad(option){
+          
+      }
+  }
+</script>
+<style lang="less" scoped>
+
+</style>

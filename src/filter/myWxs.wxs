@@ -34,6 +34,9 @@
  function strSlice(str, length) {
     return  str.length>length?str.slice(0,length)+"...":str
   }
+  function  numToFixed(num){
+      return num > 1000 ? (num / 10000).toFixed(1)+'w':num
+}
 function qdStatus(status){
   var x=''
    switch (status) {
@@ -78,5 +81,6 @@ module.exports = {
   leadTime:leadTime,
   strSlice: strSlice,
   qdStatus: qdStatus,
-  weekToString: weekToString
+  weekToString: weekToString,
+  numToFixed: numToFixed
 }

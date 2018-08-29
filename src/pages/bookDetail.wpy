@@ -1,31 +1,54 @@
 <template>
      <view>
          <scroll-view scroll-y>
-            <view class='book_wrap'>
-                <image src='{{bookInfo.bookListInfo.bookImage}}' class='book_img'/> 
-                <view class='book_info'>
-                    <view style='font-size:32rpx;'>{{bookInfo.bookListInfo.bookName}}</view>
-                    <view class='font24'>作者:{{bookInfo.bookListInfo.writerName}}</view>
-                    <view class='font24'>字数:{{bookInfo.bookListInfo.bookWorldCount}}</view>
-                    <view class='font24'>分类:{{bookInfo.bookListInfo.classificationName}} <text>|</text> {{
-                      bookInfo.bookListInfo.bookStatus==0?"连载中":"已完结"  
-                    }}</view>
-                    <BookLabel :list.sync="bookLables"></BookLabel>
+                <view class='bookInfo_header'>
+                   <image style='width:100%;height:400rpx; filter: blur(12rpx);' src="{{bookInfo.bookListInfo.bookImage}}"/>
+                   <view class='book_detail'>
+                       <view class='bookName'>
+                         {{bookInfo.bookListInfo.bookName}}
+                       </view>
+                       <view class='book_Info'>
+                           <image class='book_img' src='{{bookInfo.bookListInfo.bookImage}}'/>
+                           <view class='book_info_detail'>
+                                <view style='font-size:28rpx;color:#fff'>
+                                    <text>{{bookInfo.bookListInfo.bookWorldCount}}</text>
+                                    <text style='margin:0 10rpx;'>|</text>
+                                    <text>{{bookInfo.bookListInfo.classificationName}}</text>
+                                </view>
+                                <view  style="margin-bottom:22rpx;font-size:28rpx;color:{{bookInfo.bookListInfo.bookStatus==0?'#2BF6C7':'#FF6F00'}}">{{
+                                        bookInfo.bookListInfo.bookStatus==0?"连载中":"已完结"
+                                  }}
+                                </view>
+                              <BookLabel :list.sync="bookLables"></BookLabel>
+                              <view class='dasang' >
+                                  <block wx:for="{{reward}}" wx:key="{{index}}">
+                                   <view class='reward_wrap' style="width:{{index==1?'120rpx':'104rpx'}};margin-right:{{index==2?'0':'62rpx'}}">
+                                        <view class='reward_item' style="border:4rpx solid {{item.color}}">
+                                           <image style="width:{{item.width}}rpx;height:{{item.height}}rpx" src="{{item.img}}"/>
+                                        </view> 
+                                            <text style="color:{{item.color}};font-size:24rpx">{{item.text}}</text>
+                                   </view>
+                                 </block>
+                              </view>
+                           </view>
+                       </view>
+                  </view>
                 </view>
-             </view>
-                <view class='btn'>
-                    <block wx:for="{{btns}}" wx:key='{{item.key}}}' >
-                       <text class="{{activeBtnIndex==item.key&&'active'}}" bindtap="hanldeTapBtn({{item.key}})">{{item.btnName}}</text>
-                    </block>
+                <view class='book_data'>
+                      <view>{{myWxs.numToFixed(bookInfo.bookdate.bookClickCount)}}点击</view>
+                      <view>{{myWxs.numToFixed(bookInfo.bookdate.areward)}}打赏</view>
+                      <view>{{myWxs.numToFixed(bookInfo.bookdate.bookRecommend)}}小米椒</view>
+                      <view style='border:0'>{{myWxs.numToFixed(bookInfo.bookdate.goldenTicket)}}金椒</view>
                 </view>
-                <view class='reward_wrap'>
-                    <block wx:for="{{reward}}" wx:key='{{item.key}}'>
-                        <view class="reward" style="border:{{item.key==2&&'0'}}">
-                            <image src="{{item.img}}"/>
-                            <text>{{item.text}}</text>
-                        </view>
-                    </block>
-                </view>
+                 <van-cell-group>
+                    <van-cell
+                        title="打赏区({{}})"
+                        is-link
+                        arrow-direction="down"
+                        border="{{ false }}"
+                        url="/pages/rewordArea"
+                    />
+                </van-cell-group>
                 <view class='bookIntroduction' bindtap="handleShowtext">
                      <view class="{{showText&&'add'}}" style="text-indent: 2em;letter-spacing: .2em;">
                          {{bookInfo.bookListInfo.bookIntroduction}}
@@ -77,7 +100,11 @@
     )
   export default class BookDetail extends wepy.page {
       config = {
-        navigationBarTitleText: '书籍详情'
+        navigationBarTitleText: '书籍详情',
+        usingComponents: {
+            "van-cell": "../lib/vant/cell/index",
+            "van-cell-group": "../lib/vant/cell-group/index"
+          }
       }
       wxs = {
         myWxs
@@ -89,22 +116,17 @@
       data = {
          bookInfo:{},
          bookLables:[],
-         btns:[
-             {btnName:"立即阅读",key:0},
-             {btnName:"自动订阅",key:1},
-             {btnName:"放入书架",key:2}
-         ],
         activeBtnIndex:0,
         reward:[
-            {text:"投喂金椒",img:"../images/d_18@3x.png",key:0},
-            {text:"打赏辣椒",img:"../images/d-28@3x.png",key:1},
-            {text:"投喂小米椒",img:"../images/d-48@3x.png",key:2}
+            {text:"投喂辣椒",img:"../images/lj.png",color:'#FA1919',width:34,height:50},
+            {text:"投食小米椒",img:"../images/mj.png",color:'#9AD14B',width:44,height:52},
+            {text:"金椒",img:"../images/zj.png",color:'#F9CF1C',width:40,height:52}
         ],
         showText:true,
         updateTime:0,
         leadTime:0,
         HotComments:[],
-        similarRecommendation:[]
+        similarRecommendation:[],
       }
       watch = {
           
@@ -141,80 +163,8 @@
 </script>
 <style lang="less" scoped>
 @import '../css/main';
-.book_wrap {
-   width:100%;
-   height:264rpx;
-   padding:32rpx 28rpx 16rpx 28rpx;
-}
-.book_img{
-    width:192rpx;
-    height:264rpx;
-    border-radius:10rpx;
-    float: left;
-    margin-right:40rpx;
-}
-.book_info{
-    float: left;
-    view{
-        margin-bottom: 18rpx;
-    }
-}
-.font24{
-    .font(24rpx,#666666);
-    margin-top:5rpx;
-}
-.btn{
-   display: flex;
-   justify-content:space-between;
-   width: 100%;
-   padding:0  28rpx 16rpx 28rpx;
-   box-sizing: border-box;
-   text{
-    width: 192rpx;
-    height: 68rpx;
-    border: 2rpx solid #f77583;
-    border-radius: 8rpx;
-    font-size: 32rpx;
-    line-height: 68rpx;
-    text-align: center;
-    color: #f77583;
-   }
-   .active{
-       background: #f77583;
-       color:#fff;
-   }
-}
-.reward_wrap{
-    height: 100rpx;
-    margin-top: 20rpx;
-    border-top: 2rpx solid #e9e9e9;
-    border-bottom: 2rpx solid #e9e9e9;
-    -webkit-box-sizing: border-box;
+view{
     box-sizing: border-box;
-    padding: 12rpx 28rpx;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    .reward{
-        width:246rpx;
-        height: 100%;
-        border-right: 4rpx solid #f77583;
-        color: #333;
-        font-size: 24rpx;
-        text-align: center;
-        line-height: 76rpx;
-        image{
-            width: 32rpx;
-            height: 44rpx;
-            vertical-align: middle;
-        }
-        text{
-            margin-left:12rpx;
-        }
-    }
 }
 .bookIntroduction{
     .font(28rpx,#333);
@@ -285,4 +235,69 @@
     height:256rpx;
     border-radius: 8rpx;
  }  
+ .bookInfo_header{
+     width:100%;
+     height:494rpx;
+     position: relative;
+ }
+ .book_detail{
+     position: absolute;
+     top:58rpx;
+     width:100%;
+ }
+ .bookName{
+     font-size:36rpx;
+     color:#fff;
+     text-align: center;
+     width:100%;
+     margin-bottom:50rpx;
+ }
+ .book_Info{
+    overflow:hidden;
+ }
+ .book_info_detail{
+     float:left;
+ }
+ .book_img{
+     width:198rpx;
+     height:272rpx;
+     border-radius:10rpx;
+     float:left;
+     margin-left:26rpx;
+     margin-right:40rpx;
+ }
+ .dasang{
+    overflow: hidden;
+    width:454rpx;
+    margin-top:28rpx;
+ }
+ .reward_wrap {
+     float:left;
+     text-align: center;
+     .reward_item{
+         width:104rpx;
+         height:104rpx;
+         border-radius: 50%;
+         background: #fff;
+         line-height:108rpx;
+     }
+ }
+ .book_data{
+     height:78rpx;
+     width:100%;
+     border-top:6rpx solid #EFEFEF;
+     border-bottom:2rpx solid #EFEFEF;
+     view{
+         width:25%;
+         border-right:4rpx solid #FB5E6F;
+         text-align:center;
+         color:#666666;
+         font-size:28rpx;
+         height:54rpx;
+         line-height:54rpx;
+         margin-top:8rpx;
+         float:left;
+     }
+ }
+
 </style>

@@ -33,7 +33,9 @@
            </view>
            <BookItem :list.sync="HostXiaoBianRecommend"></BookItem>
            <!-- 广告图 -->
-           <view class='adv-img'></view>
+           <view class='adv-img' bindtap='handleGoActive'>
+                <image  src='{{homeInfo.activityRecommendedPositionList[0].activityImgURL}}'/>
+           </view>
            <!-- 限时免费 -->
            <view class='floor_title'>
               <view class='floor_left'>
@@ -229,6 +231,12 @@
       })
     }
    methods = {
+     handleGoActive(){
+        var url=this.homeInfo.activityRecommendedPositionList[0].detailsImgAndPageURL
+        wx.navigateTo({
+          url:'active?url='+url
+        })
+     },
      handleLabel(word){
        this.keyWord=word
        this.search()
@@ -432,10 +440,13 @@ image{
 }
 .adv-img{
   width:100%;
-  height:84rpx;
-  background: #F73D51;
+  height:108rpx;
   border-bottom:12rpx solid #EFEFEF;
   border-top:12rpx solid #EFEFEF;
+  image{
+    height:84rpx;
+    width:100%;
+  }
 }
 .timer{
   width:218rpx;

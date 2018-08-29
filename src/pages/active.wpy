@@ -1,0 +1,21 @@
+<template>
+   <web-view src="{{url}}">   
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class Active extends wepy.page{
+       config={
+
+       }
+       data={
+           url:''
+       }
+       onLoad(option){
+          this.url=option.url
+          this.$apply()
+       }
+    }
+</script>
+<style lang="less" scoped>
+
+</style>
