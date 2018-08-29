@@ -1,8 +1,8 @@
 <template>
- <view>212121</view>    
+   <view>12</view>    
 </template>
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
   export default class RewordArea extends wepy.page{
       config={
 

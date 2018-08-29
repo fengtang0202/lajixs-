@@ -59,6 +59,8 @@ const get_label = `${host}/api/stacks-hotLableVersionTow`
 const hotWords = `${host}/api/sys-hotwords`
 //书籍阅读
 const bookRead = `${host}/api/book-read`
+//打赏
+const bookReword = `${host}/api/spicyirewardticketlogByBookId`
 module.exports = {
   login,
   get_user_info,
@@ -110,5 +112,6 @@ module.exports = {
   wxCode,
   get_label,
   hotWords,
-  bookRead
+  bookRead,
+  bookReword
 }

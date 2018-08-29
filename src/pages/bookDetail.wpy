@@ -46,7 +46,7 @@
                         is-link
                         arrow-direction="down"
                         border="{{ false }}"
-                        url="/pages/rewordArea"
+                        url="{{url}}"
                     />
                 </van-cell-group>
                 <view class='bookIntroduction' bindtap="handleShowtext">
@@ -117,6 +117,7 @@
          bookInfo:{},
          bookLables:[],
         activeBtnIndex:0,
+        url:"",
         reward:[
             {text:"投喂辣椒",img:"../images/lj.png",color:'#FA1919',width:34,height:50},
             {text:"投食小米椒",img:"../images/mj.png",color:'#9AD14B',width:44,height:52},
@@ -158,6 +159,7 @@
                this.HotComments=data
                this.$apply()
            })
+           this.url="/pages/rewordArea?bookId="+bookId
       }     
 }
 </script>
