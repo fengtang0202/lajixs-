@@ -43,6 +43,7 @@
          wx.navigateTo({
            url:'bookDetail?bookId='+e.currentTarget.dataset.id
          })
+         this.$emit('saveWords')
        }
      }
  }   

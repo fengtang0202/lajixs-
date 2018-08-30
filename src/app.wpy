@@ -83,7 +83,7 @@ export default class extends wepy.app {
     var that=this;
     wx.getSetting({
       success:function(res){
-        console.log(res,1)
+        // console.log(res,1)
       },
       fail:function(res){
         console.log(res)

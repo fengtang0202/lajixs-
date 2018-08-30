@@ -8,7 +8,7 @@
         </view>
      </block>
   </view>
-<swiper current="{{activeIndex}}"  class="swiper-box"  style='height:{{mtabH}}rpx' duration="500" bindchange="bindChange">
+<swiper current="{{activeIndex}}"  class="swiper-box"  style='height:{{mtabH}}px' duration="500" bindchange="bindChange">
     <swiper-item class="swiper-item">
        <scroll-view style='height:100%' scroll-y bindscrolltolower="loadMore">
          <!-- <view  scroll-y> -->
@@ -74,7 +74,7 @@
                 <text>最新小说</text>
               </view>
            </view>
-          <BookDetailItem :list.sync='newBooks' :saveword="1"></BookDetailItem>
+          <BookDetailItem  :list.sync='newBooks'></BookDetailItem>
          <!-- </view> -->
       </scroll-view>
     </swiper-item>
@@ -108,7 +108,7 @@
             bind:change='onSearch'
             maxlength='20'  
           />
-       <scroll-view class='hot_wrap'  style='height:100%' scroll-y bindscrolltolower="loadSearchBookList">
+       <scroll-view class='hot_wrap'  style='height:100%;padding-bottom:80rpx' scroll-y bindscrolltolower="loadSearchBookList">
         <!-- 搜索模块 -->
          <veiw wx:if='{{showSearch}}'>
            <view class='t'>热门搜索</view>
@@ -117,8 +117,8 @@
               </block>
             <view class='t' style=' border-top:8rpx solid #EFEFEF'>历史搜索</view>
             <van-cell-group>
-               <block wx:for="{{historySearch}}" wx:key="{{index}}">
-                 <van-cell title="{{item}}" icon="clock" border="{{ historySearch.length-1==index?false:true}}" />
+               <block wx:for="{{keyWordList}}" wx:key="{{index}}">
+                 <van-cell title="{{item}}" bindtap="handleLabel({{item}})" icon="clock" border="{{ keyWordList.length-1==index?false:true}}" />
                </block>
             </van-cell-group>
          </veiw>
@@ -156,7 +156,6 @@
         loginState:LOGIN_STATE
       }
   )
-//  localStorage.setItem(this.userInfo.userId,JSON.stringify(Array.from(new Set(this.hotwordList))))
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '辣鸡小说',
@@ -212,10 +211,10 @@
      hotWords:[],
      showSearch:true,
      keyWord:'',
+     keyWordList:[],
      searchBookList:[],
      searchPage:1,
      searchLastPage:1,
-     historySearch:[1,2,3,4,5,6,7],
     }
     computed = {
      
@@ -329,24 +328,30 @@
       }
     }
     getRandomArrayElements(arr, count) {
-    var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
-    while (i-- > min) {
-        index = Math.floor((i + 1) * Math.random());
-        temp = shuffled[index];
-        shuffled[index] = shuffled[i];
-        shuffled[i] = temp;
-      }
-      return shuffled.slice(min);
+      var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+      while (i-- > min) {
+          index = Math.floor((i + 1) * Math.random());
+          temp = shuffled[index];
+          shuffled[index] = shuffled[i];
+          shuffled[i] = temp;
+        }
+        return shuffled.slice(min); 
     }
     events = {
-      
+       'saveWords':()=>{
+         if(this.keyWord){
+            this.keyWordList.unshift(this.keyWord)
+            wx.setStorageSync('word',JSON.stringify(Array.from(new Set(this.keyWordList))))
+            this.keyWordList=JSON.parse(wx.getStorageSync('word'))
+         }
+      }
     }
     onLoad() {
      wx.getSystemInfo({
-        success:res=>{                
+        success:res=>{     
             this.mtabW = res.windowWidth
             var rpxR=750/res.windowWidth
-            this.mtabH=res.windowHeight*rpxR
+            this.mtabH=res.windowHeight
             this.tabW=this.mtabW/this.tabs.length
         }
       })
@@ -373,6 +378,10 @@
           this.lastPage=data.pages
           this.$apply()
      })
+     var words = wx.getStorageSync('word')
+     if(words){
+       this.keyWordList=JSON.parse(words)
+     }
     }
   }
 </script>
