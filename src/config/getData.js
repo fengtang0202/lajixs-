@@ -108,6 +108,24 @@ const bookRead=(chapterId,readType=1)=>{
         }
     })
 }
+const bookReword = (bookId, startpage=1) => {
+    return post({
+        url:api.bookReword,
+        params:{
+           bookid:bookId,
+           startpage: startpage
+        }
+    })
+}
+const bookBank = (type,page)=>{
+    return post({
+        url:api.book_rank,
+        params:{
+            type:type,
+            page:page
+        }
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -124,5 +142,7 @@ module.exports = {
     getSearchHotWords,
     searchBook,
     getBookvolumeChapterList,
-    bookRead
+    bookRead,
+    bookReword,
+    bookBank
 }

@@ -3,18 +3,22 @@
 </template>
 <script>
   import wepy from 'wepy'
+  import {bookReword} from '../config/getData'
   export default class RewordArea extends wepy.page{
       config={
 
       }
       data={
+         page:1,
 
       }
       methods={
 
       }
       onLoad(option){
-          
+         bookReword(option.bookId,this.page).then(data=>{
+           console.log(data)
+         }) 
       }
   }
 </script>

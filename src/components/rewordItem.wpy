@@ -1,0 +1,19 @@
+<template>
+    <view>
+        item
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class RewordItem extends wepy.component{
+        props={
+             
+        }
+        onLoad={
+            
+        }
+    }
+</script>
+<style lang="less" scoped>
+
+</style>

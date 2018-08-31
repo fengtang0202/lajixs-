@@ -28,7 +28,8 @@ export default class extends wepy.app {
       'pages/directory',
       'pages/bookRead',
       'pages/rewordArea',
-      'pages/active'
+      'pages/active',
+      'pages/bookBank'
     ],
     window: {
       backgroundTextStyle: '#fff',
@@ -53,8 +54,8 @@ export default class extends wepy.app {
                      "selectedIconPath": "./images/2-2@3x.png"     
               },
               {
-                "pagePath":"pages/message",
-                "text":"消息",
+                "pagePath":"pages/bookBank",
+                "text":"排行",
                 "iconPath": "./images/3@3x.png",
                 "selectedIconPath": "./images/3-3@3x.png" 
               },
@@ -89,17 +90,17 @@ export default class extends wepy.app {
         console.log(res)
       } 
     })
-    wx.login({
-      success: function(res) {
-        if (res.code) {
-          wxLogin(res.code).then(res=>{
-            console.log(res)
-          })
-        } else {
-          console.log('登录失败！' + res.errMsg)
-        }
-      }
-    });
+    // wx.login({
+    //   success: function(res) {
+    //     if (res.code) {
+    //       wxLogin(res.code).then(res=>{
+    //         console.log(res)
+    //       })
+    //     } else {
+    //       console.log('登录失败！' + res.errMsg)
+    //     }
+    //   }
+    // });
   }
 
   sleep (s) {

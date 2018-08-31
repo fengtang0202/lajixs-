@@ -13,16 +13,28 @@
          </view>
          <!-- adv -->
          <view>
-             <swiper class='swiper' indicator-dots="{{indicatorDots}}"
+             <swiper class='swiper' indicator-dots="{{true}}"
              autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
               <block wx:for="{{imgUrls}}" wx:key="{{item.bookId}}">
                 <swiper-item style='margin:10rpx 0'>
-                  <image src="{{item}}"  style='width:100%;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
+                  <image src="{{item}}"  style='width:100%;height:240rpx;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
                 </swiper-item> 
               </block>
            </swiper>
          </view>
          <!-- 正在阅读 -->
+          <view style="padding:28rpx;overflow:hidden;">
+              <block wx:for="{{bookReadList}}" wx:key="{{index}}">
+                <view class='nowBookRead' style="margin-right:{{(index+1)%3==0?'0':'35rpx'}}">
+                    <image style="width:208rpx;height:270rpx;border-radius:10rpx;"  src="{{item.img}}"/>
+                    <view style="font-size:32rpx">{{item.bookName}}</view>
+                    <view style="font-size:24rpx;color:#999999">阅读至：第302章</view>
+                </view>
+              </block>
+            <view class='addBook'>
+
+            </view>
+          </view>
      </view>
 </template>
 <script>
@@ -39,6 +51,7 @@
                 config = {
                     navigationBarTitleText: '书架',
                     usingComponents: {
+                          "van-icon": "../lib/vant/icon/index"
                     },
             }
             wxs={
@@ -64,6 +77,13 @@
                 interval: 2000,
                 duration: 1000,
                 circular:true,
+                bookReadList:[
+                    {img:"http://bookcovers.oss-cn-hangzhou.aliyuncs.com/BookCover/bookcover0003436.png?time=1523431625329",author:"唐锋",bookName:"熊来了"},
+                    {img:"http://bookcovers.oss-cn-hangzhou.aliyuncs.com/BookCover/bookcover0003436.png?time=1523431625329",author:"唐锋",bookName:"熊来了"},
+                    {img:"http://bookcovers.oss-cn-hangzhou.aliyuncs.com/BookCover/bookcover0003436.png?time=1523431625329",author:"唐锋",bookName:"熊来了"},
+                    {img:"http://bookcovers.oss-cn-hangzhou.aliyuncs.com/BookCover/bookcover0003436.png?time=1523431625329",author:"唐锋",bookName:"熊来了"},
+                    {img:"http://bookcovers.oss-cn-hangzhou.aliyuncs.com/BookCover/bookcover0003436.png?time=1523431625329",author:"唐锋",bookName:"熊来了"}
+                ]
             }
           methods = {
 
@@ -71,12 +91,14 @@
   }
 </script>
 <style lang="less" scoped>
+view{
+     box-sizing: border-box;
+}
  .qiandao{
      width:100%;
      height:128rpx;
      text-align: center;
      padding:22rpx 28rpx;
-     box-sizing: border-box;
      view {
         width:56rpx;
         float:left;
@@ -92,6 +114,7 @@
         line-height:56rpx;
         border-radius: 38rpx;
         margin-right:0;
+        margin-top:16rpx;
    }
  }
  .day{
@@ -103,6 +126,7 @@
      font-size: 28rpx;
      text-align: center;
      color:#999999;
+     background:#EFEFEF;
  }
  .now{
      border-color:#FB5E6F;
@@ -114,5 +138,18 @@
      color:#fff;
     
  }
-
+ .nowBookRead{
+    width:208rpx;
+    text-align: center;
+    margin-bottom:38rpx;
+    float:left;
+ }
+ .addBook{
+     width:208rpx;
+     height:272rpx;
+     border:4rpx dotted #FF8E8E;
+     box-sizing: border-box;
+     float:left;
+     border-radius: 10rpx;
+}
 </style>

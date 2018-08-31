@@ -1,0 +1,173 @@
+<template>
+ <view class='bookBank'>
+    <view class='nav'>
+        <block wx:for="{{topNavList[type]}}"  wx:key="{{index}}">
+            <view  bindtap="handleDay({{item}})" class="{{topIndex==item.key&&'topactive'}}">
+                <text>{{item.day}}</text>
+            </view>
+       </block>
+    </view>
+    <view style="overflow:hidden;"> 
+        <view  class='leftNav' style="height:{{88*leftNav.length}}rpx;">
+            <block wx:for="{{leftNav}}" wx:key="{{index}}">
+                <view bindtap="handleBankType({{item}})" style="height:88rpx;line-height:88rpx;font-size:36rpx;" class="{{leftIndex==index&&'leftactive'}}">{{item.text}}</view>
+            </block>
+        </view>
+        <scroll-view  scroll-top="{{scroll}}" enable-back-to-top='{{true}}' scroll-y bindscrolltolower="loadMore" style='height:{{mtabH-88}}px;width:524rpx;float:left'>
+            <block wx:for="{{bankBookList}}" wx:key="{{index}}">
+                <view style="overflow:hidden;padding-bottom:24rpx;padding-top:{{index==0?'0':'24rpx'}};border-bottom:2rpx solid #EFEFEF">
+                   <image src="{{item.bookImage}}" style="border-radius:10rpx;width:162rpx;height:216rpx;float:left;margin-right:10rpx"/>
+                   <view class="bookDetail"> 
+                        <view style="font-size:32rpx;color:#333;">{{myWxs.strSlice(item.bookName,10)}}</view>
+                        <view style="font-size:28rpx;margin:14rpx 0 50rpx 0">作者:{{myWxs.strSlice(item.writerName,10)}}</view>
+                        <view style="font-size:26rpx;">{{myWxs.strSlice(item.bookIntroduction,24)}}</view>
+                   </view>
+                </view>
+            </block>
+        </scroll-view>  
+    </view>
+ </view>    
+</template>
+<script>
+    import wepy from 'wepy'
+    import {bookBank} from '../config/getData'
+    import myWxs from '../filter/myWxs.wxs'
+    export default class BookBank extends wepy.page{
+        config = {
+            navigationBarTitleText: '排行榜',
+        }
+        wxs={
+            myWxs
+        }
+        data = {
+             topNavList:[
+                 [
+                    {day:'总榜',key:2,type:"total"},
+                    {day:'月榜',key:1,type:"month"},
+                    {day:'周榜',key:0,type:"week"}
+                 ],
+                 [
+                     {day:'总榜',key:0,type:'newBookRankingList'}
+                 ],
+                 [
+                    {day:'总榜',key:2,type:"total"},
+                    {day:'月榜',key:1,type:"month"},
+                    {day:'周榜',key:0,type:"week"}
+                 ],
+                 [   {day:'总榜',key:1,type:'total'},
+                     {day:'月榜',key:0,type:'month'}
+                 ]
+             ],
+             topIndex:0,
+             leftIndex:0,
+             page:1,
+             lastPage:1,
+             type:0,
+             mtabH:0,
+             bankBookList:[],
+             dayType:'week',
+             leftNav:[
+                 {text:'点击榜',type:3,key:0},
+                 {text:'新书榜',type:4,key:1},
+                 {text:'打赏榜',type:8,key:2},
+                 {text:'金椒榜',type:1,key:3}
+             ],
+             scroll:0
+        }
+        methods={
+           handleBankType(item){
+               this.page=1
+               this.type=item.key
+               this.leftIndex=item.key
+               this.topIndex=0
+               this.dayType=this.topNavList[item.key][0].type
+               if(this.scroll==0){
+                   this.scroll=1
+               }else{
+                   this.scroll=0
+               }
+               this.getBookList(this.dayType)
+               this.$apply()
+           },
+           handleDay(item){
+                 this.dayType=item.type
+                 this.topIndex=item.key
+                 if(this.scroll==0){
+                   this.scroll=1
+                 }else{
+                    this.scroll=0
+                 }
+                 this.getBookList(this.dayType)
+           },
+           loadMore(){
+               this.page++
+               if(this.page>this.lastPage){
+                wx.showToast({
+                    title:'没有更多了'
+                })
+                   return;
+               }
+            bookBank(this.leftNav[this.type].type,this.page).then(data=>{
+                this.bankBookList = this.bankBookList.concat(data[this.dayType].list)
+                this.$apply()
+            })            
+           }           
+        }
+        getBookList(dayType){
+            bookBank(this.leftNav[this.type].type,this.page).then(data=>{
+                this.bankBookList=data[dayType].list
+                this.lastPage=data[dayType].pages
+                this.$apply()
+            })
+        }
+        onLoad(){
+             wx.getSystemInfo({
+                success:res=>{     
+                    this.mtabH=res.windowHeight
+                }
+            })
+            this.getBookList(this.dayType)
+        }
+    }
+</script>
+<style lang="less" scoped>
+view{
+    box-sizing: border-box;
+}
+  .nav{
+     height:88rpx;
+     border:2rpx solid #efefef; 
+     font-size:32rpx;
+     padding:4rpx 24rpx;
+     margin-bottom:40rpx;
+     view{
+         float:right;
+         height:80rpx;
+         margin-left:70rpx;
+         line-height:80rpx;
+     }
+  }
+  .topactive{
+    color:#F77583;
+    border-bottom:4rpx solid #F77583;  
+  }
+  .leftactive{
+      background:#F77583;
+      color:#fff;
+  }
+  .leftNav{
+    float:left;
+    width:144rpx;
+    background:rgba(255,255,255,1);
+    box-shadow:0 2rpx 14rpx 0px rgba(0,0,0,0.1);
+    border-radius:6rpx;
+    margin-left:24rpx;
+    margin-right:26rpx;
+    text-align:center;
+  }
+  .bookDetail{
+      float:left;
+      width:352rpx;
+      color:#999
+  }
+</style>

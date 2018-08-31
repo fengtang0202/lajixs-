@@ -60,7 +60,7 @@ const hotWords = `${host}/api/sys-hotwords`
 //书籍阅读
 const bookRead = `${host}/api/book-read`
 //打赏
-const bookReword = `${host}/api/spicyirewardticketlogByBookId`
+const bookReword = `${host}/api/getSpicyirewardticketlogByBookId`
 module.exports = {
   login,
   get_user_info,

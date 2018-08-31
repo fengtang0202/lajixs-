@@ -508,7 +508,7 @@ image{
     margin-right:30rpx;
     margin-bottom:44rpx;
     border-radius: 72rpx;
-    padding:6rpx 26rpx;
+    padding:6rpx;
     text-align: center;
   }
 }
