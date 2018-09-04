@@ -29,7 +29,10 @@ export default class extends wepy.app {
       'pages/bookRead',
       'pages/rewordArea',
       'pages/active',
-      'pages/bookBank'
+      'pages/bookBank',
+      'pages/wallet',
+      'pages/readHistory',
+      'pages/customerService'
     ],
     window: {
       backgroundTextStyle: '#fff',
@@ -70,7 +73,7 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    userInfo:null
   }
 
   constructor () {
@@ -80,6 +83,7 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
+
     this.testAsync()
     var that=this;
     wx.getSetting({

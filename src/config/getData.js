@@ -108,6 +108,23 @@ const bookRead=(chapterId,readType=1)=>{
         }
     })
 }
+const getVolume=bookId=>{
+    return get({
+        url:api.get_volume+bookId,
+    })
+}
+const subscribe = (userName, bookId, bookName, bookChapterId, bookChapterName)=>{
+    return post({
+        url:api.chapter_subscribe,
+        params:{
+            userName:userName,
+            bookId:bookId,
+            bookName:bookName,
+            bookChapterId:bookChapterId,
+            bookChapterName:bookChapterName
+        }
+    })
+}
 const bookReword = (bookId, startpage=1) => {
     return post({
         url:api.bookReword,
@@ -123,6 +140,39 @@ const bookBank = (type,page)=>{
         params:{
             type:type,
             page:page
+        }
+    })
+}
+const SpicyiRewardTicket = (spicyiTicketCount, bookid, bookName, authorId)=>{
+    return post({
+        url:api.SpicyiRewardTicket,
+        params:{
+            spicyiTicketCount: spicyiTicketCount,
+            bookid: bookid,
+            bookName: bookName,
+            authorId: authorId
+        }
+    })
+}
+const RewardGonderTicket = (goldenTicketCount, bookid, bookName, authorId) => {
+    return post({
+        url:api.RewardGonderTicket,
+        params:{
+          goldenTicketCount: goldenTicketCount,
+          bookid:bookid,
+          bookName:bookName,
+          authorId:authorId
+        }
+    })
+}
+const RecommendationTicket = (recommendTicketCount, bookid, bookName, authorId)=>{
+    return post({
+        url:api.RecommendationTicket,
+        params:{
+            recommendTicketCount: recommendTicketCount,
+            bookid: bookid,
+            bookName: bookName,
+            authorId: authorId
         }
     })
 }
@@ -143,6 +193,11 @@ module.exports = {
     searchBook,
     getBookvolumeChapterList,
     bookRead,
+    getVolume,
+    subscribe,
     bookReword,
-    bookBank
+    bookBank,
+    SpicyiRewardTicket,
+    RewardGonderTicket,
+    RecommendationTicket
 }

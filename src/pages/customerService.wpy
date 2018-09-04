@@ -1,0 +1,22 @@
+<template>
+    <view>客服</view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class CustomerService extends wepy.page{
+        config = {
+            navigationBarTitleText:"客服",
+            usingComponents:{
+            }
+        }
+        data = {
+
+        }
+        onLoad(){
+
+        }
+    }
+</script>
+<style lang="less" scoped>
+
+</style>

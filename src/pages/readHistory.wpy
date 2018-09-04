@@ -1,0 +1,23 @@
+<template>
+    <view>阅读记录</view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class ReadHistory extends wepy.page{
+        config = {
+            navigationBarTitleText:"阅读记录",
+            usingComponents:{
+
+            }
+        }
+        data = {
+
+        }
+        onLoad(){
+
+        }
+    }
+</script>
+<style lang="less" scoped>
+
+</style>

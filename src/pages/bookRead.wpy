@@ -1,50 +1,100 @@
 <template>
- <view>
-     <block wx:for="{{bookContent}}" wx:key="{{index}}">
-       <view class='bookContent' >{{item}}</view>
-     </block>
-     <van-tabbar active="{{ active }}" bind:change="onChange">
-        <van-tabbar-item icon="shop">标签</van-tabbar-item>
-        <van-tabbar-item icon="chat" dot>标签</van-tabbar-item>
-        <van-tabbar-item icon="records" info="5">标签</van-tabbar-item>
-    </van-tabbar>
+ <view style='padding:30rpx 42rpx;'>
+    <view class='bookName'>《{{bookName}}》 {{chapterName}}</view>
+    <scroll-view scroll-y enable-back-to-top bindscroll="scroll" style="height:{{mtabH*2-142}}rpx">
+       <view class='chapter'> {{chapterName}}</view>
+       <view wx:for="{{bookContent}}" wx:key="{{index}}" class='bookContent' >{{item}}</view>
+    </scroll-view>
  </view>    
 </template>
 <script>
     import wepy from 'wepy'
-    import {bookRead} from '../config/getData'
+    import {bookRead,getVolume} from '../config/getData'
     export default class BookRead extends wepy.page{
          config = {
            navigationBarTitleText: '辣鸡小说',
            usingComponents: {
-             "van-tabbar": "../lib/vant/tabbar/index",
-             "van-tabbar-item": "../lib/vant/tabbar-item/index"
+             
           },
         }
         data={
           bookId:0,
           bookContent:[],
-          chapterId:0
+          chapterId:0,
+          chapterIdNum:0,
+          chapterList:[],
+          chapterName:'',
+          bookName:'',
+          chapterPrice:0,
+          mtabH:0
         }
         methods={
-          
+          getNextBookText(){
+            this.chapterIdNum--
+            if(this.chapterIdNum==0){
+              return;
+            }
+            this.chapterId=this.chapterList[this.chapterIdNum]
+            this.getBookText()
+          },
+          scroll(e){
+            console.log(e.detail.scrollTop)
+          }
+        }
+        //获取当前chapter的位置
+        getNowChapterId(){
+            getVolume(this.bookId).then(res=>{
+                var arr=res.chapterInfo
+                arr.forEach(value=>{
+                      this.chapterList=this.chapterList.concat(value.resultList)
+                })
+                for(var n in this.chapterList){
+                  if(this.chapterList[n].id==this.chapterId){
+                      this.chapterIdNum=n
+                  }
+                }
+            }) 
+        } 
+        getBookText(){
+          bookRead(this.chapterId).then(data=>{
+            this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
+            this.bookName=data.bookInfo.bookName
+            this.chapterName=data.chapterInfo.chapterTitle
+            this.chapterPrice=parseInt(data.chapterInfo.chapterLength/1000*3)//辣椒
+            this.$apply()
+          })
         }
         onLoad(option){
-         this.chapterId=option.chapterId
-         bookRead(this.chapterId).then(data=>{
-            this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
-            this.$apply()
-         })
+          wx.getSystemInfo({
+            success:res=>{     
+                this.mtabH=res.windowHeight
+             }
+            })
+          this.bookId=option.bookId
+          this.chapterId=option.chapterId
+          this.getBookText()
+          this.getNowChapterId()  
        }
     }
 </script>
 <style lang="less" scoped>
   .bookContent{
      font-size:32rpx;
-     padding:20rpx;
      letter-spacing: 4rpx;
      text-indent: 2em;
      text-align: justify;
      line-height: 1.8;
+     font-size:36rpx;
+  }
+  .bookName{
+    font-size:20rpx;
+    color:#999;
+    height:26rpx;
+    margin-bottom:56rpx;
+  }
+  .chapter{
+    font-size:48rpx;
+    color:#999;
+    height:108rpx;
   }
 </style>

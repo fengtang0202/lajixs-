@@ -19,6 +19,10 @@ const check_code = `${host}/api/verification/person-checkedCode`
 const register_code = `${host}/api/verification/sys-getShortMessage`
 //小程序登录api
 const wxCode = `${host}/api/person-LaJiXiaoShuoWAPWeChatLogin`
+//用户打赏
+const RecommendationTicket = `${host}/api/user-RecommendationTicket`
+const RewardGonderTicket = `${host}/api/user-RewardGonderTicket`
+const SpicyiRewardTicket = `${host}/api/user-SpicyiRewardTicket`
 //图书获取
 const homePageRecommended = `${host}/api/hot/homePageRecommended`
 const recommend_book = `${host}/api/book-xiaobiantuijian`
@@ -59,7 +63,7 @@ const get_label = `${host}/api/stacks-hotLableVersionTow`
 const hotWords = `${host}/api/sys-hotwords`
 //书籍阅读
 const bookRead = `${host}/api/book-read`
-//打赏
+//打赏区
 const bookReword = `${host}/api/getSpicyirewardticketlogByBookId`
 module.exports = {
   login,
@@ -113,5 +117,8 @@ module.exports = {
   get_label,
   hotWords,
   bookRead,
-  bookReword
+  bookReword,
+  RecommendationTicket,
+  RewardGonderTicket,
+  SpicyiRewardTicket
 }

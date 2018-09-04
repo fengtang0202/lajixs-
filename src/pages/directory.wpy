@@ -5,7 +5,7 @@
             <van-cell-group>
                 <van-cell value="{{item.chapterLength}}" bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}'>
                     <view slot="title">
-                        <span class="van-cell-text">{{item.chapterTitle}}</span>
+                        <span style="color:{{item.chapterIsvip&&'#999999'}}" class="van-cell-text">{{item.chapterTitle}}</span>
                         <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
                     </view>
                 </van-cell>
@@ -25,12 +25,13 @@
           },
         }
         data={
-           chapterList:[]
+           chapterList:[],
+           bookId:0
         }
         methods={
         handle(chapterId){
             wx.navigateTo({
-                url:'bookRead?chapterId='+chapterId
+                url:`bookRead?chapterId=${chapterId}&bookId=${this.bookId}`
             })
         }
         }
@@ -38,6 +39,7 @@
 
         }
         onLoad(option){
+            this.bookId=option.bookId
            getBookvolumeChapterList(option.bookId).then(data=>{
                this.chapterList=data.chapterInfo
                this.$apply()

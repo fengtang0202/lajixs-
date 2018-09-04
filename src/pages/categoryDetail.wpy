@@ -1,7 +1,42 @@
 <template>
-    <scroll-view scroll-y bindscrolltolower="loadMore" style='height:100vh'>
-       <bookDetailItem :list.sync='bookList'></bookDetailItem>  
-   </scroll-view>      
+    <view style='position: relative;'>
+        <view class='classNav'>
+            <view bindtap='handleShowBank(1)'>
+                <text style="color:{{showCategory&&'#FB5E6F'}}">排行</text>
+                <text class="arrow {{showCategory&&'activeArrow'}}" ></text>
+            </view>
+            <view bindtap='handleShowBank(2)'>
+                <text style="color:{{showTj&&'#FB5E6F'}}">筛选</text>
+                <text class="arrow {{showTj&&'activeArrow'}}"></text>
+            </view>
+        </view>
+        <scroll-view scroll-y bindscrolltolower="loadMore" style='height:{{mtabH*2-100}}rpx'>
+            <bookDetailItem :list.sync='bookList'></bookDetailItem>  
+        </scroll-view>
+        <view class='bank' style="height:{{showCategory?'188rpx':'0'}}">
+             <view wx:for="{{category}}" bindtap='handleSetCategory({{item.key}})' class="bank_item {{categoryIndex-1==index&&'active'}}" style="margin-right:{{(index+1)%4==0?'0':'104rpx'}}" wx:key='{{item.key}}'>{{item.name}}</view>
+        </view>
+        <view class='bank' style="height:{{showTj?'654rpx':'0'}}">
+            <view class='bank_wrap'>
+                <view class='t'>作品字数</view>
+                <view class='d'>
+                    <view bindtap='handleSetWord({{item.key}})' class="d_item {{wordsIndex==index&&'active'}}" wx:for='{{words}}' style="margin-right:{{index==3?'0':'52rpx'}}" wx:key="{{index}}">{{item.name}}</view>
+                </view>
+            </view>
+             <view class='bank_wrap'>
+                <view class='t'>作品状态</view>
+                <view class='d'>
+                    <view bindtap='handleSetStatus({{item.key}})' class="d_item {{statusIndex==index&&'active'}}" wx:for='{{status}}' style="margin-right:52rpx" wx:key="{{index}}">{{item.name}}</view>
+                </view>
+            </view>
+            <view class='bank_wrap'>
+                <view class='t'>更新时间</view>
+                <view class='d'>
+                    <view bindtap='handleSetTime({{item.key}})' class="d_item {{timeIndex==index&&'active'}}" wx:for='{{time}}' style="margin-right:{{index==4?'0':'52rpx'}}" wx:key="{{index}}">{{item.name}}</view>
+                </view>
+            </view>
+        </view>
+    </view>      
 </template>
 <script>
   import wepy from 'wepy' 
@@ -9,15 +44,76 @@
   import bookDetailItem from '../components/bookDetailItem'
   export default class CategoryDetail extends wepy.page{
       config={
-          navigationBarTitleText:''
+          navigationBarTitleText:'',
+          usingComponents:{
+              'van-icon':'../lib/vant/icon/index'
+          }
       }
       data = {
          categoryId:0,
          bookList:[],
          page:1,
          lastPage:0,
+         mtabH:0,
+         showCategory:false,
+         showTj:false,
+         category:[ 
+            {name:"金椒榜",key:1},
+            {name:"推荐榜",key:2},
+            {name:"点击榜",key:3},
+            {name:"新书榜",key:4},
+            {name:"畅销榜",key:5},
+            {name:"吐槽榜",key:6},
+            {name:"更新榜",key:7},
+            {name:"打赏榜",key:8}
+         ],
+        words:[
+            {name:"不限字数",key:0},
+            {name:"30万以下",key:1},
+            {name:"30-50万",key:2},
+            {name:"50-100万",key:3},
+            {name:"100-200万",key:4},
+            {name:"200万以上",key:5}
+        ],
+        status:[
+            {name:"不限状态",key:0},
+            {name:"连载中",key:1},
+            {name:"已完结",key:2},
+        ],
+        time:[
+            {name:"不限时间",key:0},
+            {name:"本日",key:1},
+            {name:"三日",key:2},
+            {name:"七日",key:3},
+            {name:"半个月",key:4},
+            {name:"一月内",key:5},
+        ],
+        categoryIndex:1,
+        wordsIndex:0,
+        statusIndex:0,
+        timeIndex:0
       }
       methods = {
+        handleSetWord(key){
+            this.wordsIndex=key
+            this.page=1
+            this.getBookList()
+        },
+        handleSetCategory(key){
+            this.categoryIndex=key
+            this.page=1
+            this.getBookList()
+        },
+        handleSetStatus(key){
+            this.statusIndex=key
+            this.page=1
+            this.getBookList()
+        },
+        handleSetTime(key){
+            this.timeIndex=key
+            this.page=1
+            this.getBookList()
+        },
           loadMore(){
             this.page++
             if(this.page>this.lastPage){
@@ -26,28 +122,108 @@
                 })
                 return;
             }
-            filterBook(this.categoryId,this.page).then(res=>{
+            filterBook(this.categoryId,this.page,this.categoryIndex,this.statusIndex,this.timeIndex,this.wordsIndex).then(res=>{
                 this.bookList=this.bookList.concat(res.list)
                 this.$apply()
             })
+          },
+          handleShowBank(n){
+              if(n==1){
+                 this.showCategory=!this.showCategory
+                 this.showTj=false
+              }else{
+                  this.showTj=!this.showTj
+                  this.showCategory=false
+              }
           }
       }
       components = {
          bookDetailItem
       }
+      getBookList(){
+            filterBook(this.categoryId,this.page,this.categoryIndex,this.statusIndex,this.timeIndex,this.wordsIndex).then(res=>{
+                this.bookList=res.list
+                this.lastPage=res.pages
+                this.$apply()
+            })
+      }
       onLoad(option){
-          this.categoryId=option.categoryId
-          filterBook(this.categoryId,this.page).then(res=>{
-              this.bookList=res.list
-              this.lastPage=res.pages
-              this.$apply()
-          })
-           wx.setNavigationBarTitle({
-              title: option.categoryName
-          })
+           wx.getSystemInfo({
+            success:res=>{     
+                this.mtabH=res.windowHeight
+            }
+         })
+        this.categoryId=option.categoryId
+        this.getBookList()
+        wx.setNavigationBarTitle({
+            title: option.categoryName
+        })
       }
   }  
 </script>
 <style lang="less" scoped>
-
+view{
+    box-sizing: border-box;
+}
+.classNav{
+    height:98rpx;
+    border-bottom:2rpx solid #EFEFEF;
+    text-align:center;
+    line-height: 98rpx;
+    view{
+        float:left;
+        width:50%;
+        position: relative;
+        text{
+            font-size:36rpx;
+        }
+    }
+}
+.arrow {
+    width:0;
+    height:0;
+    border-width:20rpx 20rpx 0;
+    border-style:solid;
+    border-color:#EFEFEF transparent transparent;
+    position: absolute;
+    top:44rpx;
+}   
+.bank{
+    background:rgba(255,255,255,1);
+    box-shadow:0 4rpx 8rpx 0 rgba(0,0,0,0.4);
+    position:absolute;
+    width:100%;
+    top:98rpx;
+    font-size:32rpx;
+    color:#999999;
+    padding:0 24rpx;
+    transition: all  .5s;
+    overflow:hidden;
+}
+.bank_item{
+    margin-top:32rpx;
+    float:left;
+}
+.bank_wrap{
+    border-bottom:2rpx solid #E9E9E9;
+    overflow:hidden;
+    padding-top:28rpx;
+}
+.t{
+  color:#333;
+  font-size:36rpx;
+  margin-bottom:20rpx;
+}
+.d_item{
+    float:left;
+    margin-bottom:30rpx;
+}
+.active{
+    color:#FB5E6F;
+}
+.activeArrow{
+    border-color:#FB5E6F transparent transparent;
+    transition: all .5s;
+    transform: rotate(180deg);
+}
 </style>

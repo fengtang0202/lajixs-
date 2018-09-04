@@ -68,17 +68,17 @@
                 <view style='border-bottom:8px solid #EFEFEF'>
                      <view class='top_p'>评论区</view>
                      <CommentItem  :commentList.sync="HotComments"></CommentItem>
-                     <view wx:if="{{commentList.length>0}}" class='more' bindtap="handleGo('comment')">
-                         <view>
-                            <text>更多书评</text>
-                          </view>
+                     <view wx:if="{{showComment}}" class='more' bindtap="handleGo('comment')">
+                        <view>
+                           <text>更多书评</text>
+                        </view>
                      </view>
-                     <view wx:if="{{commentList.length==0||commentList}}" style="color:#666;text-align:center;padding-bottom:40rpx">
+                     <view wx:if="{{!showComment}}" style="color:#666;text-align:center;padding-bottom:40rpx">
                          暂无评论
                      </view>
                 </view>
                 <view class='fans'>
-                    <view style='font-size:36rpx'>粉丝榜</view>
+                    <view style='font-size:36rpx;margin-bottom:12rpx'>粉丝榜</view>
                     <view wx:if="{{fans.length>0}}" style="overflow:hidden">
                         <view style="float:left">
                             <block wx:for="{{fans}}" wx:key="{{index}}">
@@ -110,7 +110,7 @@
                         <text>{{"关注"}}</text>
                     </view>
                 </view>
-                <view style='height:100rpx;font-size:32rpx;color: #666;line-height:100rpx;'>同类热门书籍</view>
+                <view style='height:100rpx;font-size:32rpx;color: #666;line-height:100rpx;padding-left:28rpx'>同类热门书籍</view>
                 <scroll-view scroll-x="true">  
                     <view class="uploadWrap" scroll-x="true"> 
                         <block wx:for="{{similarRecommendation}}" wx:key="{{item.bookId}}"> 
@@ -153,8 +153,8 @@
           CommentItem
       }
       data = {
-         bookInfo:{},
-         bookLables:[],
+        bookInfo:{},
+        bookLables:[],
         activeBtnIndex:0,
         url:"",
         reward:[
@@ -169,7 +169,8 @@
         similarRecommendation:[],
         isQ:false,
         fans:[],
-        authorInfo:{}
+        authorInfo:{},
+        showComment:false
       }
       watch = {
           
@@ -211,8 +212,11 @@
                this.$apply()
            })
            getHotComments(bookId).then(data=>{
-               this.HotComments=data
-               this.$apply()
+               if(data.length>0){
+                   this.HotComments=data
+                   this.showComment=true
+                   this.$apply()
+               }
            })
            this.url="/pages/rewordArea?bookId="+bookId
       }     
@@ -277,15 +281,15 @@ view{
     display: flex; 
     display: -webkit-box; 
     flex-direction: column;
-    padding:20rpx;
     font-size: 28rpx;
     text-align: center;
 }  
 .upload_Item{ 
       width: 192rpx;
+      height:316rpx;
       height:256rpx; 
       flex: 1;
-      margin-right:20rpx;
+      margin-left:40rpx;
 }  
 .upload_Item_img{ 
     width: 192rpx;

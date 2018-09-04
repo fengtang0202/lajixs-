@@ -17,7 +17,7 @@
              autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
               <block wx:for="{{imgUrls}}" wx:key="{{item.bookId}}">
                 <swiper-item style='margin:10rpx 0'>
-                  <image src="{{item}}"  style='width:100%;height:240rpx;' class="slide-image" bindload='imageLoad' mode="widthFix"  data-id='{{index}}'/>
+                  <image src="{{item}}"  style='width:100%;height:240rpx;' class="slide-image"  mode="widthFix"  data-id='{{index}}'/>
                 </swiper-item> 
               </block>
            </swiper>
@@ -31,8 +31,8 @@
                     <view style="font-size:24rpx;color:#999999">阅读至：第302章</view>
                 </view>
               </block>
-            <view class='addBook'>
-
+            <view class='addBook' bindtap="handleGo">
+              <image src='../images/addBook@3x.png'/>
             </view>
           </view>
      </view>
@@ -41,7 +41,6 @@
   import wepy from 'wepy'
   import { connect } from 'wepy-redux'
   import myWxs from '../filter/myWxs.wxs'
-
     @connect({
         //state
     },
@@ -86,7 +85,11 @@
                 ]
             }
           methods = {
-
+              handleGo(res){
+                wx.switchTab({
+                    url: 'index'
+                    })
+                }
           }
   }
 </script>
@@ -151,5 +154,11 @@ view{
      box-sizing: border-box;
      float:left;
      border-radius: 10rpx;
+     text-align:center;
+     image{
+         width:164rpx;
+         height:164rpx;
+         margin-top:54rpx;
+     }
 }
 </style>
