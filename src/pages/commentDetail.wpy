@@ -1,5 +1,6 @@
 <template>
-    <scroll-view scroll-y bindscrolltolower="loadMore" style='height:100vh'>
+   <view>
+    <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height*2-98}}rpx">
        <commentItem :commentList.sync="commentList"></commentItem>
        <view style='margin-top: 20rpx;font-size:28rpx;color: #333;margin-left:40rpx'>相关回复</view>
        <block wx:for='{{replyList}}' wx:key='{{item.id}}'>
@@ -20,22 +21,37 @@
                </view>
            </view>
        </block>
-    </scroll-view>    
+    </scroll-view>
+    <commentInput :cb="addReply" placeholder="回复评论~"></commentInput>
+    <van-toast id="van-toast" />
+    </view>    
 </template>
 <script>
 import wepy from 'wepy'
 import commentItem from '../components/commentItem'
-import {getNewComments,getReplyComment} from '../config/getData'
+import commentInput from '../components/commentInput'
+import {getNewComments,getReplyComment,addReply} from '../config/getData'
 export default class CommentDetail extends wepy.page{
+    config={
+        navigationBarTitleText:"回复评论",
+        usingComponents:{
+            "van-toast": "../lib/vant/toast/index"
+        }
+    }
     data = {
        commentId:0,
        commentList:[],
        replyList:[],
        page:1,
-       lastPage:0
+       lastPage:0,
+       height:0,
+       bookId:0,
+       bookName:'',
+       puserId:0
     }
     components = {
-        commentItem
+        commentItem,
+        commentInput
     }
     methods = {
         loadMore(){
@@ -52,10 +68,19 @@ export default class CommentDetail extends wepy.page{
        })
         }
     }
+    addReply(bookid,replyCommentsContent,bookName,commentId,puserId){
+        addReply(bookid,replyCommentsContent,'haru',bookName,commentId,puserId).then(res=>{
+            console.log('回复评论')
+        })
+    }
     onLoad(option){
+        this.height=this.$parent.globalData.mh
        this.commentId=option.commentId
        getNewComments(this.commentId,1,0).then(res=>{
             this.commentList.push(res)
+            this.bookName=res.bookName
+            this.bookId=res.bookId
+            this.puserId=res.userId
             this.$apply()
        })
        getReplyComment(this.commentId,this.page).then(res=>{

@@ -42,6 +42,8 @@ const get_comment = `${host}/api/comm-getcomminfo`
 const reply_comment = `${host}/api/comm-replyInfo`
 const give_thumbs = `${host}/api/comm-GiveThumbs`
 const hot_comment = `${host}/api/comm-HotCommentInfo`
+const add_comment = `${host}/api/add-getcomminfo`
+const add_reply = `${host}/api/add-replyInfo`
 //书籍控制器
 const get_volume = `${host}/api/books-volumeChapterList/`
 const get_volumeid_chapter = `${host}/api/books-getVolumeById`
@@ -95,8 +97,10 @@ module.exports = {
   update_message_status,
   get_comment,
   reply_comment,
+  add_reply,
   give_thumbs,
   hot_comment,
+  add_comment,
   get_volume,
   get_volumeid_chapter,
   add_book_rack,

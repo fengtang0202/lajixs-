@@ -35,7 +35,13 @@ function request(method, requestHandler, isShowLoading = true) {
                 if (res.data.returnCode==200) {
                     resolve(res.data.data)
                 } else if(res.data.returnCode==400) {
-                    wx.showToast({title:'登录过期,请重新登录'})
+                    if (res.data.data) {
+                        resolve(res.data.data)
+                    }else{
+                        wx.showToast({
+                          title: res.data.msg
+                        })
+                    }
                 } else if(res.data.returnCode==1000){
                     wx.showToast({
                       title: '服务器异常',

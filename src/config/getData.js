@@ -62,6 +62,30 @@ const updateLike=commentId=>{
         }
     })
 }
+const addComment = (bookId, commentContext, userName, bookName)=>{
+    return post({
+        url:api.add_comment,
+        params:{
+            bookId:bookId,
+            commentContext:commentContext,
+            userName:userName,
+            bookName:bookName
+        }
+    })
+}
+const addReply = (bookid, replyCommentsContent, userName, bookName, commentId, puserId)=>{
+    return post({
+        url:api.add_reply,
+        params:{
+            bookid:bookid,
+            replyCommentsContent:replyCommentsContent,
+            userName:userName,
+            bookName:bookName,
+            commentId:commentId,
+            puserId: puserId
+        }
+    })
+}
 const wxLogin = (code, terminal=1, userCode = 'LG20180608000') => {
     return post({
         url:api.wxCode,
@@ -184,6 +208,8 @@ module.exports = {
     getBookInfo,
     getHotComments,
     updateLike,
+    addComment,
+    addReply,
     wxLogin,
     getRecommendBook,
     getNewComments,

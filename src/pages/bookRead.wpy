@@ -38,7 +38,9 @@
             this.getBookText()
           },
           scroll(e){
-            console.log(e.detail.scrollTop)
+            if(e.detail.scrollTop>10){
+              
+            }
           }
         }
         //获取当前chapter的位置

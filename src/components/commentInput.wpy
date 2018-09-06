@@ -1,0 +1,63 @@
+<template>
+   <view>
+     <view class="add_comment">
+            <input type="text"  placeholder="{{placeholder}}" bindconfirm="addComment"  value="{{commentConent}}" maxlength='51' class='comment_text' />
+     </view> 
+   </view>
+</template>
+<script>
+   import wepy from 'wepy'
+   import Toast from '../lib/vant/toast/index';
+   export default class bookItem extends wepy.component {
+       props={
+           cb:{
+               type:Function,
+               default:''
+           },
+           placeholder:{
+               type:String,
+               default:''
+           }
+       }
+       data={
+        commentConent:'' 
+       }
+       methods={
+           addComment(e){
+                this.commentConent=e.detail.value.replace(/\s+/g,"");
+                var  reg=/[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/;
+                if(this.commentConent){   
+                    if(!reg.test(this.commentConent)){
+                        if(this.commentConent.length>50){
+                           Toast('评论字数，不能超过五十个字~')
+                        }else{
+                           this.cb(this.$parent.bookId,this.commentConent,this.$parent.bookName,this.$parent.commentId,this.$parent.puserId)
+                    }
+               }else{
+                  Toast('不能包含表情~')
+              }
+            }else{
+               Toast('还没填写评论呢~') 
+            }
+          }
+       }
+       onLoad(){
+        
+       }
+  }    
+</script>
+<style lang="less" scoped>
+    .add_comment{
+      width:100%;
+      height:98rpx;
+      background: #efefef;
+      padding:20rpx;
+      box-sizing: border-box;   
+  }
+  .comment_text{
+      background:#fff;
+      height:58rpx;
+      border-radius:10rpx;
+      font-size:28rpx;
+  }
+</style>

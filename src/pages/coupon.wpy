@@ -1,0 +1,54 @@
+<template>
+<view style='padding-left:30rpx'>
+    <view wx:for="{{ticks}}" wx:key="{{index}}" class='tick_wrap'>
+        <view class='tick_info'>
+            <view style="color:#333">{{item.tickName}}</view>
+            <view style="color:#FF83A6;font-size:24rpx">{{item.gift}}</view>
+        </view>    
+        <view class='tickBtn'>
+            {{item.btnName}}
+        </view>
+    </view>
+</view>    
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class Coupon extends wepy.page{
+        data={
+            ticks:[
+                {tickName:'邀请好友',gift:'分享+10辣椒券，好友注册回礼+20辣椒券',btnName:'去邀请'}
+            ]
+        }
+        methods={
+
+        }
+        onLoad(){
+        }
+    }
+</script>
+<style lang="less" scoped>
+.tick_wrap{
+    height:138rpx;
+    font-size:32rpx;
+    border-bottom:2rpx solid #EFEFEF;
+}
+.tick_info{
+    float:left;
+    view{
+        margin-top:20rpx;
+    }
+}
+    .tickBtn{
+        width:160rpx;
+        height:60rpx;
+        background:rgba(255,131,166,1);
+        border-radius:32rpx;
+        border:0;
+        color:#fff;
+        line-height:60rpx;
+        text-align:center;
+        float:right;
+        margin-top:38rpx;
+        margin-right:42wrpx;
+    }
+</style>

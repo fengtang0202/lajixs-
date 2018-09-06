@@ -32,7 +32,9 @@ export default class extends wepy.app {
       'pages/bookBank',
       'pages/wallet',
       'pages/readHistory',
-      'pages/customerService'
+      'pages/customerService',
+      'pages/accountRecharge',
+      'pages/coupon'
     ],
     window: {
       backgroundTextStyle: '#fff',
@@ -73,7 +75,8 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo:null
+    userInfo:null,
+    mh:0
   }
 
   constructor () {
@@ -82,8 +85,12 @@ export default class extends wepy.app {
     this.use('promisify')
   }
 
-  onLaunch() {
-
+  onLaunch(ops) {
+    wx.getSystemInfo({
+        success:res=>{     
+            this.globalData.mh=res.windowHeight
+        }
+    })
     this.testAsync()
     var that=this;
     wx.getSetting({
@@ -106,7 +113,22 @@ export default class extends wepy.app {
     //   }
     // });
   }
-
+  onShow(ops){
+    if(ops.scene==1044){
+      console.log(ops)
+      wx.getShareInfo({
+        shareTicket:ops.shareTicket,
+        success:function(res){
+          var encryptedData = res.encryptedData;
+          var iv = res.iv;
+          console.log(res)
+        },
+        fail:function(res){
+          console.log(res)
+        }
+      })
+    }
+  }
   sleep (s) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {

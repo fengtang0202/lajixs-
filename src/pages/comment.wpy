@@ -1,5 +1,6 @@
 <template>
-    <scroll-view scroll-y bindscrolltolower="loadMore" style='height:100vh'>
+<view>
+    <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height*2-98}}rpx">
          <view style='padding:20rpx 28rpx'>
              <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
              <text>热门评论({{hotCommentList.length}})</text>
@@ -9,26 +10,39 @@
              <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
              <text>最新评论({{newCommentCount}})</text>
          </view>
-             <CommentItem :commentList.sync="newCommentList"></CommentItem>         
-    </scroll-view>  
+            <CommentItem :commentList.sync="newCommentList"></CommentItem>
+    </scroll-view> 
+        <commentInput :cb.sync="addComment" placeholder="填写评论~"></commentInput>
+        <van-toast id="van-toast" />
+</view>
 </template>
 <script>
   import wepy from 'wepy'
   import CommentItem from '../components/commentItem' 
-  import {getHotComments,getNewComments} from '../config/getData'
+  import {getHotComments,getNewComments,addComment} from '../config/getData'
+  import commentInput from '../components/commentInput'
   export default class Comment extends wepy.page{
+      config={
+          navigationBarTitleText:'书评',
+          usingComponents:{
+              "van-toast": "../lib/vant/toast/index"
+          }
+      }
         data={
            hotCommentList:[],
            newCommentList:[],
            page:1,
            lastPage:0,
            newCommentCount:0,
-           bookId:0
+           bookName:'',
+           bookId:0,
+           height:0,
+           commentConent:"",
+           bottom:0
         }
         methods = {
             loadMore(){
                 this.page++
-                console.log(this.page)
                 if(this.page>this.lastPage){
                     wx.showToast({
                       title: '没有更多了',
@@ -39,16 +53,24 @@
                   this.newCommentList=this.newCommentList.concat(res.list) 
                   this.$apply()                   
                })
-            }
+            },
+        }
+        addComment(bookId,commentContent,bookName){
+          addComment(bookId,commentContent,"haru",bookName).then(res=>{
+              console.log(commentContent)
+          })
         }
         components = {
            CommentItemHot: CommentItem,
-           CommentItem:CommentItem
+           CommentItem:CommentItem,
+           commentInput:commentInput
         }
         onLoad(option){
             this.bookId=option.bookId
+            this.height=this.$parent.globalData.mh
             getHotComments(this.bookId).then(res=>{
               this.hotCommentList=res
+              this.bookName=res[0].bookName
               this.$apply()
           })
             getNewComments(this.bookId,this.page).then(res=>{
@@ -61,5 +83,16 @@
   } 
 </script>
 <style lang="less" scoped>
-  
+  .add_comment{
+      width:100%;
+      height:98rpx;
+      background: #efefef;
+      padding:20rpx;
+      box-sizing: border-box;   
+  }
+  .comment_text{
+      background:#fff;
+      height:58rpx;
+      border-radius:10rpx;
+  }
 </style>

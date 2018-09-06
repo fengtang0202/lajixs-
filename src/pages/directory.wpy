@@ -1,15 +1,12 @@
 <template>
-    <view style='padding:28rpx'>
+    <view style='padding:0 28rpx'>
         <block wx:for='{{chapterList}}' wx:key="{{index}}">
-            <view style='font-size:32rpx;height:104rpx;line-height:104rpx'>{{item.volumeName}}</view>
-            <van-cell-group>
-                <van-cell value="{{item.chapterLength}}" bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}'>
-                    <view slot="title">
-                        <span style="color:{{item.chapterIsvip&&'#999999'}}" class="van-cell-text">{{item.chapterTitle}}</span>
-                        <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
-                    </view>
-                </van-cell>
-            </van-cell-group>
+            <view class='chapter' style='font-size:32rpx;'>{{item.volumeName}}</view>
+                <view  class='chapter' style='font-size:28rpx;position:relative' bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}'>
+                    <text style="color:{{item.chapterIsvip&&'#999999'}}">{{item.chapterTitle}}</text>
+                    <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
+                    <text class='words'>{{item.chapterLength}}</text>
+                </view>
        </block>
     </view>
 </template>
@@ -20,8 +17,6 @@
         config={
            navigationBarTitleText:'目录',
             usingComponents: {
-           "van-cell": "../lib/vant/cell/index",
-            "van-cell-group": "../lib/vant/cell-group/index"
           },
         }
         data={
@@ -48,9 +43,28 @@
    }
 </script>
 <style lang="less" scoped>
+     view{
+         box-sizing: border-box;
+     }
    .vip{
        width:40rpx;
        height:40rpx;
        vertical-align:middle;
+   }
+   .chapter{
+       height:104rpx;
+       line-height:104rpx;
+       border-bottom:2rpx solid #EFEFEF;
+   }
+   .words{
+       position:absolute;
+       right:20rpx;
+       top:28rpx;
+       height:48rpx;
+       padding:0 18rpx;
+       border:2rpx solid #F77583;
+       color:#F77583;
+       border-radius:30rpx;
+       line-height:48rpx
    }
 </style>

@@ -50,26 +50,19 @@
         }
         methods = {
            handleLike(id){
-               this.commentList.forEach((el,index) => {
-                     if(el.id==id){
-                        if(el.isthumbs==0){
-                            this.commentList[index].isthumbs=1
-                        }else{
-                            this.commentList[index].isthumbs=0
-                        }         
-                    }
-               });
-            // updateLike(item.id).then(res=>{
-                    // if (item.isthumbs==0) {
-                    //      item.isthumbs=1
-                    //      item.thumbsCount+=1
-                    //       this.$apply();
-                    //     } else {
-                    //     item.isthumbs=0                 
-                    //     item.thumbsCount-=1
-                    //       this.$apply();
-                    //  }
-            // })
+               updateLike(id).then(()=>{
+                   this.commentList.forEach((el,index) => {
+                         if(el.id==id){
+                            if(el.isthumbs==0){
+                                this.commentList[index].isthumbs=1
+                                this.commentList[index].thumbsCount+=1
+                            }else{
+                                this.commentList[index].isthumbs=0
+                                this.commentList[index].thumbsCount-=1
+                            }         
+                        }
+                   });
+               })    
           },
           handleGO(id){
              wx.navigateTo({

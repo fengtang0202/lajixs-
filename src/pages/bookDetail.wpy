@@ -52,7 +52,7 @@
                     />
                 </van-cell-group> -->
                 <view class='bookIntroduction' bindtap="handleShowtext">
-                     <view class="{{showText&&'add'}}" style="text-indent: 2em;letter-spacing: .2em;">
+                     <view class="{{showText&&'add'}}" style="line-height:60rpx;text-indent: 2em;letter-spacing: .2em;">
                          {{bookInfo.bookListInfo.bookIntroduction}}
                      </view>
                      <view style='height:40rpx;width:100%;marin-top:20rpx'>
@@ -193,7 +193,30 @@
               })
           }
       }
-      onLoad (options) {
+    onShareAppMessage(options){
+        var that=this
+        var shareObj = {
+    　　　　 title: that.bookInfo.bookListInfo.bookName,        
+    　　　　 path: 'pages/bookDetail?bookId='+this.bookInfo.bookListInfo.bookId,
+    　　　　 imgUrl: that.bookInfo.bookListInfo.bookImage, 
+        success:function(res){
+           var shareTicket=res.shareTickets[0]
+        },    
+    　　complete:res=>{
+    　　　　
+    　　}
+    };
+        // 　　if( options.from == 'button' ){
+        // 　　　　var eData = options.target.dataset;
+        // 　　　　console.log( eData.name );     // shareBtn
+        // 　　　　shareObj.path = '/pages/btnname/btnname?btn_name='+eData.name;
+        // 　　}
+        　　return shareObj;
+    }
+        onLoad (options) {
+            wx.showShareMenu({
+                withShareTicket: true
+            })
            let bookId=options.bookId
            getBookInfo(bookId).then(data=>{
                this.bookInfo=data
@@ -233,7 +256,7 @@ view{
     padding: 20rpx 28rpx;
     border-bottom: 2rpx solid #e9e9e9;
     .add{
-        height:77rpx;
+        height:134rpx;
         overflow: hidden;
     }
     .arrow{
