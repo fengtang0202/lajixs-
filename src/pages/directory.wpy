@@ -1,14 +1,14 @@
 <template>
-    <view style='padding:0 28rpx'>
+    <scroll-view style='padding:0 28rpx;height:100vh' scroll-y bindscrolltolower="loadVolume">
         <block wx:for='{{chapterList}}' wx:key="{{index}}">
             <view class='chapter' style='font-size:32rpx;'>{{item.volumeName}}</view>
-                <view  class='chapter' style='font-size:28rpx;position:relative' bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}'>
+                <view  wx:if="{{index<volumeIndex}}" class='chapter' style='font-size:28rpx;position:relative' bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}'>
                     <text style="color:{{item.chapterIsvip&&'#999999'}}">{{item.chapterTitle}}</text>
                     <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
                     <text class='words'>{{item.chapterLength}}</text>
-                </view>
+                 </view>
        </block>
-    </view>
+    </scroll-view>
 </template>
 <script>
     import wepy from 'wepy'
@@ -21,14 +21,20 @@
         }
         data={
            chapterList:[],
-           bookId:0
+           bookId:0,
+           volumeIndex:13
         }
         methods={
         handle(chapterId){
             wx.navigateTo({
                 url:`bookRead?chapterId=${chapterId}&bookId=${this.bookId}`
             })
-        }
+        },
+        loadVolume(){
+            this.volumeIndex+=13
+            console.log(this.volumeIndex)
+            this.$apply()
+          }
         }
         components={
 
@@ -43,7 +49,7 @@
    }
 </script>
 <style lang="less" scoped>
-     view{
+     view,scroll-view{
          box-sizing: border-box;
      }
    .vip{

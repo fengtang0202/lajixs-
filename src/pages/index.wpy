@@ -1,16 +1,21 @@
 <template>
 <view>
-  <view  class="weui-navbar">
+  <!-- <view  class="weui-navbar">
      <block wx:for-items="{{tabs}}"  wx:key="tabs">
         <view id="{{index}}"   class="default-item" bindtap="tabClick" style="width:{{tabW}}px;height:60rpx">
           <text style='padding-bottom:2rpx;' wx:if='{{item.text}}' class="{{activeIndex == index ?'item_on':''}}">{{item.text}}</text>
           <zan-icon  wx:if='{{item.icon}}' name="search"/>
         </view>
      </block>
-  </view>
-<swiper current="{{activeIndex}}"   class="swiper-box"  style='height:{{mtabH}}px' duration="500" bindchange="bindChange">
-    <swiper-item class="swiper-item">
-       <scroll-view style='height:100%' scroll-y bindscrolltolower="loadMore">
+  </view> -->
+  <van-search
+            value="{{ keyWord }}"
+            placeholder="搜索作者或作品..."
+            background="#F8F8F8"
+            maxlength='20' bindtap="onFocus" disabled="{{true}}"/>
+<!-- <swiper current="{{activeIndex}}"   class="swiper-box"  style='height:{{mtabH}}px' duration="500" bindchange="bindChange"> -->
+    <!-- <swiper-item class="swiper-item"> -->
+       <scroll-view enable-back-to-top style='height:{{mtabH*2-46.25*2}}rpx' scroll-y bindscrolltolower="loadMore">
          <!-- <view  scroll-y> -->
           <swiper class='swiper' previous-margin="28rpx" next-margin="28rpx" indicator-dots="{{indicatorDots}}"
              autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
@@ -77,8 +82,8 @@
           <BookDetailItem  :list.sync='newBooks'></BookDetailItem>
          <!-- </view> -->
       </scroll-view>
-    </swiper-item>
-     <swiper-item class="swiper-item">
+    <!-- </swiper-item> -->
+     <!-- <swiper-item class="swiper-item">
        <scroll-view style='height:100%' scroll-y>
           <view class='biaoqian'>
               <view style='font-size:32rpx;margin-top:16rpx;margin-bottom:34rpx;'>
@@ -99,18 +104,18 @@
               </view>
           </view>
        </scroll-view>
-    </swiper-item>
-     <swiper-item class="swiper-item">
+    </swiper-item> -->
+     <!-- <swiper-item class="swiper-item">
           <van-search
             value="{{ keyWord }}"
             placeholder="搜索作者或作品..."
             background="#F73D51"
             bind:change='onSearch'
             maxlength='20'  
-          />
-       <scroll-view class='hot_wrap'  style='height:100%;padding-bottom:80rpx' scroll-y bindscrolltolower="loadSearchBookList">
+          /> -->
+       <!-- <scroll-view class='hot_wrap'  style='height:100%;padding-bottom:80rpx' scroll-y bindscrolltolower="loadSearchBookList"> -->
         <!-- 搜索模块 -->
-         <veiw wx:if='{{showSearch}}'>
+         <!-- <veiw wx:if='{{showSearch}}'>
            <view class='t'>热门搜索</view>
               <block wx:for="{{hotWords}}" wx:key='{{index}}'>
                     <view class='search_hot' bindtap='handleLabel({{item.hotWords}})'  wx:if='{{item.hotWords}}' style="color:{{item.color}};border:2rpx solid {{item.color}}">{{item.hotWords}}</view>
@@ -124,10 +129,10 @@
          </veiw>
          <view wx:if='{{!showSearch}}'>
              <searchBookList :list.sync="searchBookList"></searchBookList>
-         </view>
-       </scroll-view>
-    </swiper-item>
-</swiper>
+         </view> -->
+       <!-- </scroll-view> -->
+    <!-- </swiper-item> -->
+<!-- </swiper> -->
 </view>
 </template>
 <script>
@@ -162,8 +167,6 @@
       usingComponents: {
            "zan-icon": "../lib/vant/icon/index",
            "van-search": "../lib/vant/search/index",
-           "van-cell": "../lib/vant/cell/index",
-           "van-cell-group": "../lib/vant/cell-group/index"
        },
     }
     components = {
@@ -236,32 +239,18 @@
           url:'active?url='+url
         })
      },
-     handleLabel(word){
-       this.keyWord=word
-       this.search()
+     onFocus(){
+      wx.navigateTo({
+         url:'search'
+       })
      },
-     loadSearchBookList(){
-         if(this.searchBookList.length>0){
-            this.searchPage++
-            if(this.searchPage>this.searchLastPage){
-                wx.showToast({
-                title:'没有更多了'
-              })
-              return;
-            }
-            searchBook(this.keyWord,this.searchPage).then(data=>{
-                  this.searchBookList=this.searchBookList.concat(data.list)
-                  this.$apply()
-            })
-         }
-     },
+    //  handleLabel(word){
+    //    this.keyWord=word
+    //    this.search()
+    //  },
      changeLabel(){
        this.labelList=this.getRandomArrayElements(this.booklableList,10)
      },
-     togglePopup() {
-         this.show=!this.show
-         this.$apply()
-    },
     handleGo(res){
        wx.navigateTo({
          url:res
@@ -270,15 +259,6 @@
     colse(){
       this.show=false
       this.$apply()
-    },
-    onSearch(e){
-         this.keyWord=e.detail.replace(/\s+/g,"")
-         if(this.keyWord){
-            this.search()             
-        }else{
-           this.showSearch=true
-           this.searchBookList=[]
-        }
     },
     tabClick(e){
       var idIndex = e.currentTarget.id;
@@ -349,21 +329,14 @@
             this.tabW=this.mtabW/this.tabs.length
         }
       })
-        getSearchHotWords.then(data=>{
-           data.forEach(value => {
-              value.color=`#${Math.floor(Math.random()*0xffffff).toString(16)}`
-           });
-           this.hotWords=data
-           this.$apply()
-        })
-       getBookClass.then(data=>{
-        this.hots=data.slice(0,3)
-        for(var i=0;i<this.hots.length;i++){
-            this.hots[i].img=this.hotImg[i]
-        }
-        this.lables=data.slice(3)
-        this.$apply()
-      })
+      //  getBookClass.then(data=>{
+      //   this.hots=data.slice(0,3)
+      //   for(var i=0;i<this.hots.length;i++){
+      //       this.hots[i].img=this.hotImg[i]
+      //   }
+      //   this.lables=data.slice(3)
+      //   this.$apply()
+      // })
       getHomePageBooks.then(data=>{
         this.homeInfo=data
         this.booklableList=data.booklableList
@@ -379,10 +352,6 @@
           this.lastPage=data.pages
           this.$apply()
      })
-     var words = wx.getStorageSync('word')
-     if(words){
-       this.keyWordList=JSON.parse(words)
-     }
     }
   }
 </script>
@@ -420,7 +389,7 @@ view , scroll-view{
 }
 .swiper-box{
    overflow: hidden;
-   padding-top:64rpx;
+  //  padding-top:64rpx;
    box-sizing: border-box;
 }
 .floor_title{

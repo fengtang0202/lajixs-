@@ -67,6 +67,8 @@ const hotWords = `${host}/api/sys-hotwords`
 const bookRead = `${host}/api/book-read`
 //打赏区
 const bookReword = `${host}/api/getSpicyirewardticketlogByBookId`
+//其他用户信息
+const personInfo = `${host}/api/person-SimplifyUserInfo`
 module.exports = {
   login,
   get_user_info,
@@ -124,5 +126,6 @@ module.exports = {
   bookReword,
   RecommendationTicket,
   RewardGonderTicket,
-  SpicyiRewardTicket
+  SpicyiRewardTicket,
+  personInfo
 }

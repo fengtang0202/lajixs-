@@ -1,0 +1,140 @@
+<template>
+<view>
+    <van-search
+            value="{{ keyWord }}"
+            placeholder="搜索作者或作品..."
+            bind:change='onSearch'
+            maxlength='20' 
+            background="#F8F8F8"
+            focus="{{true}}" 
+          />
+       <scroll-view class='hot_wrap'  style='height:{{height*2-46.25*2}}rpx' scroll-y bindscrolltolower="loadSearchBookList">
+        <!-- 搜索模块 -->
+         <veiw wx:if='{{showSearch}}'>
+           <view class='t'>热门搜索</view>
+              <block wx:for="{{hotWords}}" wx:key='{{index}}'>
+                    <view class='search_hot' bindtap='handleLabel({{item.hotWords}})'  wx:if='{{item.hotWords}}' style="color:{{item.color}};border:2rpx solid {{item.color}}">{{item.hotWords}}</view>
+              </block>
+            <view class='t' style=' border-top:8rpx solid #EFEFEF'>历史搜索</view>
+            <van-cell-group>
+               <block wx:for="{{keyWordList}}" wx:key="{{index}}">
+                 <van-cell title="{{item}}" bindtap="handleLabel({{item}})" icon="clock" border="{{ keyWordList.length-1==index?false:true}}" />
+               </block>
+            </van-cell-group>
+         </veiw>
+         <view wx:if='{{!showSearch}}'>
+             <searchBookList :list.sync="searchBookList"></searchBookList>
+         </view>
+       </scroll-view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import {getSearchHotWords,searchBook} from '../config/getData'
+import BookDetailItem from '../components/bookDetailItem'
+export default  class Search extends wepy.page{
+    config={
+        navigationBarTitleText:"搜索",
+        usingComponents:{
+           "zan-icon": "../lib/vant/icon/index",
+           "van-search": "../lib/vant/search/index",
+           "van-cell": "../lib/vant/cell/index",
+           "van-cell-group": "../lib/vant/cell-group/index"
+        }
+    }
+    data={
+        hotWords:[],
+        showSearch:true,
+        keyWord:'',
+        keyWordList:[],
+        searchBookList:[],
+        searchPage:1,
+        searchLastPage:1,
+        height:0,
+    }
+    methods={
+        loadSearchBookList(){
+         if(this.searchBookList.length>0){
+            this.searchPage++
+            if(this.searchPage>this.searchLastPage){
+                wx.showToast({
+                title:'没有更多了'
+              })
+              return;
+            }
+            searchBook(this.keyWord,this.searchPage).then(data=>{
+                  this.searchBookList=this.searchBookList.concat(data.list)
+                  this.$apply()
+            })
+         }
+     },
+    handleLabel(word){
+       this.keyWord=word
+       this.search()
+     },
+     onSearch(e){
+         this.keyWord=e.detail.replace(/\s+/g,"")
+         if(this.keyWord){
+            this.search()             
+        }else{
+           this.showSearch=true
+           this.searchBookList=[]
+        }
+    },
+    }
+    events = {
+       'saveWords':()=>{
+         if(this.keyWord){
+            this.keyWordList.unshift(this.keyWord)
+            wx.setStorageSync('word',JSON.stringify(Array.from(new Set(this.keyWordList))))
+            this.keyWordList=JSON.parse(wx.getStorageSync('word'))
+         }
+      }
+    }
+    components={
+        searchBookList:BookDetailItem
+    }
+    search(){
+      searchBook(this.keyWord,this.searchPage).then(data=>{
+            if(data.list.length>0){
+              this.searchBookList=data.list
+              this.searchLastPage=data.pages
+              this.showSearch=false
+              this.$apply()
+       }
+      })
+    }
+    onLoad(){
+        getSearchHotWords.then(data=>{
+           data.forEach(value => {
+              value.color=`#${Math.floor(Math.random()*0xffffff).toString(16)}`
+           });
+           this.hotWords=data
+           this.$apply()
+        })
+        var words = wx.getStorageSync('word')
+        if(words){
+        this.keyWordList=JSON.parse(words)
+        }
+        this.height=this.$parent.globalData.mh
+    }
+}
+</script>
+<style lang="less" scoped>
+.t{
+    font-size:32rpx;
+    padding:28rpx;
+    box-sizing:border-box;
+    }
+    .search_hot{
+      display: inline-block;
+      font-size: 28rpx;
+      padding: 0 36rpx;
+      margin-left: 28rpx;
+      border-radius:44rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      text-align: center;
+      margin-bottom: 40rpx;
+   }
+</style>

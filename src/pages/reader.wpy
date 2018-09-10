@@ -1,0 +1,22 @@
+<template>
+    <view>
+       reader
+    </view>
+</template>
+<script>
+   import wepy from 'wepy'
+   export default class Reader extends wepy.page{
+    data={
+
+    }
+    methods={
+
+    }
+    onLoad(option){
+
+    }
+}
+</script>
+<style lang="less" scoped>
+    
+</style>

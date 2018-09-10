@@ -5,7 +5,6 @@
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
-
 import { setStore } from 'wepy-redux'
 import configStore from './store'
 import {wxLogin} from './config/getData'
@@ -34,13 +33,16 @@ export default class extends wepy.app {
       'pages/readHistory',
       'pages/customerService',
       'pages/accountRecharge',
-      'pages/coupon'
+      'pages/coupon',
+      'pages/del',
+      'pages/reader',
+      'pages/search'
     ],
     window: {
       backgroundTextStyle: '#fff',
-      navigationBarBackgroundColor: '#F73D51',
+      navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '辣鸡小说',
-      navigationBarTextStyle: '#fff',
+      navigationBarTextStyle: 'black',
       // enablePullDownRefresh: true
     },
      "tabBar": {  
@@ -76,7 +78,7 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo:null,
-    mh:0
+    mh:0,
   }
 
   constructor () {

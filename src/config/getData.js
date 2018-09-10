@@ -200,6 +200,14 @@ const RecommendationTicket = (recommendTicketCount, bookid, bookName, authorId)=
         }
     })
 }
+const getPersonInfo = puserid=>{
+    return post({
+        url:api.personInfo,
+        params:{
+            puserid: puserid
+        }
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -225,5 +233,6 @@ module.exports = {
     bookBank,
     SpicyiRewardTicket,
     RewardGonderTicket,
-    RecommendationTicket
+    RecommendationTicket,
+    getPersonInfo
 }

@@ -1,6 +1,6 @@
 <template>
  <view style='padding:30rpx 42rpx;'>
-    <view class='bookName'>《{{bookName}}》 {{chapterName}}</view>
+    <view class='bookName' wx:if="{{show}}">《{{bookName}}》 {{chapterName}}</view>
     <scroll-view scroll-y enable-back-to-top bindscroll="scroll" style="height:{{mtabH*2-142}}rpx">
        <view class='chapter'> {{chapterName}}</view>
        <view wx:for="{{bookContent}}" wx:key="{{index}}" class='bookContent' >{{item}}</view>
@@ -26,11 +26,12 @@
           chapterName:'',
           bookName:'',
           chapterPrice:0,
-          mtabH:0
+          mtabH:0,
+          show:false
         }
         methods={
           getNextBookText(){
-            this.chapterIdNum--
+            this.chapterIdNum++
             if(this.chapterIdNum==0){
               return;
             }
@@ -39,7 +40,7 @@
           },
           scroll(e){
             if(e.detail.scrollTop>10){
-              
+              console.log(111)
             }
           }
         }
@@ -59,10 +60,11 @@
         } 
         getBookText(){
           bookRead(this.chapterId).then(data=>{
+            this.show=true
             this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
             this.bookName=data.bookInfo.bookName
             this.chapterName=data.chapterInfo.chapterTitle
-            this.chapterPrice=parseInt(data.chapterInfo.chapterLength/1000*3)//辣椒
+            this.chapterPrice=data.chapterInfo.price //辣椒
             this.$apply()
           })
         }
@@ -92,7 +94,8 @@
     font-size:20rpx;
     color:#999;
     height:26rpx;
-    margin-bottom:56rpx;
+    height:80rpx;
+    line-height:80rpx;
   }
   .chapter{
     font-size:48rpx;
