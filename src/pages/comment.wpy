@@ -5,22 +5,25 @@
              <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
              <text>热门评论({{hotCommentList.length}})</text>
          </view>
-             <CommentItemHot :commentList.sync="hotCommentList"></CommentItemHot>
+            <CommentItemHot :commentList.sync="hotCommentList"></CommentItemHot>
+            <view style="text-align:center;color:#999" wx:if="{{noComment}}">暂无评论</view>
          <view style='padding:20rpx 28rpx'>
              <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
              <text>最新评论({{newCommentCount}})</text>
          </view>
+            <view style="text-align:center;color:#999" wx:if="{{noComment}}">暂无评论</view>            
             <CommentItem :commentList.sync="newCommentList"></CommentItem>
     </scroll-view> 
-        <commentInput :cb.sync="addComment" placeholder="填写评论~"></commentInput>
+        <commentInput   placeholder="填写评论~"></commentInput>
         <van-toast id="van-toast" />
 </view>
 </template>
 <script>
   import wepy from 'wepy'
   import CommentItem from '../components/commentItem' 
-  import {getHotComments,getNewComments,addComment} from '../config/getData'
+  import {getHotComments,getNewComments,addComment,getServerTime} from '../config/getData'
   import commentInput from '../components/commentInput'
+   import Toast from '../lib/vant/toast/index'
   export default class Comment extends wepy.page{
       config={
           navigationBarTitleText:'书评',
@@ -31,6 +34,7 @@
         data={
            hotCommentList:[],
            newCommentList:[],
+            noComment:false,
            page:1,
            lastPage:0,
            newCommentCount:0,
@@ -38,7 +42,8 @@
            bookId:0,
            height:0,
            commentConent:"",
-           bottom:0
+           bottom:0,
+           timer:0
         }
         methods = {
             loadMore(){
@@ -55,10 +60,32 @@
                })
             },
         }
-        addComment(bookId,commentContent,bookName){
-          addComment(bookId,commentContent,"haru",bookName).then(res=>{
-              console.log(commentContent)
-          })
+        events={
+            'addComment':(commentContent)=>{
+                //本地用户信息,临时用
+                let userInfo=wx.getStorageSync('userInfo')
+                addComment(this.bookId,commentContent,userInfo.pseudonym,this.bookName).then(res=>{
+                    if(res==1){
+                        // let option={}
+                        // option.userHeadPortraitURL=userInfo.userHeadPortraitURL
+                        // option.pseudonym=userInfo.pseudonym
+                        // option.userSex=userInfo.userSex
+                        // option.userGrade=userInfo.userGrade
+                        // option.commentDateTime=this.timer
+                        // option.replyCount=0
+                        // option.isthumbs=0
+                        // option.thumbsCount=0
+                        // option.commentContext=commentContent
+                        // this.newCommentList.unshift(option)
+                        Toast('评论成功~')
+                        getNewComments(this.bookId,this.page).then(res=>{
+                            this.newCommentList=res.list
+                            this.newCommentCount=res.total
+                            this.$apply()
+                        })
+                    }
+              })
+            }
         }
         components = {
            CommentItemHot: CommentItem,
@@ -67,15 +94,25 @@
         }
         onLoad(option){
             this.bookId=option.bookId
-            this.height=this.$parent.globalData.mh
+            // this.height=this.$parent.globalData.mh
+             wx.getSystemInfo({
+                success:res=>{     
+                    this.height=res.windowHeight
+                }
+            })
+            getServerTime.then(res=>{
+                this.timer=res.beijing
+            })
             getHotComments(this.bookId).then(res=>{
               this.hotCommentList=res
               this.bookName=res[0].bookName
+              this.hotCommentList.length==0 && (this.noComment=false)
               this.$apply()
           })
             getNewComments(this.bookId,this.page).then(res=>{
                this.newCommentList=res.list
                this.newCommentCount=res.total
+               res.total==0 && (this.noComment=true)
                this.lastPage=res.pages
                this.$apply()
             })

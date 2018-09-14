@@ -1,23 +1,20 @@
 <template>
-   <view class="container">
+  <view class="container">
     <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{items}}" wx:key="">
       <view class="content">{{item.content}}</view>
       <view class="del" catchtap="del" data-index="{{index}}">删除</view>
     </view>
-    <button open-type="contact">2212</button> 
-</view>
+  </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import swiperDel from '../components/swiperDel'
 import touch from '../config/touch'
 export default class Del extends wepy.page {
   config = {
     navigationBarTitleText: '购物车'
   };
   components = {
-    swiperDel
   };
 
   mixins = [];
@@ -45,7 +42,7 @@ export default class Del extends wepy.page {
     this.startY= e.changedTouches[0].clientY
   },
   touchmove (e) {
-    var that = this,
+      var that = this,
       index = e.currentTarget.dataset.index,//当前索引
       startX = that.data.startX,//开始X坐标
       startY = that.data.startY,//开始Y坐标
@@ -69,11 +66,8 @@ export default class Del extends wepy.page {
   },
   //删除事件
   del: function (e) {
-    this.data.items.splice(e.currentTarget.dataset.index, 1)
-    this.setData({
-      items: this.data.items
-    })
-  }
+    this.items.splice(e.currentTarget.dataset.index, 1)
+    } 
   }
   angle(start, end) {
     var _X = end.X - start.X,

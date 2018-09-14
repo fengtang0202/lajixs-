@@ -22,7 +22,7 @@
            </view>
        </block>
     </scroll-view>
-    <commentInput :cb="addReply" placeholder="回复评论~"></commentInput>
+    <commentInput  placeholder="回复评论~"></commentInput>
     <van-toast id="van-toast" />
     </view>    
 </template>
@@ -31,6 +31,7 @@ import wepy from 'wepy'
 import commentItem from '../components/commentItem'
 import commentInput from '../components/commentInput'
 import {getNewComments,getReplyComment,addReply} from '../config/getData'
+import Toast from '../lib/vant/toast/index'
 export default class CommentDetail extends wepy.page{
     config={
         navigationBarTitleText:"回复评论",
@@ -65,13 +66,22 @@ export default class CommentDetail extends wepy.page{
         getReplyComment(this.commentId,this.page).then(res=>{
            this.replyList=this.replyList.concat(res.list)
            this.$apply()
-       })
+          })
         }
     }
-    addReply(bookid,replyCommentsContent,bookName,commentId,puserId){
-        addReply(bookid,replyCommentsContent,'haru',bookName,commentId,puserId).then(res=>{
-            console.log('回复评论')
-        })
+    events={
+        'addComment':commentContent=>{
+            let userInfo=wx.getStorageSync('userInfo')            
+            addReply(this.bookId,commentContent,userInfo.pseudonym,this.bookName,this.commentId,this.puserId).then(res=>{
+               if(res==1){
+                   Toast('回复成功~')
+                   getReplyComment(this.commentId,this.page).then(res=>{
+                        this.replyList=res.list
+                        this.$apply()
+                    })
+               }
+            })
+        }
     }
     onLoad(option){
         this.height=this.$parent.globalData.mh

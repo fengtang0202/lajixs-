@@ -1,21 +1,42 @@
 <template>
- <view style='padding:30rpx 42rpx;'>
+ <view>
     <view class='bookName' wx:if="{{show}}">《{{bookName}}》 {{chapterName}}</view>
-    <scroll-view scroll-y enable-back-to-top bindscroll="scroll" style="height:{{mtabH*2-142}}rpx">
-       <view class='chapter'> {{chapterName}}</view>
-       <view wx:for="{{bookContent}}" wx:key="{{index}}" class='bookContent' >{{item}}</view>
+    <scroll-view scroll-y scroll-top="{{scrollTop}}" enable-back-to-top bindscroll="scroll" style="height:{{mtabH*2-80}}rpx">
+      <view class='chapter'> {{chapterName}}</view>
+      <view wx:for="{{bookContent}}" wx:key="{{index}}" class='bookContent' >{{item}}</view>
+      <view wx:if="{{show}}" class='authorWords' >
+        <image  style="float:left;width:44rpx;height:44rpx;border-radius:50%;margin-right:20rpx"/>
+        <view style="float:left;font-size:26rpx;width:480rpx">
+          <view style="margin-bottom:14rpx;">作者昵称</view>
+          <view style="color:#999;">内容内容内容内容内容内容内容内容内容内容内容内容内容内。</view>
+        </view>
+        <image src="../images/authorSaid.png" class="authorImg"/>
+      </view>
+      <view wx:if="{{show}}" style="height:194rpx;padding:78rpx  42rpx 48rpx;">
+        <view class='page' style="width:156rpx;margin-right:20rpx;" bindtap="getNextPreBookText(2)">上一章</view>
+        <view class='page' style="width:192rpx;" bindtap="getNextPreBookText(1)">下一章</view>
+        <view class='page' style="float:right;width:156rpx;" bindtap="handleDiretory">目录</view>
+      </view>
+      <van-toast id="van-toast" />
     </scroll-view>
+    <Directory :chapterList.sync="directoryChapterList"></Directory>
  </view>    
 </template>
 <script>
     import wepy from 'wepy'
-    import {bookRead,getVolume} from '../config/getData'
+    import Toast from '../lib/vant/toast/toast'
+    import Directory from '../components/directory'
+    import {bookRead,getVolume,addBookReadHistroy} from '../config/getData'
     export default class BookRead extends wepy.page{
          config = {
-           navigationBarTitleText: '辣鸡小说',
-           usingComponents: {
-             
+          navigationBarTitleText: '辣鸡小说',
+          usingComponents: {
+            "van-toast": "../lib/vant/toast/index",
+             "van-popup": "../lib/vant/popup/index",             
           },
+        }
+        components={
+            Directory
         }
         data={
           bookId:0,
@@ -27,47 +48,69 @@
           bookName:'',
           chapterPrice:0,
           mtabH:0,
-          show:false
+          show:false,
+          scrollTop:0,
+          directoryChapterList:[]
+        }
+        events={
+          'handleEx':(chapterId)=>{
+            this.chapterId=chapterId
+            this.$invoke('Directory','onClose')            
+            this.getBookText()
+          }
         }
         methods={
-          getNextBookText(){
-            this.chapterIdNum++
-            if(this.chapterIdNum==0){
-              return;
+          handleDiretory(){
+              this.$invoke('Directory','onClose')            
+          },
+          getNextPreBookText(type){
+            if(type==1){
+              if(this.chapterIdNum==this.chapterList.length){
+                Toast('')
+                return;
+               }
+               this.chapterIdNum++
+            }else{
+                if(this.chapterIdNum==0){
+                  return;
+                }
+                this.chapterIdNum--
             }
-            this.chapterId=this.chapterList[this.chapterIdNum]
+            this.chapterId=this.chapterList[this.chapterIdNum].id
             this.getBookText()
           },
           scroll(e){
             if(e.detail.scrollTop>10){
-              console.log(111)
+              // console.log(111)
             }
           }
         }
-        //获取当前chapter的位置
-        getNowChapterId(){
-            getVolume(this.bookId).then(res=>{
-                var arr=res.chapterInfo
-                arr.forEach(value=>{
-                      this.chapterList=this.chapterList.concat(value.resultList)
-                })
-                for(var n in this.chapterList){
-                  if(this.chapterList[n].id==this.chapterId){
-                      this.chapterIdNum=n
-                  }
-                }
-            }) 
-        } 
-        getBookText(){
-          bookRead(this.chapterId).then(data=>{
-            this.show=true
-            this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
-            this.bookName=data.bookInfo.bookName
-            this.chapterName=data.chapterInfo.chapterTitle
-            this.chapterPrice=data.chapterInfo.price //辣椒
+      async getNowChapterId(){
+            let res = await getVolume(this.bookId)
+            this.directoryChapterList=res.chapterInfo
+            await res.chapterInfo.forEach(value=>{
+                 this.chapterList=this.chapterList.concat(value.resultList)
+            })
+            for(var n in this.chapterList){
+              if(this.chapterList[n].id==this.chapterId){
+                  this.chapterIdNum=n
+              }
+            }
             this.$apply()
-          })
-        }
+        } 
+      async getBookText(){
+        let data = await  bookRead(this.chapterId)
+        this.show=true
+        this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
+        this.bookName=data.chapterInfo.bookTitle
+        this.chapterName=data.chapterInfo.chapterTitle
+        this.chapterPrice=data.chapterInfo.price 
+        this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
+        //用户信息
+        let userInfo = wx.getStorageSync('userInfo')
+        userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
+        this.$apply()
+      }
         onLoad(option){
           wx.getSystemInfo({
             success:res=>{     
@@ -82,6 +125,9 @@
     }
 </script>
 <style lang="less" scoped>
+  view{
+    box-sizing: border-box;
+  }
   .bookContent{
      font-size:32rpx;
      letter-spacing: 4rpx;
@@ -89,6 +135,7 @@
      text-align: justify;
      line-height: 1.8;
      font-size:36rpx;
+     padding:0 42rpx;
   }
   .bookName{
     font-size:20rpx;
@@ -96,10 +143,41 @@
     height:26rpx;
     height:80rpx;
     line-height:80rpx;
+    padding:0 42rpx;
+
   }
   .chapter{
     font-size:48rpx;
     color:#999;
     height:108rpx;
+    padding:0 42rpx;
+  }
+  .authorWords{
+    width:620rpx;
+    height:192rpx;
+    border:2rpx solid #F4F5FA;
+    background: #F7F8FA;
+    border-radius:24rpx;
+    margin:0 auto;
+    margin-top:56rpx;
+    padding:34rpx;
+    position: relative;
+  }
+  .page{
+    height:68rpx;
+    background:#F77583;
+    border-radius:8rpx;
+    font-size:32rpx;
+    color:#fff;
+    text-align: center;
+    line-height:68rpx;
+    float:left;
+  }
+  .authorImg{
+    width:260rpx;
+    height:116rpx;
+    position: absolute;
+    top:-60rpx;
+    right:32rpx;
   }
 </style>

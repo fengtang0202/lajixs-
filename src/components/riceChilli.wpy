@@ -1,0 +1,137 @@
+<template>
+    <van-popup show="{{ Riceshow }}" position="bottom"  bind:close="onClose">
+       <view style="height:368rpx;background:#3D3D3D">
+        <view class='nav'>
+            <view class="{{currentTab==0&&'active'}}" bindtap="handleSwitch(0)">
+                <text>投喂小米椒</text>
+            </view>
+            <view class="{{currentTab==1&&'active'}}"  bindtap="handleSwitch(1)">
+                <text>投喂金椒</text>
+            </view>
+        </view>
+        <swiper current="{{currentTab}}" class="swiper" duration="300" style="height:280rpx" bindchange="bindChange">
+            <swiper-item class='reward_wrap'>
+                <view >小米椒余额:{{min}}</view>
+                <view class='ste'>
+                    <van-stepper style='float:left' value="{{ min }}" bind:change="onChange1" />
+                    <view class='all'>ALL</view>
+                    <view class='feed' bindtap="handleFeedmin">投喂</view>
+                </view>
+            </swiper-item>
+            <swiper-item class='reward_wrap'>
+                <view >金椒余额:{{1}}</view>
+                <view class='ste'>
+                    <van-stepper integer="{{integer}}" style='float:left' value="{{ gloden }}" bind:change="onChange2" />
+                    <view class='all'>ALL</view>
+                    <view class='feed' >投喂</view>
+                </view>
+            </swiper-item>
+        </swiper>
+       </view>
+    </van-popup>
+</template>
+<script>
+    import wepy from 'wepy'
+    import {RecommendationTicket} from '../config/getData'
+    import Toast from '../lib/vant/toast/toast'
+    export default class RiceChilli extends wepy.component{
+        data={
+            Riceshow:false,
+            currentTab:0,
+            min:1,
+            gloden:1,
+            integer:true
+        }
+        props={
+        
+        }
+    methods = {
+        onChange1(e){
+           this.min=e.detail
+        },
+        onChange2(e){
+            this.gloden=e.detail
+        },
+       async handleFeedmin(){
+            let data= await RecommendationTicket(this.min,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId)
+            if(data == "ok"){
+                Toast('投喂成功~')
+            }else{
+                Toast('小米椒不足~')
+            }
+        },
+        onClose(index){
+            this.Riceshow=!this.Riceshow
+            this.currentTab=index
+            this.$apply()
+        },
+        handleSwitch(key){
+            if (this.currentTab == key) {
+                return false;
+                }else{
+                    this.currentTab = key
+            }
+        },
+        bindChange(e){
+            this.currentTab = e.detail.current
+        }  
+        }
+        events={
+            
+        }
+        onLoad(){
+            
+        }
+    }
+</script>
+<style lang="less" scoped>
+  view,swiper-item{
+      box-sizing: border-box
+  }
+    .nav{
+        height:88rpx;
+        border-bottom:2rpx solid #333333;
+        view{
+            height:88rpx;
+            width:160rpx;
+            text-align:center;
+            line-height:88rpx;
+            margin-left:166rpx;
+            float:left;
+            color:#FFFFFF;
+            font-size:32rpx;
+        }
+        .active{
+            border-bottom:2rpx solid #F77583;
+        }
+    }
+    .reward_wrap {
+        padding:40rpx 28rpx  0;
+        color:#FFFFFF;
+        font-size:28rpx;
+    }
+    .ste{
+        text-align: center;
+        margin-top:70rpx;       
+    }
+.all{
+    width:52rpx;
+    height:52rpx;
+    border-radius:8rpx;
+    border:2rpx solid #FFB1B1;
+    font-size:22rpx;
+    line-height:52rpx;
+    color:#FFB1B1;
+    float: left;
+    margin-top:4rpx;
+    margin-left:48rpx;
+}
+.feed{
+    width:160rpx;
+    height:56rpx;
+    float:right;
+    border-radius:30px;
+    background: #F77583;
+    line-height:56rpx;
+}
+</style>

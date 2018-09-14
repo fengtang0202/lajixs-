@@ -10,10 +10,6 @@
    import Toast from '../lib/vant/toast/index';
    export default class bookItem extends wepy.component {
        props={
-           cb:{
-               type:Function,
-               default:''
-           },
            placeholder:{
                type:String,
                default:''
@@ -31,7 +27,8 @@
                         if(this.commentConent.length>50){
                            Toast('评论字数，不能超过五十个字~')
                         }else{
-                           this.cb(this.$parent.bookId,this.commentConent,this.$parent.bookName,this.$parent.commentId,this.$parent.puserId)
+                           this.$emit('addComment',this.commentConent);
+                           this.commentConent=' '
                     }
                }else{
                   Toast('不能包含表情~')

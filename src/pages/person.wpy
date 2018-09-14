@@ -17,10 +17,10 @@
          </view>
          <view class='fans_wrap'> 
              <view class='fan' style='border-right:2rpx solid #EFEFEF'>
-                 关注{{12}}
+                 关注{{0}}
              </view>
              <view class='fan'>
-                 粉丝{{21}}
+                 粉丝{{0}}
              </view>
          </view>
          <van-cell-group>

@@ -1,11 +1,11 @@
 <template>
-     <view>
+     <view style="padding-bottom:98rpx;">
          <scroll-view scroll-y>
                 <view class='bookInfo_header'>
                    <image style='width:100%;height:400rpx; filter: blur(12rpx);' src="{{bookInfo.bookListInfo.bookImage}}"/>
                    <view class='book_detail'>
                        <view class='bookName'>
-                         {{bookInfo.bookListInfo.bookName}}
+                         {{bookName}}
                        </view>
                        <view class='book_Info'>
                            <image class='book_img' src='{{bookInfo.bookListInfo.bookImage}}'/>
@@ -22,7 +22,7 @@
                               <BookLabel :list.sync="bookLables"></BookLabel>
                               <view class='dasang' >
                                   <block wx:for="{{reward}}" wx:key="{{index}}">
-                                   <view class='reward_wrap' style="width:{{index==1?'120rpx':'104rpx'}};margin-right:{{index==2?'0':'62rpx'}}">
+                                   <view bindtap="handleReward({{index}})" class='reward_wrap' style="width:{{index==1?'120rpx':'104rpx'}};margin-right:{{index==2?'0':'62rpx'}}">
                                         <view class='reward_item' style="border:4rpx solid {{item.color}}">
                                            <image style="width:{{item.width}}rpx;height:{{item.height}}rpx" src="{{item.img}}"/>
                                         </view> 
@@ -59,7 +59,7 @@
                          <image class='arrow' style="transform: rotate({{showText?'180':'0'}}deg);" src="../images/d-38@3x.png"/>
                      </view>
                 </view>
-                <view class='directory' bindtap="handleGo('directory')">
+                <view class='directory' bindtap="handleDiretory">
                    <text>目录</text>
                    <text style='margin-left: 100rpx;color:rgb(153, 153, 153);'>共{{bookInfo.chapterCount}}章</text>
                    <text style='margin-left:100rpx;color:rgb(247, 117, 131);'>{{myWxs.leadTime(leadTime,updateTime)}}</text>
@@ -106,8 +106,8 @@
                             <text>{{1}}</text>
                         </view>
                     </view>
-                    <view class='gz'>
-                        <text>{{"关注"}}</text>
+                    <view class='gz' bindtap="handlefollow">
+                        <text>{{authorInfo.isfollow==1?"已关注":"关注"}}</text>
                     </view>
                 </view>
                 <view style='height:100rpx;font-size:32rpx;color: #666;line-height:100rpx;padding-left:28rpx'>同类热门书籍</view>
@@ -122,15 +122,39 @@
                     </view>  
                 </scroll-view>
          </scroll-view>
+        <view class='tabbar'>
+            <view class="tabbar-item" bindtap="handleAddBookRack">
+                <image wx:if="{{collectionStatus==0}}" src='../images/sc.png' />
+                <image wx:if="{{collectionStatus==1}}" src='../images/sca.png'/>
+                <text>加入书架</text>
+            </view>
+            <view class="tabbar-item tab2" bindtap="handleBookRead">
+                <image src='../images/yd.png'/>
+                <text>阅读</text>
+            </view>
+            <view class="tabbar-item" bindtap="handleSubscribe">
+                <image wx:if="{{subscribe==0}}" src='../images/dy.png'/>
+                <image wx:if="{{subscribe==1}}" src='../images/dya.png'/>
+                <text>订阅</text>
+            </view>
+        </view>
+        <van-toast id="van-toast" />
+        <RiceChilli></RiceChilli>
+        <Pepper></Pepper>
+        <Directory :chapterList.sync='chapterList'></Directory>
      </view>
 </template>
 <script>
     import wepy from 'wepy'
     import {connect} from "wepy-redux"
-    import {getBookInfo,getHotComments,updateLike} from '../config/getData'
+    import {getVolume,getBookInfo,getHotComments,updateLike,addFans,CheckSubscribe,addBookRack,bookReadHistory} from '../config/getData'
     import BookLabel from '../components/bookLabel'
     import myWxs from '../filter/myWxs.wxs'
     import CommentItem from '../components/commentItem'
+    import Toast from '../lib/vant/toast/toast'
+    import RiceChilli from '../components/riceChilli'
+    import Pepper from '../components/pepper'
+    import Directory from '../components/directory'
     @connect({
         //state
     },
@@ -142,7 +166,10 @@
         usingComponents: {
             "van-cell": "../lib/vant/cell/index",
             "van-cell-group": "../lib/vant/cell-group/index",
-             "van-icon": "../lib/vant/icon/index"
+            "van-icon": "../lib/vant/icon/index",
+            "van-toast": "../lib/vant/toast/index",
+            "van-popup": "../lib/vant/popup/index",
+            "van-stepper": "../lib/vant/stepper/index"
           }
       }
       wxs = {
@@ -150,11 +177,16 @@
       }
       components = {
           BookLabel,
-          CommentItem
+          CommentItem,
+          RiceChilli,
+          Pepper,
+          Directory
       }
       data = {
         bookInfo:{},
         bookLables:[],
+        bookId:0,
+        bookName:'',
         activeBtnIndex:0,
         url:"",
         reward:[
@@ -170,62 +202,142 @@
         isQ:false,
         fans:[],
         authorInfo:{},
-        showComment:false
+        showComment:false,
+        userId:0,
+        chapterId:0,
+        subscribe:0,
+        collectionStatus:0,
+        currentTab:0,
+        chapterList:[]
       }
       watch = {
           
       }
-      methods = {
-          hanldeTapBtn(res){
-              this.activeBtnIndex=res
+    async getBookChapterId(){
+        if(wx.getStorageSync('userInfo')){
+            let data = await  bookReadHistory(wx.getStorageSync("userInfo").userId,this.bookId)
+            data&&(this.chapterId=data.chapterId)
+        }
+    }
+    events={
+        "handleEx":(chapterId)=>{
+            this.chapterId=chapterId
+            wx.navigateTo({
+                url:'bookRead?bookId='+this.bookId+"&chapterId="+this.chapterId
+            })
+            this.$invoke('Directory','onClose')            
+        }
+    }
+    methods = {
+      async  handleDiretory(){
+            let data=await getVolume(this.bookId)
+            this.chapterList=data.chapterInfo
+            this.$apply()
+            this.$invoke('Directory','onClose')            
+        },
+        handleReward(index){
+            if(index==1||index==2){
+                this.currentTab=index
+                this.$invoke('RiceChilli','onClose',index-1)
+            }else{
+                this.$invoke('Pepper','onClose')
+            }
+        },
+       async handleBookRead(){  
+          await this.getBookChapterId()
+          wx.navigateTo({
+              url:'bookRead?chapterId='+this.chapterId+"&bookId="+this.bookId
+          })
+        },
+        handleAddBookRack(){
+            if(this.collectionStatus==1){
+                return;
+            }
+        addBookRack('haru',this.bookId,this.bookName).then(data=>{
+            this.collectionStatus=1
+            this.$apply()
+        })
+        },
+        handleSubscribe(){
+        if(this.subscribe==1){
+                  return;
+        }
+        CheckSubscribe(this.bookId,'update',1).then(res=>{
+                Toast('订阅成功~')
+                if(res) {
+                    this.subscribe=res.isClose
+                }
+                this.$apply()
+            })
           },
-          handleShowtext(){
-              this.showText=!this.showText
-          },
-          handleGo(res){
-              wx.navigateTo({
-                  url:res+'?bookId='+this.bookInfo.bookListInfo.bookId
-              })
-          },
-          handleSmGO(e){
-              wx.navigateTo({
-                  url:`bookDetail?bookId=${e.currentTarget.dataset.id}`
-              })
-          }
-      }
+        handlefollow(){
+            if(this.authorInfo.isfollow==1){
+                return 
+            }
+            addFans(this.authorInfo.userId,this.authorInfo.pseudonym).then(res=>{
+                Toast('关注成功~');
+                this.authorInfo.isfollow==1?this.authorInfo.isfollow=0:this.authorInfo.isfollow=1
+                this.$apply()
+            })
+        },
+        hanldeTapBtn(res){
+            this.activeBtnIndex=res
+        },
+        handleShowtext(){
+            this.showText=!this.showText
+        },
+        handleGo(res){
+            wx.navigateTo({
+                url:res+'?bookId='+this.bookId
+            })
+        },
+        handleSmGO(e){
+            wx.navigateTo({
+                url:`bookDetail?bookId=${e.currentTarget.dataset.id}`
+            })
+        }
+    }
     onShareAppMessage(options){
         var that=this
         var shareObj = {
-    　　　　 title: that.bookInfo.bookListInfo.bookName,        
-    　　　　 path: 'pages/bookDetail?bookId='+this.bookInfo.bookListInfo.bookId,
+    　　　　 title: that.bookName,        
+    　　　　 path: 'pages/bookDetail?bookId='+this.bookId,
     　　　　 imgUrl: that.bookInfo.bookListInfo.bookImage, 
         success:function(res){
-           var shareTicket=res.shareTickets[0]
+            console.log(res)
+        //    var shareTicket=res.shareTickets[0]
         },    
     　　complete:res=>{
     　　　　
     　　}
     };
-        // 　　if( options.from == 'button' ){
-        // 　　　　var eData = options.target.dataset;
-        // 　　　　console.log( eData.name );     // shareBtn
-        // 　　　　shareObj.path = '/pages/btnname/btnname?btn_name='+eData.name;
-        // 　　}
         　　return shareObj;
     }
         onLoad (options) {
+            let userInfo=wx.getStorageSync('userInfo')
+            if(userInfo){
+                this.userId=userInfo.userId
+            }
             wx.showShareMenu({
                 withShareTicket: true
             })
-           let bookId=options.bookId
-           getBookInfo(bookId).then(data=>{
+            this.bookId=options.bookId
+            CheckSubscribe(this.bookId,'search',0).then(res=>{
+                res && (this.subscribe=res.isClose)
+                this.$apply()
+            })
+           getBookInfo(this.bookId).then(data=>{
                this.bookInfo=data
                this.bookLables=data.bookLable
                this.similarRecommendation=data.similarRecommendation
                this.updateTime=data.bookListInfo.lastUpdateTime
                this.leadTime=new Date().getTime()-this.updateTime
                this.fans=data.fansInfoList.list
+               this.collectionStatus=data.bookListInfo.collectionStatus
                this.authorInfo=data.AuthorInfo
+               this.bookName=this.bookInfo.bookListInfo.bookName
+               //获取第一章
+               this.chapterId=data.chapterOne.id
                var  qy=data.bookListInfo.bookAuthorization
                 if(qy==1||qy==2){
                     this.isQ=true
@@ -234,14 +346,14 @@
                 }    
                this.$apply()
            })
-           getHotComments(bookId).then(data=>{
+           getHotComments(this.bookId).then(data=>{
                if(data.length>0){
                    this.HotComments=data
                    this.showComment=true
                    this.$apply()
                }
            })
-           this.url="/pages/rewordArea?bookId="+bookId
+           this.url="/pages/rewordArea?bookId="+this.bookId
       }     
 }
 </script>
@@ -363,7 +475,7 @@ view{
          height:104rpx;
          border-radius: 50%;
          background: #fff;
-         line-height:108rpx;
+         line-height:116rpx;
      }
  }
  .book_data{
@@ -439,5 +551,35 @@ view{
     text{
         margin-left:8rpx;
     }
+}
+.tabbar{
+    height:98rpx;
+    width:100%;
+    background: #fff;
+    position: fixed;
+    bottom:0;
+    box-shadow:0px -2rpx 0px 0px rgba(203,203,203,0.5);
+    font-size: 24rpx;
+    image{
+        width:48rpx;
+        height:48rpx;
+        vertical-align: middle;
+        margin-right:24rpx;
+    }
+}
+.tab2{
+    color:#FFFFFF;
+    background:#F77583;
+    image{
+        width:56rpx;
+        height:56rpx;
+    }
+}
+.tabbar-item{
+    width:250rpx;
+    height:100%;
+    text-align: center;
+    line-height: 98rpx;
+    float: left;
 }
 </style>

@@ -86,13 +86,19 @@ const addReply = (bookid, replyCommentsContent, userName, bookName, commentId, p
         }
     })
 }
-const wxLogin = (code, terminal=1, userCode = 'LG20180608000') => {
-    return post({
+const getAppid = (code) => {
+    return get({
         url:api.wxCode,
         params:{
-            code:code,
-            userCode:userCode,
-            terminal: terminal
+            code:code
+        }
+    })
+}
+const wxLogin = weChatServerJson=>{
+    return post({
+        url:api.wxLogin,
+        params:{
+            weChatServerJson: weChatServerJson
         }
     })
 }
@@ -167,14 +173,15 @@ const bookBank = (type,page)=>{
         }
     })
 }
-const SpicyiRewardTicket = (spicyiTicketCount, bookid, bookName, authorId)=>{
+const SpicyiRewardTicket = (spicyiTicketCount, bookid, bookName, authorId, message)=>{
     return post({
         url:api.SpicyiRewardTicket,
         params:{
             spicyiTicketCount: spicyiTicketCount,
             bookid: bookid,
             bookName: bookName,
-            authorId: authorId
+            authorId: authorId,
+            message: message
         }
     })
 }
@@ -208,6 +215,66 @@ const getPersonInfo = puserid=>{
         }
     })
 }
+const getBookReadHistory = (userid, startpage) => {
+    return post({
+        url: api.readHistory,
+        params:{
+            userid:userid,
+            startpage:startpage
+        }
+    })
+}
+const bookReadHistory=(userid,bookId)=>{
+    return post({
+        url: api.bookReadHistory,
+        params:{
+            userid:userid,
+            bookId:bookId
+        }
+    })
+}
+const addBookReadHistroy = (userName, bookId, bookName, chapterId, chapterName)=>{
+    return post({
+        url: api.addBookReadHistory,
+        params:{
+            userName:userName,
+            bookId:bookId,
+            bookName:bookName,
+            chapterId:chapterId,
+            chapterName:chapterName
+        }
+    })
+}
+const addFans = (followId, followUserName)=>{
+    return post({
+        url:api.addFans,
+        params:{
+            followId:followId,
+            followUserName:followUserName
+        }
+    })
+}
+const CheckSubscribe = (bookid, type, isSelect)=>{
+    return post({
+        url:api.is_subscribe,
+        params:{
+            bookid:bookid,
+            type:type,
+            isSelect:isSelect
+        }
+    })
+}
+const addBookRack = (userName, bookId, bookName) => {
+    return post({
+        url:api.add_book_rack,
+        params:{
+            userName:userName,
+            bookId:bookId,
+            bookName: bookName
+        }
+    })
+}
+const getServerTime=get({url:api.getServerTime})
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -234,5 +301,13 @@ module.exports = {
     SpicyiRewardTicket,
     RewardGonderTicket,
     RecommendationTicket,
-    getPersonInfo
+    getPersonInfo,
+    getAppid,
+    addFans,
+    getServerTime,
+    CheckSubscribe,
+    addBookRack,
+    getBookReadHistory,
+    bookReadHistory,
+    addBookReadHistroy
 }

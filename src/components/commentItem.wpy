@@ -1,8 +1,8 @@
 <template>
-    <view>
         <block wx:for="{{commentList}}" wx:key="{{item.id}}">
                         <view class='book_comment_item' data-id="{{item.id}}">
                                <image  src='{{item.userHeadPortraitURL}}' class='comment_avatar'/>
+                               <image  wx:if="{{item.vipGrade>0}}" src="../images/crown@3x.png" class='vip'/>
                                <view class='comment_item'>
                                    <view style="overflow:hidden;">
                                         <view style="float:left">
@@ -32,7 +32,6 @@
                                </view>
                         </view>
            </block>
-    </view>
 </template>
 <script>
   import wepy from 'wepy'
@@ -56,13 +55,15 @@
                             if(el.isthumbs==0){
                                 this.commentList[index].isthumbs=1
                                 this.commentList[index].thumbsCount+=1
+                                this.$apply()
                             }else{
                                 this.commentList[index].isthumbs=0
                                 this.commentList[index].thumbsCount-=1
+                                this.$apply()
                             }         
                         }
                    });
-               })    
+               })
           },
           handleGO(id){
              wx.navigateTo({
@@ -79,6 +80,7 @@
     overflow: hidden;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
 }
 .comment_item{
     overflow: hidden;
@@ -122,5 +124,12 @@
         margin-left: 10rpx;
         margin-right: 72rpx;
     }
+}
+.vip{
+    width:38rpx;
+    height:30rpx;
+    position: absolute;
+    top:0;
+    left:80rpx;
 }
 </style>

@@ -27,7 +27,8 @@ function request(method, requestHandler, isShowLoading = true) {
             data: params,
             method: method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             header: {
-                'Content-Type': method === 'POST' ? 'application/x-www-form-urlencoded' : 'application/json'
+                'Content-Type': method === 'POST' ? 'application/x-www-form-urlencoded' : 'application/json',
+                'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
             },
             success: function (res) {
                 isShowLoading && wx.hideLoading && wx.hideLoading()
@@ -38,19 +39,22 @@ function request(method, requestHandler, isShowLoading = true) {
                     if (res.data.data) {
                         resolve(res.data.data)
                     }else{
-                        wx.showToast({
-                          title: res.data.msg
-                        })
+                        if(wx.getStorageSync('userInfo')){
+                            wx.navigateTo({url:'Login'})
+                            wx.clearStorageSync()
+                        }
                     }
                 } else if(res.data.returnCode==1000){
-                    wx.showToast({
-                      title: '服务器异常',
-                      duration:1500
-                    })
-                } else if (res.data.returnCode==2000) {
                     // wx.showToast({
-                    //   title: '书籍已被删除'
-                    // })                       
+                    //   title: '服务器异常',
+                    //   duration:1500
+                    // })
+                } else if (res.data.returnCode==2000) {
+                    wx.showToast({
+                      title: '书籍已被下架,换一本看看吧~'
+                    })                       
+                } else if (res.data.returnCode == 500) {
+                    resolve(res.data.data)
                 }else{
                     // reject(res.data.data)
                     throw new Error('Network request success but data state not success')

@@ -79,6 +79,7 @@ export default  class Search extends wepy.page{
         }else{
            this.showSearch=true
            this.searchBookList=[]
+           this.$apply()
         }
     },
     }

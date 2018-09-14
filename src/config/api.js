@@ -1,4 +1,5 @@
 let host=`https://www.lajixs.com`
+// let host = `http://192.168.0.136:8081`
 // 用户中心
 const login = `${host}/api/person-login`
 const login_out = `${host}/api/person-ClearUserInfo`
@@ -18,7 +19,8 @@ const get_code = `${host}/api/verification/getCode`
 const check_code = `${host}/api/verification/person-checkedCode`
 const register_code = `${host}/api/verification/sys-getShortMessage`
 //小程序登录api
-const wxCode = `${host}/api/person-LaJiXiaoShuoWAPWeChatLogin`
+const wxCode = `${host}/api/getWeChartLoginInfo`
+const wxLogin = `${host}/api/person-LaJiXiaoShuoAppWeChatLogin`
 //用户打赏
 const RecommendationTicket = `${host}/api/user-RecommendationTicket`
 const RewardGonderTicket = `${host}/api/user-RewardGonderTicket`
@@ -44,6 +46,12 @@ const give_thumbs = `${host}/api/comm-GiveThumbs`
 const hot_comment = `${host}/api/comm-HotCommentInfo`
 const add_comment = `${host}/api/add-getcomminfo`
 const add_reply = `${host}/api/add-replyInfo`
+//用户粉丝
+const addFans = `${host}/api/fans-addFans`
+//用户阅读记录
+const readHistory = `${host}/api/person-UserBookReadRecord/`
+const bookReadHistory = `${host}/api/person-UserBookReadRecordByUserIDAndBookId`
+const addBookReadHistory = `${host}/api/person-addBookReadRecord`
 //书籍控制器
 const get_volume = `${host}/api/books-volumeChapterList/`
 const get_volumeid_chapter = `${host}/api/books-getVolumeById`
@@ -53,6 +61,8 @@ const del_book_rack = `${host}/api/bookshelf-deluserbookshelf`
 const get_book_rack_recommend = `${host}/api/bookshelf-recommendPosition`
 const chapter_subscribe = `${host}/api/book-subscription`
 const book_freetime = `${host}/api/sys-freetimelimit`
+//获取服务器时间
+const getServerTime = `${host}/api/sys-getNetWorkDateTime`
 //分类控制
 const book_class = `${host}/api/ranking-classification`
 const best_seller = `${host}/api/stacks-changxiaobang`
@@ -127,5 +137,11 @@ module.exports = {
   RecommendationTicket,
   RewardGonderTicket,
   SpicyiRewardTicket,
-  personInfo
+  personInfo,
+  wxLogin,
+  addFans,
+  getServerTime,
+  readHistory,
+  bookReadHistory,
+  addBookReadHistory
 }
