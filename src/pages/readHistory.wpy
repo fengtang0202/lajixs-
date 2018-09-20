@@ -1,23 +1,39 @@
 <template>
-    <view>阅读记录</view>
+    <scroll-view style="height:100vh" scroll-y>
+    <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{items}}" wx:key="">
+      <view class="content">
+          {{item.bookName}}
+      </view>
+      <view class="del" catchtap="del" data-index="{{index}}">删除</view>
+    </view>
+    </scroll-view>
 </template>
 <script>
-    import wepy from 'wepy'
-    export default class ReadHistory extends wepy.page{
-        config = {
-            navigationBarTitleText:"阅读记录",
-            usingComponents:{
-
-            }
-        }
-        data = {
-
-        }
-        onLoad(){
-
-        }
+import wepy from 'wepy'
+import Touch from '../mixins/touch'
+import {getBookReadHistory} from '../config/getData'
+export default class ReadHistory extends wepy.page {
+    data={
+        page:1,
+        lastPage:1
     }
-</script>
-<style lang="less" scoped>
+  config = {
+    navigationBarTitleText: '阅读记录'
+  }
+  components = {
 
-</style>
+  }
+  mixins = [Touch]
+  onLoad(){
+    let userInfo=wx.getStorageSync('userInfo')
+    getBookReadHistory(userInfo.userId,1).then(data=>{
+        this.items=data.list
+        this.$apply()
+    })
+    this.initItems(this.items)
+  }
+}
+  </script>
+  <style lang="less" scoped>
+  @import url('../css/touch.less');
+  </style>

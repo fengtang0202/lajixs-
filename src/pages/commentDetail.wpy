@@ -84,7 +84,11 @@ export default class CommentDetail extends wepy.page{
         }
     }
     onLoad(option){
-        this.height=this.$parent.globalData.mh
+         wx.getSystemInfo({
+                success:res=>{     
+                    this.height=res.windowHeight
+                }
+        })
        this.commentId=option.commentId
        getNewComments(this.commentId,1,0).then(res=>{
             this.commentList.push(res)

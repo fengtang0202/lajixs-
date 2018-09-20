@@ -5,9 +5,11 @@
             placeholder="搜索作者或作品..."
             bind:change='onSearch'
             maxlength='20' 
+              use-action-slot
             background="#F8F8F8"
-            focus="{{true}}" 
-          />
+            focus="{{true}}">
+            <view slot="action" bind:tap="onSearchBook">搜索</view>
+    </van-search>
        <scroll-view class='hot_wrap'  style='height:{{height*2-46.25*2}}rpx' scroll-y bindscrolltolower="loadSearchBookList">
         <!-- 搜索模块 -->
          <veiw wx:if='{{showSearch}}'>
@@ -74,14 +76,15 @@ export default  class Search extends wepy.page{
      },
      onSearch(e){
          this.keyWord=e.detail.replace(/\s+/g,"")
-         if(this.keyWord){
-            this.search()             
-        }else{
+         if(!this.keyWord){
            this.showSearch=true
            this.searchBookList=[]
            this.$apply()
         }
     },
+    onSearchBook(){
+        this.search()
+    }
     }
     events = {
        'saveWords':()=>{

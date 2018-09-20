@@ -1,0 +1,115 @@
+<template>
+     <block wx:for="{{List}}" wx:key="{{index}}">
+            <view class="fllow_wrap">
+                <view class="fllow_item">
+                    <image bindtap="handleGo({{is==0?item.followId:item.userId}})" style="margin-right:38rpx;width:104rpx;height:104rpx;border-radius:50%;" src="{{item.userHeadPortraitURL}}"/>
+                    <text style="font-size:32rpx;color:#666666">{{myWxs.strSlice(item.followUserName,6)}}</text>
+                     <image class="sex" wx:if="{{item.userSex==0}}"  src="../images/sex-02_03@3x.png"/>
+                     <image class="sex" wx:if="{{item.userSex==1}}" src="../images/sex-03@3x.png"/>   
+                     <text class='grade'>LV{{item.userGrade}}</text>
+                </view>
+                <view wx:if="{{is==0}}" style="width:160rpx;" bindtap="handleCancel({{index}},{{item.followId}},{{item.userId}})" class="fllow_btn">
+                   <van-icon name="like" color="#F77583"/>
+                   <text>已关注</text>
+                </view>
+                 <view wx:if="{{is==1}}" style="width:{{item.isfollow==0?'140':'160'}}rpx;"  class="fllow_btn"  bindtap="handleFans({{index}},{{item}})">
+                   <van-icon wx:if="{{item.isfollow==0||!item.isfollow}}" name="like-o"  color="#F77583"/>
+                   <van-icon wx:if="{{item.isfollow==1}}" name="like" color="#F77583"/> 
+                   <text>{{item.isfollow==1?'已关注':'关注'}}</text>
+                </view>
+            </view>
+        </block>    
+</template>
+<script>
+    import wepy from 'wepy'
+    import myWxs from '../filter/myWxs.wxs'
+    import {addFans,cancelFans} from '../config/getData'
+    export default class FansAndFllowItem extends wepy.component{
+        props={
+           List:{
+               type:Array,
+               default:[]
+           },
+          is:{
+              type:Number,
+              default:0
+          }
+        }
+        wxs={
+           myWxs 
+        }
+        methods={
+            handleCancel(index,followId,userId){
+                this.$emit('handleCancle',index,followId,userId)
+            },
+            handleFans(index,item){
+                let userId=item.userId
+                let followUserName=item.followUserName
+                 if(wx.getStorageSync('userInfo')){
+                if(item.isfollow==0){
+                    addFans(userId,followUserName).then(data=>{
+                        if(data){
+                            this.List[index].isfollow=1
+                            this.$apply()
+                        }
+                   })
+                }else{
+                    cancelFans(userId).then(data=>{
+                        if(data){
+                            this.List[index].isfollow=0
+                            this.$apply()
+                        }
+                    })
+                }
+              }else{
+                this.$invoke('Login','onClose')                
+             }
+            },
+            handleGo(id){
+                wx.navigateTo({
+                    url:"userCenter?userId="+id
+                })
+            }
+        }
+    }
+</script>
+<style lang="less" scoped>
+ .fllow_wrap{
+        height:140rpx;
+        padding:0 28rpx;
+        border-bottom:2rpx solid #EFEFEF;
+    }
+    .sex{
+        width:20rpx;
+        height:20rpx;
+        margin-left:10rpx;
+    }
+.grade{
+    background-color: #74f3fe;
+    font-size: 22rpx;
+    color: #fff;
+    border-radius:6rpx;
+    padding:0 6rpx;
+    margin-left:18rpx;
+}
+.fllow_item{
+    height:140rpx;
+    line-height: 140rpx;
+    float:left;
+    image{
+     vertical-align:middle;
+    }
+}
+.fllow_btn{
+    float:right;
+    padding:0 20rpx;
+    height:56rpx;
+    border-radius:28rpx;
+    border:2rpx solid rgba(247,117,131,1);
+    margin-top:42rpx;
+    box-sizing: border-box;
+    font-size:32rpx;
+    padding:8rpx;
+    color:#999999;
+}
+</style>

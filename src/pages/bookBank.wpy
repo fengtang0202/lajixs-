@@ -15,7 +15,7 @@
         </view>
         <scroll-view  scroll-top="{{scroll}}" enable-back-to-top='{{true}}' scroll-y bindscrolltolower="loadMore" style='height:{{mtabH-88}}px;width:524rpx;float:left'>
             <block wx:for="{{bankBookList}}" wx:key="{{index}}">
-                <view style="overflow:hidden;padding-bottom:24rpx;padding-top:{{index==0?'0':'24rpx'}};border-bottom:2rpx solid #EFEFEF">
+                <view bindtap="handleGoDetail({{item.bookId}})" style="overflow:hidden;padding-bottom:24rpx;padding-top:{{index==0?'0':'24rpx'}};border-bottom:2rpx solid #EFEFEF">
                    <image src="{{item.bookImage}}" style="border-radius:10rpx;width:162rpx;height:216rpx;float:left;margin-right:10rpx"/>
                    <view class="bookDetail"> 
                         <view style="font-size:32rpx;color:#333;">{{myWxs.strSlice(item.bookName,10)}}</view>
@@ -75,6 +75,11 @@
              scroll:0
         }
         methods={
+            handleGoDetail(bookid){
+                wx.navigateTo({
+                    url:"bookDetail?bookId="+bookid
+                })
+            },
            handleBankType(item){
                this.page=1
                this.type=item.key

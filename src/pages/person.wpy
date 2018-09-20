@@ -2,39 +2,57 @@
      <view class='person'>
          <view class='header-img'>
             <image src='../images/header-img.png'  style='width:100%;height:300rpx' />
-            <view class='person-infon'>
-                <view style='height:90rpx;'>
-                      <view style='font-size:32rpx'>昵称</view>
+            <view  class='person-infon'>
+                <view style='height:90rpx;' wx:if="{{showLogin}}">
+                      <view style='font-size:32rpx'>{{userInfo.pseudonym}}</view>
                       <view class='grade'>
-                          <view style='width:{{grade/20*320}}rpx'>LV{{grade}}</view>
+                          <view style='width:{{userInfo.userGrade/20*320}}rpx'>LV{{userInfo.userGrade}}</view>
                       </view>
                 </view>
-                <view style='height:80rpx;font-size:24rpx;line-height:80rpx'>
-                    暂无签名
+                <view wx:if="{{!showLogin}}" bindtap="handleLogin" style='height:90rpx;line-height:90rpx;font-size:32rpx'>
+                        登录
                 </view>
-                  <image src='' class='avatar'/>
+                <view wx:if="{{showLogin}}" style='height:80rpx;font-size:24rpx;line-height:80rpx'>
+                    {{userInfo.userAutograph}}
+                </view>
+                  <image src='{{userInfo.userHeadPortraitURL}}' class='avatar'/>
             </view>
          </view>
          <view class='fans_wrap'> 
-             <view class='fan' style='border-right:2rpx solid #EFEFEF'>
-                 关注{{0}}
+             <view class='fan' bindtap="handleGo('userFllow')" style='border-right:2rpx solid #EFEFEF'>
+                 <image src="../images/gz.png" />
+                 <text>关注</text>
+                 <text>{{fllow}}</text>
              </view>
-             <view class='fan'>
-                 粉丝{{0}}
+             <view class='fan' bindtap="handleGo('userFans')">
+                 <image src="../images/fs.png"/>
+                 <text>粉丝</text>
+                 <text>{{fans}}</text>
              </view>
          </view>
          <van-cell-group>
-           <van-cell title="我的钱包"  is-link url="wallet"/>
-           <van-cell title="阅读记录"  is-link url="readHistory"/>
-           <van-cell title="我的消息"  is-link url="message"/>
-           <van-cell title="联系客服"  is-link url="customerService"/>
+           <van-cell title="我的钱包"  is-link url="wallet">
+               <image slot="icon" class='list_nav' src="../images/qb.png"/>
+           </van-cell>
+           <van-cell title="阅读记录"  is-link url="readHistory">
+               <image slot="icon" class='list_nav' src="../images/readHistory.png"/>
+           </van-cell>
+           <van-cell title="我的消息"  is-link url="message">
+               <image slot="icon" class='list_nav' src="../images/mymessage.png"/>
+           </van-cell>
+           <van-cell title="联系客服"  is-link url="customerService">
+               <image slot="icon" class='list_nav' src="../images/lxkf.png"/>
+           </van-cell>
         </van-cell-group>
             <button class='goApp' open-type="launchApp" app-parameter="参数" binderror="launchAppError">前往App</button>
+            <Login></Login>
      </view>
 </template>
 <script>
     import wepy from 'wepy'
     import {connect} from "wepy-redux"
+    import Login from '../components/login'
+    import {FansAndFllowCount} from '../config/getData'
     @connect({
         //state
     },
@@ -47,18 +65,66 @@
             "van-cell": "../lib/vant/cell/index",
             "van-cell-group": "../lib/vant/cell-group/index",
             "van-icon": "../lib/vant/icon/index",
+            "van-popup": "../lib/vant/popup/index"
           }
       }
+      components={
+          Login
+      }
+
       data={
-        grade:10
+        grade:10,
+        userInfo:null,
+        showLogin:true,
+        fans:0,
+        fllow:0
+      }
+      events={
+          'reload':()=>{
+            this.userInfo = wx.getStorageSync('userInfo')
+            this.showLogin=true
+            this.getFansAndCount()
+          }
       }
       methods={
+          handleGo(res){
+              if(wx.getStorageSync('userInfo')){
+                  wx.navigateTo({
+                      url:res+"?userId="+wx.getStorageSync('userInfo').userId
+                  })
+              }else{
+                this.$invoke('Login','onClose')
+              }
+          },
           launchAppError(e){
                 console.log(e.detail.errMsg) 
+          },
+          handleLogin(){
+               this.$invoke('Login','onClose')
+          }
+      }
+      getFansAndCount(){
+          FansAndFllowCount(this.userInfo.userId,1).then(data=>{
+                      this.fans=data
+                      this.$apply()
+          })
+          FansAndFllowCount(this.userInfo.userId,0).then(data=>{
+              this.fllow=data
+              this.$apply()
+          })
+      }
+      onShow(){
+        let userInfo=wx.getStorageSync('userInfo')
+          if(userInfo){
+                this.userInfo = userInfo
+                this.getFansAndCount()
+                this.$apply()
+          }else{
+                this.showLogin=false
           }
       }
       onLoad(){
-
+        
       }
 }
 </script>
@@ -87,7 +153,9 @@ view{
       top:0;
       left:34rpx;
       border-radius:50%;
-
+  }
+  .sex{
+      position: absolute;
   }
   .grade{
       width:320rpx;
@@ -128,5 +196,19 @@ view{
     margin-top:26rpx;
     font-size:32rpx;
     text-align:center;
+    text{
+        margin-left:10rpx;
+    }
+    image{
+        width:40rpx;
+        height:40rpx;
+        vertical-align: middle;
+        margin-right:30rpx;
+    }
   }
+.list_nav{
+    width:40rpx;
+    height:40rpx;
+    margin-right:20rpx;
+}
 </style>

@@ -40,7 +40,7 @@ function request(method, requestHandler, isShowLoading = true) {
                         resolve(res.data.data)
                     }else{
                         if(wx.getStorageSync('userInfo')){
-                            wx.navigateTo({url:'Login'})
+                            // wx.navigateTo({url:'Login'})
                             wx.clearStorageSync()
                         }
                     }

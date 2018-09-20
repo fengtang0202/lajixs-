@@ -13,17 +13,17 @@
             <swiper-item class='reward_wrap'>
                 <view >小米椒余额:{{min}}</view>
                 <view class='ste'>
-                    <van-stepper style='float:left' value="{{ min }}" bind:change="onChange1" />
+                    <van-stepper style='float:left' value="{{ minCount }}" bind:change="onChange1" />
                     <view class='all'>ALL</view>
                     <view class='feed' bindtap="handleFeedmin">投喂</view>
                 </view>
             </swiper-item>
             <swiper-item class='reward_wrap'>
-                <view >金椒余额:{{1}}</view>
+                <view >金椒余额:{{gloden}}</view>
                 <view class='ste'>
-                    <van-stepper integer="{{integer}}" style='float:left' value="{{ gloden }}" bind:change="onChange2" />
+                    <van-stepper integer="{{integer}}" style='float:left' value="{{ glodenCount }}" bind:change="onChange2" />
                     <view class='all'>ALL</view>
-                    <view class='feed' >投喂</view>
+                    <view class='feed' bindtap="handleFeedGloden" >投喂</view>
                 </view>
             </swiper-item>
         </swiper>
@@ -32,14 +32,16 @@
 </template>
 <script>
     import wepy from 'wepy'
-    import {RecommendationTicket} from '../config/getData'
+    import {RecommendationTicket,RewardGonderTicket} from '../config/getData'
     import Toast from '../lib/vant/toast/toast'
     export default class RiceChilli extends wepy.component{
         data={
             Riceshow:false,
             currentTab:0,
-            min:1,
-            gloden:1,
+            min:0,
+            gloden:0,
+            minCount:1,
+            glodenCount:1,
             integer:true
         }
         props={
@@ -47,17 +49,33 @@
         }
     methods = {
         onChange1(e){
-           this.min=e.detail
+           this.minCount=e.detail
         },
         onChange2(e){
-            this.gloden=e.detail
+            this.glodenCount=e.detail
         },
        async handleFeedmin(){
-            let data= await RecommendationTicket(this.min,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId)
-            if(data == "ok"){
+            let userInfo=wx.getStorageSync("userInfo")
+            let data= await RecommendationTicket(this.minCount,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId)
+            if(data){
                 Toast('投喂成功~')
+                this.min=userInfo.userRecommendTicket-1
+                userInfo.userRecommendTicket=this.min
+                wx.setStorageSync("userInfo",userInfo)
             }else{
                 Toast('小米椒不足~')
+            }
+        },
+        async handleFeedGloden(){
+            let userInfo=wx.getStorageSync("userInfo")
+            let data= await RewardGonderTicket(this.glodenCount,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId)
+            if(data){
+                Toast('投喂成功~')
+                this.gloden=userInfo.userGoldenTicket-this.glodenCount
+                userInfo.userGoldenTicket=this.gloden
+                wx.setStorageSync("userInfo",userInfo)
+            }else{
+                Toast('金椒不足~') 
             }
         },
         onClose(index){
@@ -74,13 +92,17 @@
         },
         bindChange(e){
             this.currentTab = e.detail.current
-        }  
+         }  
         }
         events={
             
         }
         onLoad(){
-            
+            if(wx.getStorageSync("userInfo")){
+               this.min=wx.getStorageSync("userInfo").userRecommendTicket
+               this.gloden=wx.getStorageSync("userInfo").userGoldenTicket
+               this.$apply()
+            }
         }
     }
 </script>

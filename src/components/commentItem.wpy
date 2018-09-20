@@ -1,7 +1,7 @@
 <template>
         <block wx:for="{{commentList}}" wx:key="{{item.id}}">
                         <view class='book_comment_item' data-id="{{item.id}}">
-                               <image  src='{{item.userHeadPortraitURL}}' class='comment_avatar'/>
+                               <image  bindtap="handleGoPerson({{item.userId}})" src='{{item.userHeadPortraitURL}}' class='comment_avatar'/>
                                <image  wx:if="{{item.vipGrade>0}}" src="../images/crown@3x.png" class='vip'/>
                                <view class='comment_item'>
                                    <view style="overflow:hidden;">
@@ -18,7 +18,7 @@
                                     <view style='font-size:28rpx;margin:4rpx 0;'>
                                         {{item.commentContext}}
                                     </view>
-                                    <view class='btn_wrap'>
+                                    <view class='btn_wrap' wx:if="{{is}}">
                                         <view class="reply" bindtap='handleGO({{item.id}})'>
                                               <image src="../images/message@3x.png"/>
                                               <text>{{item.replyCount}}</text>
@@ -37,11 +37,16 @@
   import wepy from 'wepy'
   import {updateLike} from '../config/getData'
   import myWxs from '../filter/myWxs.wxs'
+  import Login from '../components/login'
   export default class bookItem extends wepy.component {
         props = {
           commentList:{
               type:Array,
               default:[]
+          },
+          is:{
+              type:Boolean,
+              default:true
           } 
         }
         wxs = {
@@ -49,7 +54,8 @@
         }
         methods = {
            handleLike(id){
-               updateLike(id).then(()=>{
+               if(wx.getStorageSync('userInfo')){
+                    updateLike(id).then(()=>{
                    this.commentList.forEach((el,index) => {
                          if(el.id==id){
                             if(el.isthumbs==0){
@@ -63,8 +69,17 @@
                             }         
                         }
                    });
-               })
+                 })
+               }else{
+                   this.$parent.$invoke('Login','onClose')
+               }
+              
           },
+          handleGoPerson(id){
+              wx.navigateTo({
+                  url:'userCenter?userId='+id
+              })
+          },    
           handleGO(id){
              wx.navigateTo({
                 url:'commentDetail?commentId='+id

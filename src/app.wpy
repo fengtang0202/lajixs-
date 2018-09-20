@@ -37,7 +37,10 @@ export default class extends wepy.app {
       'pages/del',
       'pages/reader',
       'pages/search',
-      'pages/Login'
+      'pages/Login',
+      'pages/userCenter',
+      'pages/userFllow',
+      'pages/userFans'
     ],
     window: {
       backgroundTextStyle: '#fff',
@@ -80,9 +83,6 @@ export default class extends wepy.app {
   globalData = {
     userInfo:null,
     mh:0,
-    appid:0,
-    sessionKey:0,
-    unionid:0,
     cookie:''
   }
 
@@ -93,6 +93,11 @@ export default class extends wepy.app {
   }
 
   onLaunch(ops) {
+    let userInfo=wx.getStorageSync('userInfo')
+    if(userInfo){
+      this.globalData.userInfo=userInfo
+      this.globalData.cookie=wx.getStorageSync('cookie')
+    }
     wx.getSystemInfo({
         success:res=>{     
             this.globalData.mh=res.windowHeight
@@ -100,39 +105,23 @@ export default class extends wepy.app {
     })
     this.testAsync()
     var that=this;
-    wx.getSetting({
-      success:res=>{
-         if (res.authSetting['scope.userInfo']) {
-           console.log('用户已授权')
-            wx.getUserInfo({
-              success: function (res) {
-                  // wx.switchTab({
-                  //     url: 'index'
-                  // })
-              }
-            });
-         }
-      },
-      fail:function(res){
-        console.log(res)
-      } 
-    })
-    // wx.login({
+    // wx.getSetting({
     //   success:res=>{
-    //     if (res.code) {
-    //       getAppid(res.code).then(res=>{
-    //         this.globalData.sessionKey=res.session_key
-    //         this.globalData.unionid=res.unionid
-    //         this.globalData.openid=res.openid
-    //       })
-    //     } else {
-    //       console.log('登录失败！' + res.errMsg)
-    //     }
+    //      if (res.authSetting['scope.userInfo']) {
+    //        console.log('用户已授权')
+    //         wx.getUserInfo({
+    //           success: function (res) {
+    //               // wx.switchTab({
+    //               //     url: 'index'
+    //               // })
+    //           }
+    //         });
+    //      }
     //   },
     //   fail:function(res){
     //     console.log(res)
-    //   }
-    // });
+    //   } 
+    // })
   }
   onShow(ops){
     if(ops.scene==1044){

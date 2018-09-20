@@ -1,0 +1,60 @@
+<template>
+     <scroll-view style="height:100vh" scroll-y bindscrolltolower="loadMore">
+       <FansAndFllowItem :is="type" :List.sync="FansList"></FansAndFllowItem>
+    </scroll-view>    
+</template>
+<script>
+    import wepy from 'wepy'
+    import {getUserFans} from '../config/getData'
+    import FansAndFllowItem from '../components/fansAndFllowItem'
+    export default class UserFans extends wepy.page{
+        config={
+            navigationBarTitleText:"Ta的粉丝",
+            usingComponents:{
+              "van-icon": "../lib/vant/icon/index"
+            }
+        }
+        data={
+            FansList:[],
+            userId:0,
+            page:1,
+            lastPage:1,
+            type:1
+        }
+        components={
+            FansAndFllowItem
+        }
+        methods={
+           loadMore(){
+                this.page++
+                if(this.page>this.lastPage){
+                wx.showToast({
+                    title:'没有更多了'
+               })
+                return;
+              }
+              getUserFans(this.userId,this.page).then(data=>{
+                   this.FansList=this.FansList.concat(data.list)
+                   this.$apply()
+              })
+            }   
+        }
+        onShow(){
+             getUserFans(this.userId,1).then(data=>{
+                this.lastPage=data.pages
+                this.FansList=data.list
+                this.$apply()
+            })
+        }
+        onLoad(ops){
+             wx.setNavigationBarColor({
+                frontColor:'#ffffff',
+                backgroundColor:'#F55968'
+            })
+            this.userId=ops.userId
+        }
+    }
+</script>
+<style lang="less" scoped>
+
+</style>

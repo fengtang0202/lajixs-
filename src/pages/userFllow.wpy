@@ -1,0 +1,69 @@
+<template>
+    <scroll-view style="height:100vh" scroll-y bindscrolltolower="loadMore">
+       <FansAndFllowItem :List.sync="fllowList"></FansAndFllowItem>
+    </scroll-view>      
+</template>
+<script>
+    import wepy from 'wepy'
+    import {getUserFllow,cancelFans} from '../config/getData'
+    import FansAndFllowItem from '../components/fansAndFllowItem'
+    export default class UserFllow  extends wepy.page {
+        config={
+            navigationBarTitleText:"Ta的关注",
+            usingComponents:{
+              "van-icon": "../lib/vant/icon/index"
+            }
+        }
+        components={
+            FansAndFllowItem
+        }
+        data={
+            fllowList:[],
+            userId:0,
+            page:1,
+            lastPage:1
+        }
+        events={
+            "handleCancle":(index,followId,userId)=>{
+                if(userId!=wx.getStorageSync("userInfo").userId){
+                    return;
+                }
+                cancelFans(followId).then(data=>{
+                    if(data){
+                        this.fllowList.splice(index,1)
+                   }
+                })
+            }
+        }
+        methods={
+            loadMore(){
+                this.page++
+                if(this.page>this.lastPage){
+                wx.showToast({
+                    title:'没有更多了'
+               })
+                return;
+              }
+              getUserFllow(this.userId,this.page).then(data=>{
+                   this.fllowList=this.fllowList.concat(data.list)
+                   this.$apply()
+              })
+            }   
+        }
+        onLoad(ops){
+            wx.setNavigationBarColor({
+                frontColor:'#ffffff',
+                backgroundColor:'#F55968'
+            })
+            this.userId=ops.userId
+            getUserFllow(this.userId,this.page).then(data=>{
+                this.fllowList=data.list
+                this.lastPage=data.pages
+                this.$apply()
+            })
+        }
+    }
+</script>
+<style lang="less" scoped>
+  
+</style>

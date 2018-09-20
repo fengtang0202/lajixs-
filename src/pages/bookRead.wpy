@@ -19,7 +19,7 @@
       </view>
       <van-toast id="van-toast" />
     </scroll-view>
-    <Directory :chapterList.sync="directoryChapterList"></Directory>
+    <Directory :chapterId.sync="chapterId" :chapterList.sync="directoryChapterList"></Directory>
  </view>    
 </template>
 <script>
@@ -55,9 +55,13 @@
         events={
           'handleEx':(chapterId)=>{
             this.chapterId=chapterId
-            this.$invoke('Directory','onClose')            
-            this.getBookText()
+            this.$invoke('Directory','onClose')
+            this.handleClickDiretoryBookText()
           }
+        }
+       async handleClickDiretoryBookText(){
+            await  this.getNowChapterId()
+            await  this.getBookText()
         }
         methods={
           handleDiretory(){
@@ -65,13 +69,14 @@
           },
           getNextPreBookText(type){
             if(type==1){
-              if(this.chapterIdNum==this.chapterList.length){
-                Toast('')
+              if(this.chapterIdNum==this.chapterList.length-1){
+                Toast('目前最新一章~')
                 return;
                }
                this.chapterIdNum++
             }else{
                 if(this.chapterIdNum==0){
+                  Toast('到第一章了~')
                   return;
                 }
                 this.chapterIdNum--
@@ -119,8 +124,8 @@
             })
           this.bookId=option.bookId
           this.chapterId=option.chapterId
-          this.getBookText()
           this.getNowChapterId()  
+          this.getBookText()
        }
     }
 </script>

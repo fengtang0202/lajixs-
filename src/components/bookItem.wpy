@@ -25,8 +25,8 @@
 <template>
   <view class='recommend_wrap' >
         <block wx:for-items="{{list}}" wx:key="{{item.bookId}}">
-               <view class='book' bindtap='handleGo' data-id="{{item.bookId}}">
-                      <image src="{{item.bookImage}}"/>
+               <view class='book'  bindtap='handleGo' data-id="{{item.bookId}}">
+                      <image  src="{{item.bookImage}}"/>
                       <text>{{item.bookName}}</text>
                       <text style='color:#999'>{{item.writerName}}</text>
                </view>

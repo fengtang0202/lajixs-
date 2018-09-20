@@ -60,7 +60,7 @@ const updateLike=commentId=>{
         params:{
             commentId
         }
-    })
+    },false)
 }
 const addComment = (bookId, commentContext, userName, bookName)=>{
     return post({
@@ -71,7 +71,7 @@ const addComment = (bookId, commentContext, userName, bookName)=>{
             userName:userName,
             bookName:bookName
         }
-    })
+    },false)
 }
 const addReply = (bookid, replyCommentsContent, userName, bookName, commentId, puserId)=>{
     return post({
@@ -194,7 +194,7 @@ const RewardGonderTicket = (goldenTicketCount, bookid, bookName, authorId) => {
           bookName:bookName,
           authorId:authorId
         }
-    })
+    },false)
 }
 const RecommendationTicket = (recommendTicketCount, bookid, bookName, authorId)=>{
     return post({
@@ -205,7 +205,7 @@ const RecommendationTicket = (recommendTicketCount, bookid, bookName, authorId)=
             bookName: bookName,
             authorId: authorId
         }
-    })
+    },false)
 }
 const getPersonInfo = puserid=>{
     return post({
@@ -252,7 +252,18 @@ const addFans = (followId, followUserName)=>{
             followId:followId,
             followUserName:followUserName
         }
-    })
+    },false)
+}
+const cancelFans=followId=>{
+    return post({
+        url:api.cancelFans,
+        params:{
+            followId:followId
+        }
+    },false)
+}
+const FansAndFllowCount = (userid, type) => {
+    return get({url:`${api.FansAndFllowCount}${userid}/${type}`},false)
 }
 const CheckSubscribe = (bookid, type, isSelect)=>{
     return post({
@@ -262,7 +273,7 @@ const CheckSubscribe = (bookid, type, isSelect)=>{
             type:type,
             isSelect:isSelect
         }
-    })
+    },false)
 }
 const addBookRack = (userName, bookId, bookName) => {
     return post({
@@ -272,9 +283,53 @@ const addBookRack = (userName, bookId, bookName) => {
             bookId:bookId,
             bookName: bookName
         }
-    })
+    },false)
+}
+const getPersonBookRack = (startpage,userid)=>{
+    return post({
+        url: api.personBookRack,
+        params:{
+            startPage:startpage,
+            userid:userid
+        }
+    },false)
+}
+const getPersonComment = (startPage,userid)=>{
+   return post({
+       url:api.personComment,
+       params:{
+           startPage: startPage,
+           userid:userid
+       }
+   })
 }
 const getServerTime=get({url:api.getServerTime})
+const getAuthorBook = authorId=>{
+    return post({
+        url:api.authorAllBook,
+        params:{
+            authorId:authorId
+        }
+    },false)
+}
+const getUserFllow = (puserid, startpage)=>{
+    return get({
+        url:api.getUserFllow,
+        params:{
+            puserid:puserid,
+            startpage:startpage
+        }
+    })
+}
+const getUserFans = (puserid, startpage)=>{
+    return get({
+        url:api.getUserFans,
+        params:{
+            puserid:puserid,
+            startpage:startpage
+        }
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -304,10 +359,17 @@ module.exports = {
     getPersonInfo,
     getAppid,
     addFans,
+    cancelFans,
     getServerTime,
     CheckSubscribe,
     addBookRack,
     getBookReadHistory,
     bookReadHistory,
-    addBookReadHistroy
+    addBookReadHistroy,
+    FansAndFllowCount,
+    getPersonBookRack,
+    getPersonComment,
+    getAuthorBook,
+    getUserFllow,
+    getUserFans
 }

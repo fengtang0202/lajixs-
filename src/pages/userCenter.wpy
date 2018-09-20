@@ -1,0 +1,237 @@
+<template>
+    <view class='userCenter'>
+        <view class='userInfo'>
+            <view style="height:160rpx;">
+                <image  style='margin-left:288rpx;margin-right:130rpx;vertical-align:middle;height:160rpx;width:160rpx;border-radius:50%' src="{{PersonInfo.userHeadPortraitURL}}"/>
+                <view bindtap="handleFllow" style="text-align:center;display:inline-block;width:68rpx;height:68rpx;border-radius:50%;background:#fff;line-height:76rpx;">
+                  <van-icon wx:if="{{isfllow==0||!isfllow}}" name="like-o"  color="#F77583"/>
+                  <van-icon wx:if="{{isfllow==1}}" name="like" color="#F77583"/>
+                </view>
+            </view>
+            <view style="text-align:center;">
+                <text style="font-size:32rpx;margin-right:10rpx">{{PersonInfo.pseudonym}}</text>
+                <image wx:if="{{PersonInfo.userSex==1}}" src="../images/sex-03@3x.png" class='sex'/>
+                <image wx:if="{{PersonInfo.userSex==0}}" src="../images/sex-02_03@3x.png" class='sex'/>
+            </view>
+            <view style="text-align:center;font-size:28rpx">
+                {{PersonInfo.userAutograph}}
+            </view>
+            <view style="height:20rpx;width:380rpx;background:#D6D6D6;border-radius:11rpx;margin:8rpx auto;">
+                <view style="padding:0 8rpx;border-radius:11rpx;background:#30E7F7;font-size:18rpx;height:100%;line-height:20rpx;width:{{PersonInfo.userGrade/20*380}}rpx">
+                    LV{{PersonInfo.userGrade}}
+                </view>
+            </view>
+            <view class='fans_wrap'> 
+                <view class='fan' bindtap="handleGoFllow('userFllow')" style='border-right:2rpx solid #fff'>
+                    <text>关注</text>
+                    <text>{{fllow}}</text>
+                </view>
+                <view class='fan' bindtap="handleGoFllow('userFans')">
+                    <text>粉丝</text>
+                    <text>{{fans}}</text>
+                </view>
+            </view>
+        </view>
+            <view class='bookRack_wrap'>
+                <view wx:if="{{!isAuthor}}" style="text-align:center;">Ta的书架</view>
+                <view wx:if="{{isAuthor}}" style="text-align:center;">Ta的作品</view>
+                <view class="bookRack">
+                    <block wx:for="{{BookList}}" wx:key="{{item.bookId}}">
+                        <view class='book' style="margin-right:{{index==3&&'0'}}" bindtap="handleGo({{item.bookId}})">
+                                <image  src="{{item.bookImage}}"/>
+                                <text>{{item.bookName}}</text>
+                                <text style='color:#999'>{{item.writerName}}</text>
+                        </view>
+                    </block> 
+                </view>
+                <view class='all' wx:if="{{bookCount>4}}">
+                    查看全部{{bookCount}}本
+                </view>
+            </view>
+            <view class='comment_wrap'>
+                <view style="text-align:center;margin-top:30rpx">Ta的书评</view>
+                <commentList :is="isz" :commentList.sync="commentList"></commentList>
+                <view class='all' wx:if="{{CommentCount>2}}">
+                    查看全部{{CommentCount}}评论
+                </view>
+            </view>
+            <Login></Login>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+import {cancelFans,addFans,getPersonInfo,FansAndFllowCount,getPersonBookRack,getPersonComment,getAuthorBook} from '../config/getData'
+import commentList from '../components/commentItem'
+import Login from '../components/login'
+export default  class UserCenter extends wepy.page{
+    config={
+        navigationBarTitleText: 'Ta的主页',
+        usingComponents: {
+            "van-icon": "../lib/vant/icon/index"
+        },
+    }
+    components={
+        commentList,
+        Login
+    }
+    data={
+        userId:0,
+        PersonInfo:{},
+        dz:false,
+        fllow:0,
+        fans:0,
+        isAuthor:false,
+        BookList:[],
+        bookCount:0,
+        commentList:[],
+        isz:false,
+        CommentCount:0,
+        isfllow:0
+    }
+    methods={
+        handleFllow(){
+            if(wx.getStorageSync('userInfo')){
+                if(this.isfllow==0){
+                    addFans(this.PersonInfo.userId,this.PersonInfo.pseudonym).then(data=>{
+                        if(data){
+                            this.isfllow=1
+                            this.$apply()
+                        }
+                   })
+                }else{
+                    cancelFans(this.PersonInfo.userId).then(data=>{
+                        if(data){
+                            this.isfllow=0
+                            this.$apply()
+                        }
+                    })
+                }
+            }else{
+                this.$invoke('Login','onClose')                
+            }
+        },
+        handleGo(id){
+            wx.navigateTo({
+                url:"bookDetail?bookId="+id
+            })
+        },
+        handleGoFllow(res){
+            wx.navigateTo({
+                url:res+'?userId='+this.PersonInfo.userId
+            })
+        }
+    }
+    onLoad(ops){
+        this.userId=ops.userId
+        wx.setNavigationBarColor({
+          frontColor:'#ffffff',
+          backgroundColor:'#F55968'
+        })
+         FansAndFllowCount(this.userId,1).then(data=>{
+                    this.fans=data
+                    this.$apply()
+        })
+         FansAndFllowCount(this.userId,0).then(data=>{
+                    this.fllow=data
+                    this.$apply()
+        })
+       
+        getPersonInfo(this.userId).then(data=>{
+            this.PersonInfo=data
+            this.isAuthor=data.isAuthor
+            this.isfllow=data.isfollow
+            if(this.isAuthor==0){
+                 getPersonBookRack(1,this.userId).then(data=>{
+                    if(data){
+                        this.BookList=data.list.slice(0,4)
+                        this.bookCount=data.total
+                        this.$apply()
+                    }
+                })
+            }else{
+                getAuthorBook(this.userId).then(data=>{
+                    if(data){
+                        this.BookList=data.slice(0,4)
+                        this.bookCount=data.total
+                        this.$apply()
+                    }
+                })
+            }
+            this.$apply()
+        })
+        getPersonComment(1,this.userId).then(data=>{
+            if(data){
+                this.CommentCount=data.total
+                this.commentList=data.list.slice(0,2)
+                this.$apply()
+            }
+        })
+    }
+}
+</script>
+<style lang="less" scoped>
+view{
+    box-sizing: border-box;
+}
+    .userInfo{
+        // height:370rpx;
+        background:linear-gradient(180deg,rgba(245,89,104,1) 0%,rgba(237,156,138,1) 100%);
+        color:#fff;
+   }
+    .sex{
+        width:30rpx;
+        height:28rpx;
+    }
+     .fans_wrap{
+      height:58rpx;
+      border-bottom:2rpx solid #fff;  
+      border-top:2rpx solid   #fff;
+      margin-top:22rpx;
+  }
+  .fan{
+    width:50%;
+    height:44rpx;
+    float:left;
+    margin-top:7rpx;
+    font-size:32rpx;
+    text-align:center;
+    text{
+        margin-right:10rpx;
+    }
+  }
+  .book{
+    width: 160rpx;
+    height: 300rpx;
+    float: left;
+    margin-top:14rpx;   
+    text-align: center;
+    margin-right:16rpx;
+    text{
+       display: block;
+       font-size:28rpx;
+       white-space: nowrap;
+       text-overflow: ellipsis;
+       overflow: hidden;
+    }
+    image{
+      width: 162rpx;
+      height: 216rpx;
+      border-radius: 10rpx;
+    }
+}
+.bookRack_wrap{
+    padding: 28rpx;
+    border-top:8rpx solid #EFEFEF;
+    border-bottom:8rpx solid #EFEFEF;
+}
+.bookRack{
+    overflow: hidden;
+}
+.all{
+    height:74rpx;
+    color:#FB5E6F;
+    font-size:28rpx;
+    line-height:74rpx;
+    text-align:center;
+}
+</style>

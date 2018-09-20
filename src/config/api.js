@@ -1,5 +1,5 @@
-let host=`https://www.lajixs.com`
-// let host = `http://192.168.0.136:8081`
+// let host=`https://www.lajixs.com`
+let host = `http://192.168.0.136:8081`
 // 用户中心
 const login = `${host}/api/person-login`
 const login_out = `${host}/api/person-ClearUserInfo`
@@ -48,6 +48,10 @@ const add_comment = `${host}/api/add-getcomminfo`
 const add_reply = `${host}/api/add-replyInfo`
 //用户粉丝
 const addFans = `${host}/api/fans-addFans`
+const FansAndFllowCount = `${host}/api/fans-followCount/`
+const cancelFans = `${host}/api/fans-CancelFollow`
+const getUserFllow = `${host}/api/fans-userFollow`
+const getUserFans = `${host}/api/fans-userFans`
 //用户阅读记录
 const readHistory = `${host}/api/person-UserBookReadRecord/`
 const bookReadHistory = `${host}/api/person-UserBookReadRecordByUserIDAndBookId`
@@ -79,6 +83,9 @@ const bookRead = `${host}/api/book-read`
 const bookReword = `${host}/api/getSpicyirewardticketlogByBookId`
 //其他用户信息
 const personInfo = `${host}/api/person-SimplifyUserInfo`
+const personBookRack = `${host}/api/bookshelf-getuserbookshelf`
+const personComment = `${host}/api/comm-commInfoByUserId`
+const authorAllBook = `${host}/api/book-AuthorAllBookInfo`
 module.exports = {
   login,
   get_user_info,
@@ -140,8 +147,15 @@ module.exports = {
   personInfo,
   wxLogin,
   addFans,
+  cancelFans,
+  getUserFllow,
   getServerTime,
   readHistory,
   bookReadHistory,
-  addBookReadHistory
+  addBookReadHistory,
+  FansAndFllowCount,
+  personBookRack,
+  personComment,
+  authorAllBook,
+  getUserFans
 }
