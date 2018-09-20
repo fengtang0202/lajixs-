@@ -23,6 +23,11 @@ export default class ReadHistory extends wepy.page {
   components = {
 
   }
+  methods = {
+     del: function (e) {
+        this.items.splice(e.currentTarget.dataset.index, 1)
+      }
+  }
   mixins = [Touch]
   onLoad(){
     let userInfo=wx.getStorageSync('userInfo')

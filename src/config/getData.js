@@ -294,6 +294,14 @@ const getPersonBookRack = (startpage,userid)=>{
         }
     },false)
 }
+const delBookRack=id=>{
+    return post({
+        url:api.del_book_rack,
+        params:{
+            id:id
+        }
+    },false)
+}
 const getPersonComment = (startPage,userid)=>{
    return post({
        url:api.personComment,
@@ -326,6 +334,33 @@ const getUserFans = (puserid, startpage)=>{
         url:api.getUserFans,
         params:{
             puserid:puserid,
+            startpage:startpage
+        }
+    })
+}
+const userSignin=()=>{
+    return post({
+        url:api.userSignin
+    },false)
+}
+const userSiginState=()=>{
+    return get({
+        url: api.userSiginState
+    },false)
+}
+const getUserReplyInfo = (userid, startPage)=>{
+    return post({
+        url:api.userReplyInfo,
+        params:{
+            userid:userid,
+            startPage:startPage
+        }
+    })
+}
+const getSystemMsg = (startpage=1)=>{
+    return post({
+        url:api.systemMsg,
+        params:{
             startpage:startpage
         }
     })
@@ -371,5 +406,10 @@ module.exports = {
     getPersonComment,
     getAuthorBook,
     getUserFllow,
-    getUserFans
+    getUserFans,
+    delBookRack,
+    userSignin,
+    userSiginState,
+    getUserReplyInfo,
+    getSystemMsg
 }

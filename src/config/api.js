@@ -86,6 +86,10 @@ const personInfo = `${host}/api/person-SimplifyUserInfo`
 const personBookRack = `${host}/api/bookshelf-getuserbookshelf`
 const personComment = `${host}/api/comm-commInfoByUserId`
 const authorAllBook = `${host}/api/book-AuthorAllBookInfo`
+const userSignin = `${host}/api/user-signin`
+const userSiginState = `${host}/api/user-signinstate`
+const userReplyInfo = `${host}/api/comm-coverReplyInfo`
+const systemMsg = `${host}/api/sys-getsystemmsg`
 module.exports = {
   login,
   get_user_info,
@@ -157,5 +161,9 @@ module.exports = {
   personBookRack,
   personComment,
   authorAllBook,
-  getUserFans
+  getUserFans,
+  userSignin,
+  userSiginState,
+  userReplyInfo,
+  systemMsg
 }

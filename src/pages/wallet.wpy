@@ -2,7 +2,7 @@
     <view>
         <view class='header'>
             <view style='text-align:center;color:#fff'>
-                <text style="font-size:60rpx;">{{price}}</text>
+                <text style="font-size:60rpx;">{{userMoney}}</text>
                 <text style="font-size:24rpx;margin-left:32rpx;">辣椒</text>
                 <image src='../images/lj.png' style='width:24rpx;height:36rpx;margin-left:14rpx'/>
             </view>
@@ -33,7 +33,10 @@
             }
         }
         data={
-            price:1,
+            userMoney:0,
+            // userRecommendTicket:0,
+            // userGoldenTicket:0,
+            // userReadTicket:0,
             moneyList:[
                 {img:'../images/zj.png',price:0,type:'金椒',gift:'每充值12元送一张金椒',width:40},
                 {img:'../images/mj.png',price:0,type:'小米椒',gift:'每日登陆小米椒+1,隔天清零,快去送给你喜欢的作者吧！',width:44},
@@ -45,6 +48,16 @@
                 wx.navigateTo({
                   url:'accountRecharge'
                 })
+            }
+        }
+        onShow(){
+            let userInfo=wx.getStorageSync("userInfo")
+            if(userInfo){
+                 this.userMoney=userInfo.userMoney
+                 this.moneyList[0].price=userInfo.userGoldenTicket
+                 this.moneyList[1].price=userInfo.userRecommendTicket
+                 this.moneyList[2].price=userInfo.userReadTicket
+                 this.$apply()
             }
         }
         onLoad(){

@@ -55,6 +55,10 @@ function request(method, requestHandler, isShowLoading = true) {
                     })                       
                 } else if (res.data.returnCode == 500) {
                     resolve(res.data.data)
+                } else if (res.data.returnCode == 800){
+                    resolve(res.data.data)
+                } else if (res.data.returnCode == 700){
+                    resolve(1)
                 }else{
                     // reject(res.data.data)
                     throw new Error('Network request success but data state not success')

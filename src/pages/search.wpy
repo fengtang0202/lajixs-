@@ -5,12 +5,12 @@
             placeholder="搜索作者或作品..."
             bind:change='onSearch'
             maxlength='20' 
-              use-action-slot
+            use-action-slot
             background="#F8F8F8"
             focus="{{true}}">
             <view slot="action" bind:tap="onSearchBook">搜索</view>
     </van-search>
-       <scroll-view class='hot_wrap'  style='height:{{height*2-46.25*2}}rpx' scroll-y bindscrolltolower="loadSearchBookList">
+       <scroll-view class='hot_wrap' scroll-top="{{scroll}}" style='height:{{height*2-46.25*2}}rpx' scroll-y bindscrolltolower="loadSearchBookList">
         <!-- 搜索模块 -->
          <veiw wx:if='{{showSearch}}'>
            <view class='t'>热门搜索</view>
@@ -53,6 +53,7 @@ export default  class Search extends wepy.page{
         searchPage:1,
         searchLastPage:1,
         height:0,
+        scroll:0
     }
     methods={
         loadSearchBookList(){
@@ -83,6 +84,8 @@ export default  class Search extends wepy.page{
         }
     },
     onSearchBook(){
+        this.searchPage=1
+        this.scroll==1?this.scroll=0:this.scroll=1
         this.search()
     }
     }

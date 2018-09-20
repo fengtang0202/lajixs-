@@ -1,5 +1,5 @@
 <template>
-    <scroll-view style="height:100vh" scroll-y bindscrolltolower="loadMore">
+    <scroll-view style="height:{{height-20}}px" scroll-y bindscrolltolower="loadMore">
        <FansAndFllowItem :List.sync="fllowList"></FansAndFllowItem>
     </scroll-view>      
 </template>
@@ -21,7 +21,8 @@
             fllowList:[],
             userId:0,
             page:1,
-            lastPage:1
+            lastPage:1,
+            height:0
         }
         events={
             "handleCancle":(index,followId,userId)=>{
@@ -54,6 +55,11 @@
             wx.setNavigationBarColor({
                 frontColor:'#ffffff',
                 backgroundColor:'#F55968'
+            })
+            wx.getSystemInfo({
+                success:res=>{     
+                    this.height=res.windowHeight
+                }
             })
             this.userId=ops.userId
             getUserFllow(this.userId,this.page).then(data=>{

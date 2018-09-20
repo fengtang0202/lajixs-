@@ -55,10 +55,8 @@ export default class TouchMixin  extends wepy.mixin{
         that.setData({
           items: that.items
         })
-      },
-      //删除事件
-      del: function (e) {
-        this.items.splice(e.currentTarget.dataset.index, 1)
       }
+      //删除事件
+     
     }
 }

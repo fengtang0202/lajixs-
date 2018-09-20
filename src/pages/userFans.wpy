@@ -1,5 +1,5 @@
 <template>
-     <scroll-view style="height:100vh" scroll-y bindscrolltolower="loadMore">
+     <scroll-view style="height:{{height-20}}px" scroll-y bindscrolltolower="loadMore">
        <FansAndFllowItem :is="type" :List.sync="FansList"></FansAndFllowItem>
     </scroll-view>    
 </template>
@@ -19,7 +19,8 @@
             userId:0,
             page:1,
             lastPage:1,
-            type:1
+            type:1,
+            height:0
         }
         components={
             FansAndFllowItem
@@ -27,10 +28,11 @@
         methods={
            loadMore(){
                 this.page++
+                console.log(this.page,this.lastPage)
                 if(this.page>this.lastPage){
-                wx.showToast({
-                    title:'没有更多了'
-               })
+                    wx.showToast({
+                        title:'没有更多了'
+                })
                 return;
               }
               getUserFans(this.userId,this.page).then(data=>{
@@ -47,6 +49,11 @@
             })
         }
         onLoad(ops){
+              wx.getSystemInfo({
+                success:res=>{     
+                    this.height=res.windowHeight
+                }
+            })
              wx.setNavigationBarColor({
                 frontColor:'#ffffff',
                 backgroundColor:'#F55968'

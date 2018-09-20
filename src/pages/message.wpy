@@ -12,38 +12,41 @@
         </view>
         <swiper current="{{currentTab}}" class="swiper" duration="300" style="height:{{mtabH*2-88}}rpx" bindchange="bindChange">
             <swiper-item>
-                <scroll-view scroll-y style='height:100%'>
+                <scroll-view scroll-y style='height:100vh'>
+                    <block wx:for="{{ReplyList}}" wx:key="{{index}}">
                     <view class='message_item'>
                         <view style='overflow:hidden;margin-left:28rpx;'>
-                        <image class='message_avatar' src='../images/4@3x.png'/>
+                        <image class='message_avatar' src="{{item.userHeadPortraitURL}}"/>
                         <view class='message_info'>
                             <view style='overflow:hidden'>
-                                    <text style='font-size:32rpx'>昵称</text>
-                                    <image src='../images/sex-02_03@3x.png' style='width:26rpx;height:26rpx;margin-left:16rpx;'/>
-                                    <text style="font-size:20rpx;color:#999;margin-left:420rpx;">17:20</text>
+                                    <text style='font-size:32rpx'>{{item.replyUserName}}</text>
+                                    <image wx:if="{{item.userSex==1}}" src='../images/sex-02_03@3x.png' style='width:26rpx;height:26rpx;margin-left:16rpx;'/>
+                                    <image wx:if="{{item.userSex==0}}" src='../images/sex-03@3x.png' style='width:26rpx;height:26rpx;margin-left:16rpx;'/>
+                                    <text style="font-size:20rpx;color:#999;margin-left:300rpx;">{{myWxs.getToString(item.commentDateTime,'-')}}</text>
                             </view>
-                            <view style='font-size:24rpx;color:#666;margin-top:8rpx;margin-bottom:28rpx;'>回复了你：哈哈哈…</view>
+                            <view style='font-size:24rpx;color:#666;margin-top:8rpx;margin-bottom:28rpx;'>回复了你:{{item.replyCommentsContent}}</view>
                         </view>
                         </view>
                         <view class='message_content'>
-                            21221221
+                            {{item.commentContext}}
                         </view>
                     </view>
+                    </block>
                 </scroll-view>
             </swiper-item>
             <swiper-item>
                 <scroll-view scroll-y style='height:100%;background:#F8F8F8;padding-top:28rpx'>
+                    <block wx:for="{{sysMsgList}}" wx:key="{{index}}">
                     <view class='tz'>
                         <view style="margin-bottom:40rpx;">
-                            <text style='font-size:32rpx;'>辣鸡小说公测啦</text>
-                            <text style='font-size:20rpx;color:#999999;margin-left:348rpx'>17:20</text>
+                            <text style='font-size:32rpx;'>{{item.title}}</text>
+                            <text style='font-size:20rpx;color:#999999;margin-left:260rpx'>{{myWxs.getToString(item.dateTimes,'-')}}</text>
                         </view>
                         <view style='font-size:24rpx;color:#666666;line-height:40rpx'>
-                            内容内容内容内容内容内容内容内容内容内容内容内容内容 
-                            内容内容内容内容内容内容内容内容内容内容内容内容内容 
-                            内容内容内容内容内容内容内容内容内容内容
+                            {{item.messageContent}}
                         </view>
                     </view>
+                    </block>
                 </scroll-view>
             </swiper-item>
         </swiper>
@@ -52,6 +55,8 @@
 <script>
     import wepy from 'wepy'
     import {connect} from "wepy-redux"
+    import {getUserReplyInfo,getSystemMsg} from '../config/getData'
+    import myWxs from '../filter/myWxs.wxs'
     @connect({
         //state
     },
@@ -64,10 +69,17 @@
            
           }
       }
+      wxs={
+          myWxs
+      }
       data={
           active:0,
           currentTab:0,
-          mtabH:0
+          mtabH:0,
+          page:1,
+          lastPage:1,
+          ReplyList:[],
+          sysMsgList:[]
       }
       methods = {
         handleSwitch(key){
@@ -81,12 +93,27 @@
              this.currentTab = e.detail.current
         }    
       }
+      onShow(){
+          let userInfo=wx.getStorageSync('userInfo')
+          if(userInfo){
+              getUserReplyInfo(userInfo.userId,this.page).then(data=>{
+                  if(data){
+                      this.ReplyList=data.list
+                      this.lastPage=data.pages
+                      this.$apply()
+                  }
+              })
+          }
+      }
       onLoad(){
-        //this.$parent.globalData.userInfo
         wx.getSystemInfo({
             success:res=>{     
                 this.mtabH=res.windowHeight
             }
+        })
+        getSystemMsg().then(data=>{
+            this.sysMsgList=data.list
+            this.$apply()
         })
       }
 }
@@ -137,6 +164,8 @@ view{
         padding:20rpx 34rpx 28rpx 22rpx;
         font-size:24rpx;
         color:#666666;
+        letter-spacing: 2rpx;
+        line-height:38rpx;
         border-radius: 10rpx;
     }
     .tz{

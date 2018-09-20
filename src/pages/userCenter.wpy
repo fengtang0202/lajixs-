@@ -35,18 +35,17 @@
             <view class='bookRack_wrap'>
                 <view wx:if="{{!isAuthor}}" style="text-align:center;">Ta的书架</view>
                 <view wx:if="{{isAuthor}}" style="text-align:center;">Ta的作品</view>
-                <view class="bookRack">
-                    <block wx:for="{{BookList}}" wx:key="{{item.bookId}}">
-                        <view class='book' style="margin-right:{{index==3&&'0'}}" bindtap="handleGo({{item.bookId}})">
-                                <image  src="{{item.bookImage}}"/>
-                                <text>{{item.bookName}}</text>
-                                <text style='color:#999'>{{item.writerName}}</text>
-                        </view>
-                    </block> 
-                </view>
-                <view class='all' wx:if="{{bookCount>4}}">
-                    查看全部{{bookCount}}本
-                </view>
+                <scroll-view scroll-x style="width:100%;height:316rpx">
+                    <view class="book_wrap">
+                        <block wx:for="{{BookList}}" wx:key="{{item.bookId}}">
+                            <view class='book'  bindtap="handleGo({{item.bookId}})">
+                                    <image  src="{{item.bookImage}}"/>
+                                    <text>{{item.bookName}}</text>
+                                    <text style='color:#999'>{{item.writerName}}</text>
+                            </view>
+                        </block>
+                    </view> 
+                </scroll-view>
             </view>
             <view class='comment_wrap'>
                 <view style="text-align:center;margin-top:30rpx">Ta的书评</view>
@@ -143,7 +142,7 @@ export default  class UserCenter extends wepy.page{
             if(this.isAuthor==0){
                  getPersonBookRack(1,this.userId).then(data=>{
                     if(data){
-                        this.BookList=data.list.slice(0,4)
+                        this.BookList=data.list
                         this.bookCount=data.total
                         this.$apply()
                     }
@@ -151,7 +150,7 @@ export default  class UserCenter extends wepy.page{
             }else{
                 getAuthorBook(this.userId).then(data=>{
                     if(data){
-                        this.BookList=data.slice(0,4)
+                        this.BookList=data
                         this.bookCount=data.total
                         this.$apply()
                     }
@@ -199,13 +198,17 @@ view{
         margin-right:10rpx;
     }
   }
+  .book_wrap{
+    display: flex; 
+    display: -webkit-box; 
+    flex-direction: column;
+  }
   .book{
     width: 160rpx;
     height: 300rpx;
-    float: left;
     margin-top:14rpx;   
-    text-align: center;
     margin-right:16rpx;
+    text-align: center;
     text{
        display: block;
        font-size:28rpx;
