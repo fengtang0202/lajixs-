@@ -37,10 +37,10 @@ export default class extends wepy.app {
       'pages/del',
       'pages/reader',
       'pages/search',
-      'pages/Login',
       'pages/userCenter',
       'pages/userFllow',
-      'pages/userFans'
+      'pages/userFans',
+      'pages/fansBank'
     ],
     window: {
       backgroundTextStyle: '#fff',

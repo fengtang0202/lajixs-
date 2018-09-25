@@ -1,0 +1,274 @@
+<template>
+    <view style="font-size:32rpx">
+        <view class='nav'>
+            <view class='nav_item_wrap'>
+                <view  class="nav_item {{currentTab==0&&'active'}}" bindtap="handleSwitch(0)">
+                    <text>总榜</text>
+                </view>
+            </view>
+            <view class="nav_item_wrap">
+                <view  class="nav_item {{currentTab==1&&'active'}}"  bindtap="handleSwitch(1)">
+                    <text>周榜</text>
+                </view>
+            </view>
+        </view>
+        <swiper current="{{currentTab}}" class="swiper" duration="300" style="height:92vh" bindchange="bindChange">
+            <swiper-item>
+                <scroll-view scroll-y style='height:100%' bindscrolltolower="loadMoreWeek">
+                   <view class='header_bank'>
+                       <image src='../images/fansbj@3x.png' style="width:100%;height:100%;" />
+                        <view class='gloden' wx:if="{{FansTotalList[0]}}">
+                            <image style="height:108rpx;width:108rpx;border-radius:50%;" src='{{FansTotalList[0].userHeadPortraitURL}}'/>
+                            <view style="color:#fff">{{FansTotalList[0].userName}}</view>
+                            <image src="../images/fg.png" class='pai'/>
+                        </view>
+
+                        <view class='gloden' wx:if="{{!FansTotalList[0]}}">
+                            <image style="height:108rpx;width:108rpx;border-radius:50%;" src='../images/userDefaultHandImg.jpg'/>
+                            <view style="color:#fff">虚位以待</view>
+                            <image src="../images/fg.png" class='pai'/>
+                        </view>
+
+                         <view class='sliver' style="left:84rpx" wx:if="{{FansTotalList[1]}}">
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='{{FansTotalList[1].userHeadPortraitURL}}'/>
+                            <view style="color:#fff">{{FansTotalList[1].userName}}</view>
+                            <image src="../images/fy.png" class='pai' style="top:62rpx"/>
+                        </view>
+
+                         <view class='sliver' style="left:84rpx" wx:if="{{!FansTotalList[1]}}">
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='../images/userDefaultHandImg.jpg'/>
+                            <view style="color:#fff">虚位以待</view>
+                            <image src="../images/fy.png" class='pai' style="top:62rpx"/>
+                        </view>
+
+                         <view class='sliver' style="right:84rpx" wx:if="{{FansTotalList[2]}}">
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='{{FansTotalList[2].userHeadPortraitURL}}'/>
+                            <view style="color:#fff">{{FansTotalList[2].userName}}</view>
+                            <image src="../images/ft.png" class='pai' style="top:62rpx"/>
+                        </view>
+
+                         <view class='sliver' style="right:84rpx" wx:if="{{!FansTotalList[2]}}">
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='../images/userDefaultHandImg.jpg'/>
+                            <view style="color:#fff">虚位以待</view>
+                            <image src="../images/ft.png" class='pai' style="top:62rpx"/>
+                        </view>
+                    </view>
+                    <view class='fans_list'>
+                        <block wx:for="{{FansTotalList}}" wx:key="{{index}}" wx:if="{{index>3}}">
+                            <view class='fans_item'>
+                                <view style="float:left">
+                                    <text>{{index}}</text>
+                                    <image style="margin:0 28rpx;width:104rpx;height:104rpx;border-radius:50%;vertical-align:middle" src="{{item.userHeadPortraitURL}}" />
+                                    <text>{{item.userName}}</text>
+                                    <image  style="margin:0 12rpx 0 18rpx;width:20rpx;height:20rpx" src="../images/sex-02_03@3x.png" wx:if="{{item.userSex==0}}"/>
+                                    <image style="margin:0 12rpx 0 18rpx;width:20rpx;height:20rpx" src="../images/sex-03@3x.png" wx:if="{{item.userSex==1}}"/>
+                                    <text class='grade'>LV{{item.userGrade}}</text>
+                                </view>
+                                <view style="float:right">
+                                    <text style="color:#F73D51;font-size:28rpx">{{item.fansCount}}</text>
+                                    <image src="../images/fansCount.png" style="margin-left:38rpx;vertical-align:middle;width:60rpx;height:60rpx;"/>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </scroll-view>
+            </swiper-item>
+            <swiper-item>
+                <scroll-view scroll-y style='height:100%' bindscrolltolower="loadMoreTotal">
+                   <view class='header_bank'>
+                       <image src='../images/fansbj@3x.png' style="width:100%;height:100%;" />
+                        <view class='gloden' wx:if="{{FansWeekList[0]}}">
+                            <image style="height:108rpx;width:108rpx;border-radius:50%;" src='{{FansWeekList[0].userHeadPortraitURL}}'/>
+                            <view style="color:#fff">{{FansWeekList[0].userName}}</view>
+                            <image src="../images/fg.png" class='pai'/>
+                        </view>
+                         <view class='gloden' wx:if="{{!FansWeekList[0]}}">
+                            <image style="height:108rpx;width:108rpx;border-radius:50%;" src='../images/userDefaultHandImg.jpg'/>
+                            <view style="color:#fff">虚位以待</view>
+                            <image src="../images/fg.png" class='pai'/>
+                        </view>
+                         <view class='sliver' wx:if="{{FansWeekList[1]}}" style="left:84rpx" >
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='{{FansWeekList[1].userHeadPortraitURL}}'/>
+                            <view style="color:#fff">{{FansWeekList[1].userName}}</view>
+                            <image src="../images/fy.png" class='pai' style="top:62rpx"/>
+                        </view>
+                        <view class='sliver' wx:if="{{!FansWeekList[1]}}" style="left:84rpx" >
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='../images/userDefaultHandImg.jpg'/>
+                            <view style="color:#fff">虚位以待</view>
+                            <image src="../images/fy.png" class='pai' style="top:62rpx"/>
+                        </view>
+                         <view class='sliver' wx:if="{{FansWeekList[2]}}" style="right:84rpx">
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='{{FansWeekList[2].userHeadPortraitURL}}'/>
+                            <view style="color:#fff">{{FansWeekList[2].userName}}</view>
+                            <image src="../images/ft.png" class='pai' style="top:62rpx"/>
+                        </view>
+                         <view class='sliver' wx:if="{{!FansWeekList[2]}}" style="right:84rpx">
+                            <image style="height:84rpx;width:84rpx;border-radius:50%;" src='../images/userDefaultHandImg.jpg'/>
+                            <view style="color:#fff">虚位以待</view>
+                            <image src="../images/ft.png"  class='pai' style="top:62rpx"/>
+                        </view>
+                    </view>
+                    <view class='fans_list'>
+                        <block wx:for="{{FansWeekList}}" wx:key="{{index}}" wx:if="{{index>3}}">
+                            <view class='fans_item'>
+                                <view style="float:left">
+                                    <text>{{index}}</text>
+                                    <image style="margin:0 28rpx;width:104rpx;height:104rpx;border-radius:50%;vertical-align:middle" src="{{item.userHeadPortraitURL}}" />
+                                    <text>{{item.userName}}</text>
+                                    <image  style="margin:0 12rpx 0 18rpx;width:20rpx;height:20rpx" src="../images/sex-02_03@3x.png" wx:if="{{item.userSex==0}}"/>
+                                    <image style="margin:0 12rpx 0 18rpx;width:20rpx;height:20rpx" src="../images/sex-03@3x.png" wx:if="{{item.userSex==1}}"/>
+                                    <text class='grade'>LV{{item.userGrade}}</text>
+                                </view>
+                                <view style="float:right">
+                                    <text style="color:#F73D51;font-size:28rpx">{{item.fansCount}}</text>
+                                    <image src="../images/fansCount.png" style="margin-left:38rpx;vertical-align:middle;width:60rpx;height:60rpx;"/>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </scroll-view>
+            </swiper-item>
+        </swiper>
+     </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import {getFansWeek,getFansTotal} from  '../config/getData'
+    export default class FansBank extends wepy.page{
+        config={
+            navigationBarTitleText:"粉丝榜"
+        }
+        data={
+            active:0,
+            currentTab:0,
+            mtabH:0,
+            FansWeekList:[],
+            FansTotalList:[],
+            weekPage:1,
+            totalPage:1,
+            weekLastPage:1,
+            totalLastPage:1,
+            bookId:0
+        }
+        methods={
+            handleSwitch(key){
+        if (this.currentTab == key) {
+            return false;
+            }else{
+                this.currentTab = key
+            }
+        },
+        bindChange(e){
+             this.currentTab = e.detail.current
+        },
+        loadMoreWeek(){
+            this.weekPage++
+            if(this.weekPage>this.weekLastPage){
+                return;
+            }
+            getFansWeek(this.bookId,this.weekPage).then(data=>{
+                this.FansWeekList=this.FansWeekList.concat(data.list)
+                this.$apply()
+            })
+        },
+        loadMoreTotal(){
+            this.totalPage++
+            if(this.totalPage>this.totalLastPage){
+                return;
+            }
+            getFansWeek(this.bookId,this.totalPage).then(data=>{
+                this.totalLastPage=this.totalLastPage.concat(data.list)
+                this.$apply()
+            })
+        }
+        }
+        onLoad(ops){
+            wx.getSystemInfo({
+            success:res=>{     
+                this.mtabH=res.windowHeight
+            }
+          })
+          this.bookId=ops.bookId
+          getFansWeek(this.bookId,this.weekPage).then(data=>{
+              if(data){
+                  this.FansWeekList=data.list
+                  this.weekLastPage=data.pages
+                  this.$apply()
+              }
+          })
+          getFansTotal(this.bookId,this.totalPage).then(data=>{
+              if(data){
+                  this.FansTotalList=data.list
+                  this.totalLastPage=data.pages
+                  this.$apply()
+              }
+          }) 
+        }
+    }
+</script>
+<style lang="less" scoped>
+view{
+        box-sizing: border-box;
+}
+    .nav{
+        height:8vh;
+    }
+    .nav_item_wrap{
+        width:50%;
+        height:100%;
+        float:left;
+    }
+    .nav_item{
+        height:80rpx;
+        width:64rpx;
+        text-align:center;
+        line-height:80rpx;
+        font-size:32rpx;
+        margin:0 auto;
+    }
+    .active{
+        border-bottom:4rpx solid   #F77583;
+        color:#F77583;
+    }
+.header_bank{
+    width:100%;
+    height:318rpx;  
+    position: relative;  
+}
+.gloden{
+    position:absolute;
+    left: 0;
+    right: 0;
+    top:24rpx;
+    margin:auto;
+    text-align:center;
+}
+.pai{
+    width:32rpx;
+    height:32rpx;
+    position: absolute;
+    top:88rpx;
+    left:0;
+    right:0;
+    margin:auto;
+}
+.sliver{
+    position:absolute;
+    top:96rpx;
+    text-align:center;
+}
+.fans_item{
+    height:148rpx;
+    padding:26rpx 32rpx 0 28rpx;
+    border:2rpx solid #EFEFEF;
+    width:100%;
+    line-height:104rpx;
+}
+.grade{
+   background-color: #74f3fe;
+    font-size: 22rpx;
+    color: #fff;
+    border-radius:6rpx;
+    padding:0 6rpx;
+}
+</style>

@@ -8,15 +8,16 @@
         </view>
      </block>
   </view> -->
-  <van-search
+ 
+<!-- <swiper current="{{activeIndex}}"   class="swiper-box"  style='height:{{mtabH}}px' duration="500" bindchange="bindChange"> -->
+    <!-- <swiper-item class="swiper-item"> -->
+       <scroll-view enable-back-to-top style='height:{{mtabH}}px' scroll-y bindscrolltolower="loadMore">
+         <!-- <view  scroll-y> -->
+            <van-search
             value="{{ keyWord }}"
             placeholder="搜索作者或作品..."
             background="#F8F8F8"
             maxlength='20' bindtap="onFocus" disabled="{{true}}"/>
-<!-- <swiper current="{{activeIndex}}"   class="swiper-box"  style='height:{{mtabH}}px' duration="500" bindchange="bindChange"> -->
-    <!-- <swiper-item class="swiper-item"> -->
-       <scroll-view enable-back-to-top style='height:{{mtabH*2-46.25*2}}rpx' scroll-y bindscrolltolower="loadMore">
-         <!-- <view  scroll-y> -->
           <swiper class='swiper' previous-margin="28rpx" next-margin="28rpx" indicator-dots="{{indicatorDots}}"
              autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
               <block wx:for="{{homeInfo.pictureCarouselVersionTow}}" wx:key="{{item.bookId}}">
@@ -356,6 +357,9 @@
   }
 </script>
 <style lang="less">
+page{
+  overflow: hidden;
+}
 view , scroll-view{
   padding: 0px;
   margin: 0px;

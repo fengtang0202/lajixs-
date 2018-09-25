@@ -14,7 +14,7 @@
                 <view >小米椒余额:{{min}}</view>
                 <view class='ste'>
                     <van-stepper style='float:left' value="{{ minCount }}" bind:change="onChange1" />
-                    <view class='all'>ALL</view>
+                    <view class='all' bindtap="handleAll(1)">ALL</view>
                     <view class='feed' bindtap="handleFeedmin">投喂</view>
                 </view>
             </swiper-item>
@@ -22,7 +22,7 @@
                 <view >金椒余额:{{gloden}}</view>
                 <view class='ste'>
                     <van-stepper integer="{{integer}}" style='float:left' value="{{ glodenCount }}" bind:change="onChange2" />
-                    <view class='all'>ALL</view>
+                    <view class='all' bindtap="handleAll(2)">ALL</view>
                     <view class='feed' bindtap="handleFeedGloden" >投喂</view>
                 </view>
             </swiper-item>
@@ -48,6 +48,15 @@
         
         }
     methods = {
+        handleAll(n){
+            if(n==1){
+                this.minCount=wx.getStorageSync("userInfo").userRecommendTicket
+                this.$apply()
+            }else{
+               this.glodenCount=wx.getStorageSync("userInfo").userGoldenTicket
+                this.$apply()
+            }
+        },
         onChange1(e){
            this.minCount=e.detail
         },

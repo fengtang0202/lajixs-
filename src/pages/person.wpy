@@ -121,6 +121,7 @@
                 this.$apply()
           }else{
                 this.showLogin=false
+                this.userInfo={}
           }
       }
       onLoad(){

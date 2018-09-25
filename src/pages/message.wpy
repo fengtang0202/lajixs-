@@ -10,9 +10,9 @@
                 <text>通知</text>
             </view>
         </view>
-        <swiper current="{{currentTab}}" class="swiper" duration="300" style="height:{{mtabH*2-88}}rpx" bindchange="bindChange">
+        <swiper current="{{currentTab}}" class="swiper" duration="300" style="height:92vh" bindchange="bindChange">
             <swiper-item>
-                <scroll-view scroll-y style='height:100vh'>
+                <scroll-view scroll-y style='height:100%' bindscrolltolower="loadMore">
                     <block wx:for="{{ReplyList}}" wx:key="{{index}}">
                     <view class='message_item'>
                         <view style='overflow:hidden;margin-left:28rpx;'>
@@ -91,6 +91,19 @@
         },
         bindChange(e){
              this.currentTab = e.detail.current
+        },
+        loadMore(){
+            this.page++
+            if(this.page>this.lastPage){
+                wx.showToast({
+                    title:"没有更多了"
+                })
+                return 
+            }
+              getUserReplyInfo(userInfo.userId,this.page).then(data=>{
+                  this.ReplyList=this.ReplyList.concat(data.list)
+                  this.$apply()
+              })
         }    
       }
       onShow(){
@@ -126,7 +139,7 @@ view{
         box-sizing: border-box;
 }
     .nav{
-        height:88rpx;
+        height:8vh;
         view{
             height:80rpx;
             width:120rpx;

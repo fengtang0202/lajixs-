@@ -3,7 +3,7 @@
          <view class='qiandao' wx:if="{{isSignin==1}}">
              <block wx:for='{{days}}' wx:key="{{index}}">
                  <view>
-                     <view  class="day {{item.values==2&&'yq'}}">
+                     <view  class="day {{item.values==1&&'yq'}} {{item.values==2&&'now'}}">
                         <text>{{myWxs.qdStatus(item.values)}}</text>
                      </view>
                      <text style='font-size:20rpx;'>{{myWxs.weekToString(item.week)}}</text>
@@ -24,20 +24,16 @@
          </view>
          <!-- 正在阅读 -->
           <view style="padding-left:28rpx;overflow:hidden;">
-              <!-- <block wx:for="{{bookReadList}}" wx:key="{{index}}">
-                <view class='nowBookRead' style="margin-right:{{(index+1)%3==0?'0':'35rpx'}}">
-                    <image style="width:208rpx;height:270rpx;border-radius:10rpx;"  src="{{item.img}}"/>
-                    <view style="font-size:32rpx">{{item.bookName}}</view>
-                    <view style="font-size:24rpx;color:#999999">阅读至：第302章</view>
-                </view>
-              </block> -->
-                <view  class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" bindtap="handleGo({{item.bookId}})" wx:for="{{items}}" wx:key="{{index}}">
+                <view  class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove"  wx:for="{{items}}" wx:key="{{index}}">
                 <view class="content">
-                    <image style="margin-right:20rpx;width:162rpx;height:216rpx;float:left" src="{{item.bookImage}}"/>
+                    <image bindtap="handleGo({{item.bookId}})" style="margin-right:20rpx;width:162rpx;height:216rpx;float:left" src="{{item.bookImage}}"/>
                     <view style="float:left;">
-                        <view>{{item.bookName}}</view>
-                        <view style="color:#666">更新于{{myWxs.getToString(item.lastUpdateTime,"-")}}</view>
-                        <view style="color:{{item.bookStatus==0?'#FF6F00':'#47B2D8'}}">{{item.bookStatus==0?'连载中':'完结'}}</view>
+                        <view style="font-size:32rpx">{{item.bookName}}</view>
+                        <view style="margin-top:64rpx;margin-bottom:20rpx;color:{{item.bookStatus==0?'#FF6F00':'#47B2D8'}}">{{item.bookStatus==0?'连载中':'完结'}}</view>
+                        <view style="color:#999">更新于{{myWxs.getToString(item.lastUpdateTime,"-")}}</view>
+                    </view>
+                    <view  catchtap="handleClose({{index}})" style="height:100%;float:right;line-height:216rpx;width:120rpx;text-align:center">
+                    <image src="../images/point.png" style="width:36rpx;height:8rpx;"/>
                     </view>
                 </view>
                 <view class="del" catchtap="del" data-id="{{item.id}}" data-index="{{index}}">删除</view>
@@ -86,6 +82,10 @@
                 isSignin:0
             }
         methods = {
+            handleClose(index){
+               this.items[index].isTouchMove=true
+               this.$apply()
+            },
             del(e){
               let bookId=e.currentTarget.dataset.id
               delBookRack(bookId).then(data=>{
@@ -121,6 +121,8 @@
                         wx.showToast({
                             title:"签到成功~"
                         })
+                        this.isSignin=1
+                        this.$apply()
                     }
                 })
             }
@@ -136,12 +138,7 @@
                     } 
                 })
                 userSiginState().then(data=>{
-                    if(data==1){
-                        this.isSignin=1
-                    }else{
-                        this.days=data
-                    }
-                    this.$apply()
+                    this.days=data
                 })
               }else{
                  this.items=[] 
@@ -153,7 +150,8 @@
                 success:res=>{     
                     this.height=res.windowHeight
                 }
-            }) 
+            })
+             
           }
   }
 </script>

@@ -37,8 +37,8 @@ function request(method, requestHandler, isShowLoading = true) {
                     resolve(res.data.data)
                 } else if(res.data.returnCode==400) {
                     if (res.data.data) {
-                        resolve(res.data.data)
-                    }else{
+                    resolve(res.data)
+                }else{
                         if(wx.getStorageSync('userInfo')){
                             // wx.navigateTo({url:'Login'})
                             wx.clearStorageSync()
@@ -58,7 +58,7 @@ function request(method, requestHandler, isShowLoading = true) {
                 } else if (res.data.returnCode == 800){
                     resolve(res.data.data)
                 } else if (res.data.returnCode == 700){
-                    resolve(1)
+                    resolve(res.data.data)
                 }else{
                     // reject(res.data.data)
                     throw new Error('Network request success but data state not success')

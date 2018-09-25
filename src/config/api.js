@@ -52,6 +52,9 @@ const FansAndFllowCount = `${host}/api/fans-followCount/`
 const cancelFans = `${host}/api/fans-CancelFollow`
 const getUserFllow = `${host}/api/fans-userFollow`
 const getUserFans = `${host}/api/fans-userFans`
+//粉丝榜
+const FansWeek = `${host}/api/fans-bookFansWeek/`
+const FansTotal = `${host}/api/fans-bookFansTotal/`
 //用户阅读记录
 const readHistory = `${host}/api/person-UserBookReadRecord/`
 const bookReadHistory = `${host}/api/person-UserBookReadRecordByUserIDAndBookId`
@@ -165,5 +168,7 @@ module.exports = {
   userSignin,
   userSiginState,
   userReplyInfo,
-  systemMsg
+  systemMsg,
+  FansWeek,
+  FansTotal
 }

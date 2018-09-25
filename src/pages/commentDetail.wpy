@@ -1,6 +1,6 @@
 <template>
    <view>
-    <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height*2-98}}rpx">
+    <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height-50}}px">
        <commentItem :commentList.sync="commentList"></commentItem>
        <view style='margin-top: 20rpx;font-size:28rpx;color: #333;margin-left:40rpx'>相关回复</view>
        <block wx:for='{{replyList}}' wx:key='{{item.id}}'>

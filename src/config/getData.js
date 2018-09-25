@@ -365,6 +365,16 @@ const getSystemMsg = (startpage=1)=>{
         }
     })
 }
+const getFansWeek=(bookId,startpage)=>{
+    return get({
+        url: `${api.FansWeek}${bookId}/${startpage}`
+    })
+}
+const getFansTotal=(bookId, startpage)=>{
+    return get({
+        url: `${api.FansTotal}${bookId}/${startpage}`
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -411,5 +421,7 @@ module.exports = {
     userSignin,
     userSiginState,
     getUserReplyInfo,
-    getSystemMsg
+    getSystemMsg,
+    getFansWeek,
+    getFansTotal
 }

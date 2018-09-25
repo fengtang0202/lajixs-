@@ -85,7 +85,7 @@
                                 <image wx:if="{{index<5}}" class='fansImg' src='{{item.userHeadPortraitURL}}'/>
                             </block>
                         </view>
-                        <view style="float:right;padding:10rpx;">
+                        <view bindtap="handleGo('fansBank')" style="float:right;padding:10rpx;">
                               <text style="color:rgb(247, 117, 131)">{{fans.length}}</text>
                               <van-icon color='#D8D8D8' name="arrow"></van-icon>
                         </view>
@@ -224,7 +224,7 @@
     }
     getCommnet(){
          getHotComments(this.bookId).then(data=>{
-               if(data.length>0){
+               if(data){
                    this.HotComments=data
                    this.showComment=true
                    this.$apply()

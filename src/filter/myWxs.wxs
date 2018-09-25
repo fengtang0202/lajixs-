@@ -49,6 +49,9 @@ function qdStatus(status){
       case '3':
       x='签'
       break;
+      case '1':
+      x = '签'
+       break;
    }
    return x
 }

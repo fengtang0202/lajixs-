@@ -1,6 +1,6 @@
 <template>
 <view>
-    <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height*2-98}}rpx">
+    <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height-50}}px;">
          <view style='padding:20rpx 28rpx'>
              <text style='color: rgb(247, 117, 131);font-weight: 600;'>|</text>
              <text>热门评论({{hotCommentList.length}})</text>
