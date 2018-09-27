@@ -66,11 +66,12 @@
        async handleFeedmin(){
             let userInfo=wx.getStorageSync("userInfo")
             let data= await RecommendationTicket(this.minCount,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId)
-            if(data){
+            if(data=="OK"){
                 Toast('投喂成功~')
-                this.min=userInfo.userRecommendTicket-1
+                this.min=userInfo.userRecommendTicket-this.minCount
                 userInfo.userRecommendTicket=this.min
                 wx.setStorageSync("userInfo",userInfo)
+                this.$apply()
             }else{
                 Toast('小米椒不足~')
             }
@@ -91,6 +92,11 @@
             this.Riceshow=!this.Riceshow
             this.currentTab=index
             this.$apply()
+            if(wx.getStorageSync("userInfo")){
+               this.min=wx.getStorageSync("userInfo").userRecommendTicket
+               this.gloden=wx.getStorageSync("userInfo").userGoldenTicket
+               this.$apply()
+            }
         },
         handleSwitch(key){
             if (this.currentTab == key) {
@@ -107,11 +113,7 @@
             
         }
         onLoad(){
-            if(wx.getStorageSync("userInfo")){
-               this.min=wx.getStorageSync("userInfo").userRecommendTicket
-               this.gloden=wx.getStorageSync("userInfo").userGoldenTicket
-               this.$apply()
-            }
+    
         }
     }
 </script>

@@ -1,0 +1,80 @@
+<template>
+    <view class="login {{showFirst?'active':''}}" bindtap="onClose">
+        <view class="gift_wrap">
+            <view style="width:100%;text-align:center;">
+                <image class='img-x' src="../images/login.png" />
+            </view>
+            <view class='login_wrap'>
+                    <view style="font-size:32rpx;text-align:center;padding-top:20rpx">恭喜获得首充礼包哦～</view>
+                    <view class="gift_detail">
+                        <view style="float:left;text-align:center">
+                          <image style="width:162rpx;height:208rpx;border-radius:20rpx;"/>
+                            <view>书名</view>
+                            <view style="color:#FE4D60;font-size:16rpx">已加入书架</view>
+                        </view>
+                        <view style="font-size:72rpx;float:left;height:208rpx;line-height:208rpx;margin-left:20rpx;margin-right:24rpx">+</view>
+                        <view style="float:left;height:208rpx;line-height:208rpx">
+                            <text>19800</text>
+                          <image  src="../images/lj.png" style="width:24rpx;height:36rpx;margin-left:12rpx"/>
+                        </view>
+                    </view>
+            </view>
+        </view>
+    </view>       
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class FirstGift extends wepy.component{
+        data={
+            showFirst:true
+        }
+        methods={
+            onClose(){
+                this.showFirst=!this.showFirst
+            }
+        }
+    }
+</script>
+<style lang="less" scoped>
+view{
+    box-sizing: border-box;
+}
+ image{
+        vertical-align: middle;
+    }
+.login{
+    width:750rpx;
+    height:0;
+    background-color:rgba(0,0,0,.4);
+    position:fixed;
+    top:0;
+    opacity:0;
+    overflow: hidden;
+    transition: opacity .5s;
+}
+.gift_wrap{
+    position: absolute;
+    left:0;
+    right:0;
+    top:15%;
+}
+.login_wrap{
+    width:480rpx;
+    height:423rpx;
+    box-shadow:0px 0px 8rpx 0px rgba(250,89,107,0.5);
+    border-radius:16rpx;
+    margin:-8rpx auto;
+    background: #fff;
+}
+.gift_detail{
+    padding:20rpx 0 0 68rpx;
+}
+.img-x{
+    width:228rpx;
+    height:216rpx;  
+}
+.active{
+    opacity:1;
+    height:100vh;
+}
+</style>

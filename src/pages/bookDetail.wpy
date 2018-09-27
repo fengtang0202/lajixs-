@@ -79,24 +79,24 @@
                 </view>
                 <view class='fans'>
                     <view style='font-size:36rpx;margin-bottom:12rpx'>粉丝榜</view>
-                    <view wx:if="{{fans.length>0}}" style="overflow:hidden">
+                    <view wx:if="{{fans.length>0}}"  style="overflow:hidden">
                         <view style="float:left">
-                            <block wx:for="{{fans}}" wx:key="{{index}}">
-                                <image wx:if="{{index<5}}" class='fansImg' src='{{item.userHeadPortraitURL}}'/>
+                            <block wx:for="{{fans}}"  wx:key="{{index}}">
+                                <image wx:if="{{index<5}}" bindtap="handleGoPerson({{item.userId}})" class='fansImg' src='{{item.userHeadPortraitURL}}'/>
                             </block>
                         </view>
                         <view bindtap="handleGo('fansBank')" style="float:right;padding:10rpx;">
                               <text style="color:rgb(247, 117, 131)">{{fans.length}}</text>
                               <van-icon color='#D8D8D8' name="arrow"></van-icon>
                         </view>
-                    </view>
+                    </view> 
                      <view wx:if="{{fans.length==0}}" style="color:#666; text-align:center;">
                         暂无粉丝
                     </view>
                 </view>
                 <view class='author'>
                     <view style='font-size:36rpx;margin:12rpx 0'>作者</view>
-                    <image  bindtap="handleGoPerson" class='authorimg' src="{{authorInfo.userHeadPortraitURL}}"/>
+                    <image  bindtap="handleGoPerson()" class='authorimg' src="{{authorInfo.userHeadPortraitURL}}"/>
                     <view class='authorInfo' style="float:left">
                         <view style="font-size:32rpx;margin-bottom:10rpx">{{authorInfo.pseudonym}}</view>
                         <view class='author_detail'>
@@ -245,10 +245,11 @@
         }
     }
     methods = {
-        handleGoPerson(){
-            wx.navigateTo({
-                url:'userCenter?userId='+this.authorInfo.userId
-            })
+        handleGoPerson(res){
+              let userId=res||this.authorInfo.userId
+                wx.navigateTo({
+                    url:'userCenter?userId='+userId
+                })
         },
       async  handleDiretory(){
             let data=await getVolume(this.bookId)
@@ -306,9 +307,9 @@
                 if(res) {
                     this.subscribe=res.isClose
                     if(res.isClose==1){
-                        Toast('订阅成功~')
+                        Toast('开启自动订阅~')
                     }else{
-                        Toast('取消订阅成功~')
+                        Toast('关闭自动订阅~')
                     }
                     this.$apply()
                 }
@@ -385,6 +386,19 @@
                this.$apply()
            })
         }
+        onShow(){
+            if(wx.getStorageSync('userInfo')){
+                CheckSubscribe(this.bookId,'search',0).then(res=>{
+                    res && (this.subscribe=res.isClose)
+                    if(!res){
+                       CheckSubscribe(this.bookId,"update",0) 
+                    }
+                    this.$apply()
+                })
+            }
+            this.getBookInfo()
+            this.getCommnet()  
+        }
         onLoad (options) {
             let userInfo=wx.getStorageSync('userInfo')
             if(userInfo){
@@ -394,14 +408,7 @@
                 withShareTicket: true
             })
             this.bookId=options.bookId
-            if(userInfo){
-                CheckSubscribe(this.bookId,'search',0).then(res=>{
-                    res && (this.subscribe=res.isClose)
-                    this.$apply()
-                })
-            }
-            this.getBookInfo()
-            this.getCommnet()   
+            
            this.url="/pages/rewordArea?bookId="+this.bookId
       }     
 }

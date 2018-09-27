@@ -22,7 +22,7 @@
                                     <text style='font-size:32rpx'>{{item.replyUserName}}</text>
                                     <image wx:if="{{item.userSex==1}}" src='../images/sex-02_03@3x.png' style='width:26rpx;height:26rpx;margin-left:16rpx;'/>
                                     <image wx:if="{{item.userSex==0}}" src='../images/sex-03@3x.png' style='width:26rpx;height:26rpx;margin-left:16rpx;'/>
-                                    <text style="font-size:20rpx;color:#999;margin-left:300rpx;">{{myWxs.getToString(item.commentDateTime,'-')}}</text>
+                                    <text style="font-size:20rpx;color:#999;margin-left:200rpx;">{{myWxs.getToString(item.commentDateTime,'-')}}</text>
                             </view>
                             <view style='font-size:24rpx;color:#666;margin-top:8rpx;margin-bottom:28rpx;'>回复了你:{{item.replyCommentsContent}}</view>
                         </view>

@@ -23,14 +23,13 @@
         methods = {
             onClose(){
                 this.show=!this.show
-                console.log(this.show)
             },
-      async  handleUserLogin(e){
-          await  wx.login({
-            success:res=>{
-            if (res.code) {
-            getAppid(res.code).then(res=>{
-                if (e.detail.userInfo) {
+        async  handleUserLogin(e){
+            await  wx.login({
+                success:res=>{
+                if (res.code) {
+                getAppid(res.code).then(res=>{
+                    if (e.detail.userInfo) {
                     let userInfo=e.detail.userInfo
                     let object={}
                     object.unionid=res.unionid

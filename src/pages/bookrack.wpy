@@ -13,14 +13,14 @@
          </view>
          <!-- adv -->
          <view>
-             <swiper class='swiper' indicator-dots="{{true}}"
+            <swiper class='swiper' indicator-dots="{{true}}"
                autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx;">
               <block wx:for="{{imgUrls}}" wx:key="{{item.bookId}}">
                 <swiper-item style='margin:10rpx 0'>
                   <image src="{{item}}"  style='width:100%;height:240rpx;' class="slide-image"  mode="widthFix"  data-id='{{index}}'/>
                 </swiper-item> 
               </block>
-           </swiper>
+            </swiper>
          </view>
          <!-- 正在阅读 -->
           <view style="padding-left:28rpx;overflow:hidden;">

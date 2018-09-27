@@ -54,10 +54,10 @@
                         </view>
                     </view>
                     <view class='fans_list'>
-                        <block wx:for="{{FansTotalList}}" wx:key="{{index}}" wx:if="{{index>3}}">
+                        <block wx:for="{{FansTotalList}}" wx:key="{{index}}" wx:if="{{index>2}}">
                             <view class='fans_item'>
                                 <view style="float:left">
-                                    <text>{{index}}</text>
+                                    <text>{{index+1}}</text>
                                     <image style="margin:0 28rpx;width:104rpx;height:104rpx;border-radius:50%;vertical-align:middle" src="{{item.userHeadPortraitURL}}" />
                                     <text>{{item.userName}}</text>
                                     <image  style="margin:0 12rpx 0 18rpx;width:20rpx;height:20rpx" src="../images/sex-02_03@3x.png" wx:if="{{item.userSex==0}}"/>
@@ -109,10 +109,10 @@
                         </view>
                     </view>
                     <view class='fans_list'>
-                        <block wx:for="{{FansWeekList}}" wx:key="{{index}}" wx:if="{{index>3}}">
+                        <block wx:for="{{FansWeekList}}" wx:key="{{index}}" wx:if="{{index>2}}">
                             <view class='fans_item'>
                                 <view style="float:left">
-                                    <text>{{index}}</text>
+                                    <text>{{index+1}}</text>
                                     <image style="margin:0 28rpx;width:104rpx;height:104rpx;border-radius:50%;vertical-align:middle" src="{{item.userHeadPortraitURL}}" />
                                     <text>{{item.userName}}</text>
                                     <image  style="margin:0 12rpx 0 18rpx;width:20rpx;height:20rpx" src="../images/sex-02_03@3x.png" wx:if="{{item.userSex==0}}"/>

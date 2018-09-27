@@ -40,7 +40,9 @@ export default class extends wepy.app {
       'pages/userCenter',
       'pages/userFllow',
       'pages/userFans',
-      'pages/fansBank'
+      'pages/fansBank',
+      'pages/record',
+      'pages/userBookComment'
     ],
     window: {
       backgroundTextStyle: '#fff',

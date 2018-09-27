@@ -1,0 +1,195 @@
+<template>
+    <view class='record'>
+        <view class='nav'>
+            <block wx:for="{{navList}}" wx:key="{{index}}">
+                <view class="{{currentTab==index&&'active'}}" style="width:{{width}}px" bindtap="handleSwitch({{index}})">
+                    <text>{{item}}</text>
+                </view>
+            </block>
+        </view>
+        <swiper current="{{currentTab}}" class="swiper" duration="300" style="height:92vh" bindchange="bindChange">
+            <swiper-item>
+                <scroll-view scroll-y  bindscrolltolower="loadMore(1)">
+                    <block wx:for="{{RechargeRecord}}" wx:key="{{index}}">
+                        <view class='item'>
+                            <view style="float:left">
+                                <view style="font-size:32rpx">
+                                    <text>充值</text>
+                                    <text>{{item.money*100}}辣椒/{{item.money}}元</text>
+                                </view>
+                            </view>
+                            <view style="float:right;color:#999;font-size:24rpx">
+                                <view>{{myWxs.getToString(item.dateTimes,'-')}}</view>
+                                <view style="margin-top:16rpx">
+                                    <text>{{myWxs.RechargeRecordType(item.rechargeType)}}</text>
+                                    <text style="margin:0 10rpx">充值</text>
+                                    <text>{{item.isOK==0?"失败":"成功"}}</text>
+                                </view>
+                            </view>
+                        </view>
+                    </block>
+                </scroll-view>
+            </swiper-item>
+            <swiper-item>
+                <scroll-view scroll-y bindscrolltolower="loadMore(2)">
+                    <block wx:for="{{SubscriptionRecord}}" wx:key="{{index}}">
+                        <view class='item' style="height:146rpx;padding:0 28rpx">
+                            <view style="overflow:hidden">
+                                <view style="font-size:32rpx;float:left">
+                                    <text>订阅</text>
+                                    <text>{{item.subscriptionPrice}}辣椒</text>
+                                </view>
+                                <view style="float:right;font-size:24rpx;color:#999">{{myWxs.getToString(item.subscriptionDateTime,'-')}}</view>
+                            </view>
+                            <view style="font-size:28rpx;margin:10rpx 0">{{item.bookName}}</view>
+                            <view style="font-size:28rpx">{{item.bookChapterName}}</view> 
+                        </view>
+                    </block>
+                </scroll-view>
+            </swiper-item>
+             <swiper-item>
+                <scroll-view scroll-y bindscrolltolower="loadMore(3)">
+                        <block wx:for="{{UserGoldenTicketRecord}}" wx:key="{{index}}">
+                        <view class='item' style="height:146rpx;padding:0 28rpx">
+                            <view style="overflow:hidden">
+                                <view style="font-size:32rpx;float:left">
+                                    <text>投喂</text>
+                                    <text>{{item.goldenTicketCount}}金椒</text>
+                                </view>
+                                <view style="float:right;font-size:24rpx;color:#999">{{myWxs.getToString(item.giveDateTime,'-')}}</view>
+                            </view>
+                            <view style="font-size:28rpx">{{item.bookName}}</view>
+                            <view style="font-size:28rpx">{{item.bookChapterName}}</view> 
+                        </view>
+                    </block>
+                </scroll-view>
+            </swiper-item>
+             <swiper-item>
+                <scroll-view scroll-y bindscrolltolower="loadMore(4)">
+                     <block wx:for="{{SpicyirewardticketlogByUserId}}" wx:key="{{index}}">
+                        <view class='item' style="height:146rpx;padding:0 28rpx">
+                            <view style="overflow:hidden">
+                                <view style="font-size:32rpx;float:left">
+                                    <text>打赏</text>
+                                    <text>{{item.spicyiTicketCount}}辣椒</text>
+                                </view>
+                                <view style="float:right;font-size:24rpx;color:#999">{{myWxs.getToString(item.giveDateTime,'-')}}</view>
+                            </view>
+                            <view style="font-size:28rpx">{{item.bookName}}</view>
+                        </view>
+                    </block>
+                </scroll-view>
+            </swiper-item>
+             <swiper-item>
+                <scroll-view scroll-y bindscrolltolower="loadMore(5)">
+                   <block wx:for="{{SpicyirewardticketlogByUserId}}" wx:key="{{index}}">
+                        <view class='item' style="height:146rpx;padding:0 28rpx">
+                            <view style="overflow:hidden">
+                                <view style="font-size:32rpx;float:left">
+                                    <text>投喂</text>
+                                    <text>{{item.recommendTicketCount}}小米椒</text>
+                                </view>
+                                <view style="float:right;font-size:24rpx;color:#999">{{myWxs.getToString(item.giveDateTime,'-')}}</view>
+                            </view>
+                            <view style="font-size:28rpx">{{item.bookName}}</view>
+                        </view>
+                    </block>
+                </scroll-view>
+            </swiper-item>
+        </swiper>
+    </view>    
+</template>
+<script>
+    import wepy  from 'wepy'
+    import myWxs from '../filter/myWxs.wxs'
+    import {getRechargeRecord,getSubscriptionRecord,getUserGoldenTicketRecord,getSpicyirewardticketlogByUserId,getUserRecommendTicketRecord} from '../config/getData'
+    export default class Record extends wepy.page{
+        config={
+            navigationBarTitleText:"交易记录"
+        }
+        data={
+            currentTab:0,
+            active:0,
+            navList:["充值记录",'订阅记录','金椒记录','打赏记录','小米椒'],
+            width:0,
+            RechargeRecord:[],
+            SubscriptionRecord:[],
+            UserGoldenTicketRecord:[],
+            SpicyirewardticketlogByUserId:[],
+            UserRecommendTicketRecord:[],
+            userId:0
+        }
+        wxs={
+            myWxs
+        }
+        methods={
+            handleSwitch(key){
+                if (this.currentTab == key) {
+                    return false;
+                    }else{
+                        this.currentTab = key
+                    }
+                },
+            bindChange(e){
+                this.currentTab = e.detail.current
+            },
+            // loadMore(res){
+            //     if(res==1){
+
+            //     }
+            // }
+        }
+        onShow(){
+            
+        }
+        async getRecordList(ajax,dataList,page=1){
+            let data=await ajax(this.userId,page)
+            if(data){
+                this[dataList]=data.list
+                this.$apply()
+            }
+        }
+        onLoad(){
+            wx.getSystemInfo({
+                success:res=>{     
+                    this.width = res.windowWidth/(this.navList.length)
+                    this.$apply()
+                }
+            })
+            let userInfo=wx.getStorageSync("userInfo")
+            if(userInfo){
+                this.userId=userInfo.userId
+                this.getRecordList(getRechargeRecord,'RechargeRecord')
+                this.getRecordList(getSubscriptionRecord,'SubscriptionRecord')
+                this.getRecordList(getUserGoldenTicketRecord,'UserGoldenTicketRecord')
+                this.getRecordList(getSpicyirewardticketlogByUserId,'SpicyirewardticketlogByUserId')
+                this.getRecordList(getUserRecommendTicketRecord,'UserRecommendTicketRecord')
+            }
+        }
+    }
+</script>
+<style lang="less" scoped>
+    view,scroll-view{
+        box-sizing: border-box;
+    }
+    scroll-view{
+        height:100%;
+    }
+    .nav{
+        height:8vh;
+        view{
+            height:80rpx;
+            text-align:center;
+            line-height:80rpx;
+            float:left;
+            font-size:32rpx;
+        }
+    }
+    .active{
+        border-bottom:4rpx solid   #F77583;
+        color:#F77583;
+    }
+    .item{
+        padding:28rpx;height:136rpx;border-bottom:2rpx solid #EFEFEF;
+    }
+</style>

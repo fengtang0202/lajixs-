@@ -4,10 +4,16 @@
     var M = date.getMonth() + 1;
     var y = date.getFullYear();
     var d = date.getDate();
+    var h = date.getHours();
+    var m = date.getMinutes()
+    var s = date.getSeconds()
     if (M < 10) M = "0" + M;
     if (d < 10) d = "0" + d;
+    if (h < 10) h = "0" + h;
+    if (m < 10) m = "0" + m;
+    if (s < 10) s = "0" + s;
     if (splitStr)
-      return y + splitStr + M + splitStr + d;
+      return y + splitStr + M + splitStr + d +' ' +h + ":" + m + ":"+s;
     else
       return {
         y: y,
@@ -83,11 +89,20 @@ function weekToString(num){
   }
   return week;
 }
+function RechargeRecordType(res){
+  var type = '';
+  res == 110 && (type = '支付宝')
+  res == 113 && (type = '微信')
+  res == 112 && (type = '苹果支付')
+  res == 111 && (type = '微信')
+  return res = type
+}
 module.exports = {
   getToString: getToString,
   leadTime:leadTime,
   strSlice: strSlice,
   qdStatus: qdStatus,
   weekToString: weekToString,
-  numToFixed: numToFixed
+  numToFixed: numToFixed,
+  RechargeRecordType: RechargeRecordType
 }

@@ -1,35 +1,64 @@
 <template>
     <scroll-view style="height:100vh" scroll-y>
-    <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{items}}" wx:key="">
-      <view class="content">
-          {{item.bookName}}
+    <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}} ReadHistoryItem" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{items}}" wx:key="">
+      <view class="content" style="font-size:28rpx">
+        <view bindtap="handleGo({{item.chapterId}},{{item.bookId}})" style="float:left;margin-left:28rpx">
+          <view style="color:#999999;font-size:28rpx">{{item.bookName}}著</view>
+          <view>{{item.writerName}}</view>
+          <view>阅读至:{{item.chapterName}}</view>
+        </view>
+        <view style="color:#999;font-size:24rpx;float:right;margin-right:30rpx">
+          {{myWxs.getToString(item.dateTimes,'-')}}
+        </view>
       </view>
       <view class="del" catchtap="del" data-index="{{index}}">删除</view>
-    </view>
+      </view>
+      <van-toast id="van-toast" />
     </scroll-view>
 </template>
 <script>
 import wepy from 'wepy'
 import Touch from '../mixins/touch'
-import {getBookReadHistory} from '../config/getData'
+import myWxs from '../filter/myWxs.wxs'
+import Toast from '../lib/vant/toast/toast';
+import {getBookReadHistory,delBookReadHistory} from '../config/getData'
 export default class ReadHistory extends wepy.page {
     data={
         page:1,
         lastPage:1
     }
   config = {
-    navigationBarTitleText: '阅读记录'
+    navigationBarTitleText: '阅读记录',
+    usingComponents:{
+       "van-toast": "../lib/vant/toast/index"
+    }
   }
   components = {
 
   }
+  wxs={
+    myWxs
+  }
   methods = {
-     del: function (e) {
-        this.items.splice(e.currentTarget.dataset.index, 1)
+     del(e) {
+       let index=e.currentTarget.dataset.index
+       delBookReadHistory(this.items[index].id).then(data=>{
+         if(data==1){
+            Toast('删除成功~')
+            this.items.splice(index, 1)
+            this.$apply()
+            }
+        })
+
+      },
+      handleGo(chapterId,bookId){
+         wx.navigateTo({
+           url:'bookRead?bookId='+bookId+"&chapterId="+chapterId
+         })
       }
   }
   mixins = [Touch]
-  onLoad(){
+  onShow(){
     let userInfo=wx.getStorageSync('userInfo')
     getBookReadHistory(userInfo.userId,1).then(data=>{
         this.items=data.list
@@ -41,4 +70,8 @@ export default class ReadHistory extends wepy.page {
   </script>
   <style lang="less" scoped>
   @import url('../css/touch.less');
+  .ReadHistoryItem{
+    height:180rpx;
+    border-bottom:2rpx solid #EFEFEF;
+  }
   </style>

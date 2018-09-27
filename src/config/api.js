@@ -59,6 +59,7 @@ const FansTotal = `${host}/api/fans-bookFansTotal/`
 const readHistory = `${host}/api/person-UserBookReadRecord/`
 const bookReadHistory = `${host}/api/person-UserBookReadRecordByUserIDAndBookId`
 const addBookReadHistory = `${host}/api/person-addBookReadRecord`
+const delBookReadHistory = `${host}/api/person-delBookReadRecord`
 //书籍控制器
 const get_volume = `${host}/api/books-volumeChapterList/`
 const get_volumeid_chapter = `${host}/api/books-getVolumeById`
@@ -93,6 +94,12 @@ const userSignin = `${host}/api/user-signin`
 const userSiginState = `${host}/api/user-signinstate`
 const userReplyInfo = `${host}/api/comm-coverReplyInfo`
 const systemMsg = `${host}/api/sys-getsystemmsg`
+//用户交易记录
+const rechargeRecord = `${host}/api/user-RechargeRecord`
+const subscriptionRecord = `${host}/api/userSubscriptionRecord`
+const userGoldenTicketRecord = `${host}/api/userGoldenTicketRecord`
+const spicyirewardticketlogByUserId = `${host}/api/spicyirewardticketlogByUserId`
+const userRecommendTicketRecord = `${host}/api/userRecommendTicketRecord`
 module.exports = {
   login,
   get_user_info,
@@ -170,5 +177,11 @@ module.exports = {
   userReplyInfo,
   systemMsg,
   FansWeek,
-  FansTotal
+  FansTotal,
+  delBookReadHistory,
+  rechargeRecord,
+  subscriptionRecord,
+  userGoldenTicketRecord,
+  spicyirewardticketlogByUserId,
+  userRecommendTicketRecord,
 }

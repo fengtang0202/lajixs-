@@ -50,7 +50,7 @@
             <view class='comment_wrap'>
                 <view style="text-align:center;margin-top:30rpx">Ta的书评</view>
                 <commentList :is="isz" :commentList.sync="commentList"></commentList>
-                <view class='all' wx:if="{{CommentCount>2}}">
+                <view class='all' bindtap="handleGoAllComment" wx:if="{{CommentCount>2}}">
                     查看全部{{CommentCount}}评论
                 </view>
             </view>
@@ -85,7 +85,8 @@ export default  class UserCenter extends wepy.page{
         commentList:[],
         isz:false,
         CommentCount:0,
-        isfllow:0
+        isfllow:0,
+        AllCommentList:[]
     }
     methods={
         handleFllow(){
@@ -118,6 +119,10 @@ export default  class UserCenter extends wepy.page{
             wx.navigateTo({
                 url:res+'?userId='+this.PersonInfo.userId
             })
+        },
+        handleGoAllComment(){
+            this.$preload('commentList',this.AllCommentList);
+            this.$redirect('userBookComment')
         }
     }
     onLoad(ops){
@@ -162,6 +167,7 @@ export default  class UserCenter extends wepy.page{
             if(data){
                 this.CommentCount=data.total
                 this.commentList=data.list.slice(0,2)
+                this.AllCommentList=data.list
                 this.$apply()
             }
         })

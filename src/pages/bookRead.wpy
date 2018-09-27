@@ -1,7 +1,7 @@
 <template>
  <view>
     <view class='bookName' wx:if="{{show}}">《{{bookName}}》 {{chapterName}}</view>
-    <scroll-view scroll-y scroll-top="{{scrollTop}}" enable-back-to-top bindscroll="scroll" style="height:{{mtabH*2-80}}rpx">
+    <scroll-view scroll-y scroll-top="{{scrollTop}}" enable-back-to-top bindscroll="scroll" style="height:{{mtabH-50}}px">
       <view class='chapter'> {{chapterName}}</view>
       <view wx:for="{{bookContent}}" wx:key="{{index}}" class='bookContent' >{{item}}</view>
       <view wx:if="{{show}}" class='authorWords' >
@@ -20,23 +20,53 @@
       <van-toast id="van-toast" />
     </scroll-view>
     <Directory :chapterId.sync="chapterId" :chapterList.sync="directoryChapterList"></Directory>
+     <view wx:if="{{isShowBuyChapter}}" style="width:100%;position:fixed;bottom:0;">
+          <view style="width:100%;height:124rpx;background:linear-gradient(180deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,1) 100%);"></view>
+          <view style="background:#fff;text-align:center">
+              <view style="position:relative;">
+                 <image src='../images/readPerson.png' style="width:178rpx;height:292rpx"/>
+              </view>
+            <view style="font-size:24rpx;color:#4A90E2;margin-top:12rpx;">领券免费看>></view>
+            <view style="font-size:28rpx;margin-top:32rpx;">价格:{{chapterPrice}}辣椒</view>
+            <view style="font-size:24rpx;margin-top:6rpx;">
+              <text>余额:{{userMoney}}</text>
+              <text style="margin-left:20rpx;">辣椒劵:{{readMoney}}</text>
+            </view>
+            <view style="margin-top:32rpx">
+                <button bindtap="handleBuyChapter" style="border-radius:100rpx;line-height:72rpx;background:#F77583;width:444rpx;height:72rpx;color:#fff;font-size:32rpx">购买本章</button>
+            </view>
+            <view style="font-size:24rpx;margin-top:24rpx">
+               <switch  checked="{{isAutoBuyChapter}}" bindchange="handleIsAutoBuyBtn" color="#F77583"/>
+               <text>总动购买下一章，不再提醒</text>
+            </view>
+            <view wx:if="{{show}}" style="height:130rpx;padding:20rpx  42rpx;">
+              <view class='page' style="width:156rpx;margin-right:20rpx;" bindtap="getNextPreBookText(2)">上一章</view>
+              <view class='page' style="width:192rpx;" bindtap="getNextPreBookText(1)">下一章</view>
+              <view class='page' style="float:right;width:156rpx;" bindtap="handleDiretory">目录</view>
+            </view>
+          </view>
+     </view>
+     <Login></Login>
  </view>    
 </template>
 <script>
     import wepy from 'wepy'
     import Toast from '../lib/vant/toast/toast'
     import Directory from '../components/directory'
-    import {bookRead,getVolume,addBookReadHistroy} from '../config/getData'
+    import {getVolume,addBookReadHistroy,CheckSubscribe,subscribe,updateUserInfo} from '../config/getData'
+    import {bookRead} from '../config/api'
+    import Login from '../components/login'
     export default class BookRead extends wepy.page{
          config = {
           navigationBarTitleText: '辣鸡小说',
           usingComponents: {
             "van-toast": "../lib/vant/toast/index",
-             "van-popup": "../lib/vant/popup/index",             
+            "van-popup": "../lib/vant/popup/index",             
           },
         }
         components={
-            Directory
+            Directory,
+            Login
         }
         data={
           bookId:0,
@@ -50,20 +80,79 @@
           mtabH:0,
           show:false,
           scrollTop:0,
-          directoryChapterList:[]
+          directoryChapterList:[],
+          isShowBuyChapter:false,
+          userMoney:0,
+          readMoney:0,
+          isAutoBuyChapter:false
         }
         events={
           'handleEx':(chapterId)=>{
             this.chapterId=chapterId
             this.$invoke('Directory','onClose')
             this.handleClickDiretoryBookText()
+          },
+          "reload":()=>{
+            let userInfo=wx.getStorageSync('userInfo')
+            if(userInfo){
+              this.userMoney=userInfo.userMoney
+              this.readMoney=userInfo.userReadTicket
+              this.CheckSubscribe()
+            }
           }
         }
        async handleClickDiretoryBookText(){
             await  this.getNowChapterId()
             await  this.getBookText()
         }
+       async buyChapter(){
+            let userInfo= wx.getStorageSync("userInfo")
+            let data=await subscribe(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
+            this.bookContent=data.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')          
+            await  updateUserInfo()
+            this.isShowBuyChapter=false
+            this.$apply()
+          }
+        CheckSubscribe(){
+          CheckSubscribe(this.bookId,'search',0).then(res=>{
+                if(res){
+                  if(res.isClose==1){
+                    this.isAutoBuyChapter=true
+                  }
+                }else{
+                    CheckSubscribe(this.bookId,'update',0)
+                }
+               this.$apply()
+           }) 
+        }
         methods={
+          handleBuyChapter(){
+            let userInfo= wx.getStorageSync("userInfo")
+            if(userInfo){
+              this.buyChapter()
+            }else{
+                this.$invoke('Login','onClose')
+            }
+          },
+          handleIsAutoBuyBtn(e){
+            let userInfo= wx.getStorageSync("userInfo")
+            if(userInfo){
+             let value=e.detail.value+0
+              CheckSubscribe(this.bookId,'update',value).then(res=>{
+                if(res) {
+                    this.isAutoBuyChapter=res.isClose==1?true:false
+                    if(res.isClose==1){
+                        Toast('开启自动订阅~')
+                    }else{
+                        Toast('关闭自动订阅~')
+                    }
+                    this.$apply()
+                }
+            })
+            }else{
+               this.$invoke('Login','onClose')     
+            }
+          },
           handleDiretory(){
               this.$invoke('Directory','onClose')            
           },
@@ -83,6 +172,8 @@
             }
             this.chapterId=this.chapterList[this.chapterIdNum].id
             this.getBookText()
+            this.readMoney=wx.getStorageSync("userInfo").userReadTicket
+            this.userMoney=wx.getStorageSync("userInfo").userMoney
           },
           scroll(e){
             if(e.detail.scrollTop>10){
@@ -90,6 +181,7 @@
             }
           }
         }
+      
       async getNowChapterId(){
             let res = await getVolume(this.bookId)
             this.directoryChapterList=res.chapterInfo
@@ -104,19 +196,49 @@
             this.$apply()
         } 
       async getBookText(){
-        let data = await  bookRead(this.chapterId)
-        this.show=true
-        this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
-        this.bookName=data.chapterInfo.bookTitle
-        this.chapterName=data.chapterInfo.chapterTitle
-        this.chapterPrice=data.chapterInfo.price 
-        this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
-        //用户信息
-        let userInfo = wx.getStorageSync('userInfo')
-        userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
-        this.$apply()
+        wx.request({
+          url:bookRead,
+          method:'POST',
+          header: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
+            },
+         data:{
+           chapterId: this.chapterId,
+           readType:1
+         },
+        success:res=>{
+          let data=res.data.data
+          if(res.data.returnCode==400){
+              this.isShowBuyChapter=true
+              this.$apply()
+          }
+          this.show=true
+          this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
+          this.bookName=data.chapterInfo.bookTitle
+          this.chapterName=data.chapterInfo.chapterTitle
+          this.chapterPrice=data.chapterInfo.price 
+          this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
+          let userInfo = wx.getStorageSync('userInfo')
+          userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
+          if(res.data.returnCode==500){
+              this.isShowBuyChapter=!this.isAutoBuyChapter
+              this.isAutoBuyChapter&&this.buyChapter()
+          }
+              this.$apply()
+          }
+        })
+
       }
-        onLoad(option){
+      onShow(){
+        let userInfo=wx.getStorageSync('userInfo')
+        if(userInfo){
+          this.userMoney=userInfo.userMoney
+          this.readMoney=userInfo.userReadTicket
+          this.CheckSubscribe()
+        }
+      }
+      onLoad(option){
           wx.getSystemInfo({
             success:res=>{     
                 this.mtabH=res.windowHeight

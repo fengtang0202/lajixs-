@@ -16,7 +16,7 @@ const getBookInfo = bookid=>{
         params:{
             bookid
         }
-    })
+    },false)
 }
 const getRecommendBook=(page=1,size=10)=>{
     return post({
@@ -33,7 +33,7 @@ const getHotComments=bookid=>{
         params:{
             bookid
         }
-    })
+    },false)
 }
 const getReplyComment = (commentId,startPage)=>{
     return post({
@@ -375,6 +375,66 @@ const getFansTotal=(bookId, startpage)=>{
         url: `${api.FansTotal}${bookId}/${startpage}`
     })
 }
+const delBookReadHistory=(id)=>{
+    return post({
+        url:api.delBookReadHistory,
+        params:{
+            id:id
+        }
+    },false)
+}
+ const updateUserInfo=()=>{
+    post({
+        url:api.get_user_info
+    },false).then(data=>{
+        wx.setStorageSync("userInfo", data)        
+    })
+}
+const getRechargeRecord = (userid, startpage)=>{
+    return post({
+        url: api.rechargeRecord,
+        params:{
+            userid: userid,
+            startpage: startpage
+        }
+    })
+}
+const getSubscriptionRecord = (userid, startpage) => {
+  return post({
+    url: api.subscriptionRecord,
+    params: {
+      userid: userid,
+      startpage: startpage
+    }
+  })
+}
+const getUserGoldenTicketRecord = (userid, startpage)=>{
+    return post({
+        url:api.userGoldenTicketRecord,
+        params:{
+            userid: userid,
+            startpage: startpage
+        }
+    })
+}
+const getSpicyirewardticketlogByUserId=(userid,startpage)=>{
+    return post({
+        url: api.spicyirewardticketlogByUserId,
+        params:{
+            userid:userid,
+            startpage:startpage
+        }
+    })
+}
+const getUserRecommendTicketRecord=(userid,startpage)=>{
+    return post({
+        url: api.userRecommendTicketRecord,
+        params:{
+            userid:userid,
+            startpage:startpage
+        }
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -423,5 +483,12 @@ module.exports = {
     getUserReplyInfo,
     getSystemMsg,
     getFansWeek,
-    getFansTotal
+    getFansTotal,
+    delBookReadHistory,
+    updateUserInfo,
+    getRechargeRecord,
+    getSubscriptionRecord,
+    getUserGoldenTicketRecord,
+    getSpicyirewardticketlogByUserId,
+    getUserRecommendTicketRecord
 }

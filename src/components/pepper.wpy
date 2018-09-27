@@ -4,7 +4,7 @@
             <view style='height:80rpx;border-bottom:2rpx solid #333333;text-align:center;color:#FFC3C3;font-size:29rpx;line-height:80rpx;'>给作者打赏</view>
             <view style="padding:0 25rpx">
                 <view style="height:139rpx;color:#fff;font-size:25rpx;">
-                    <view style="line-height:139rpx;float:left">您的余额：1000</view>
+                    <view style="line-height:139rpx;float:left">您的余额:{{pepper}}</view>
                     <view style="float:right;margin-top:44rpx;width:178rpx;height:51rpx;background:#F77583;border-radius:31px;line-height:51rpx;text-align:center;">充值</view>
                 </view>
                 <view style='width:100%;height:127rpx;position:relative;font-size:25rpx;color:#999'>                
@@ -41,7 +41,8 @@
                 {img:'../images/8888.png',num:'8888'}
             ],
             activeIndex:0,
-            pepperCount:188
+            pepperCount:188,
+            pepper:0
         }
         methods={
             handleChangePepper(item,index){
@@ -51,18 +52,31 @@
             },
             onClose(){
                 this.pepperShow=!this.pepperShow
+                let userInfo=wx.getStorageSync("userInfo")
+                if(userInfo){
+                    this.pepper=userInfo.userMoney
+                    this.$apply()
+                }
             },
             handleInput(e){
                 this.greet=e.detail.value
             },
            async handleReword(){
+             let userInfo=wx.getStorageSync("userInfo")
              let data = await SpicyiRewardTicket(this.pepperCount,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId,this.greet)
-             if(data=="ok"){
+             if(data=="OK"){
+                this.pepper=userInfo.userMoney-this.pepperCount
+                userInfo.userMoney=this.pepper
+                wx.setStorageSync("userInfo",userInfo)
+                this.$apply()
                 Toast('打赏成功~')
               }else{
                 Toast('辣椒不足 请去充值吧~！')
               }
             }
+        }
+        onLoad(){
+            
         }
     }
 </script>
