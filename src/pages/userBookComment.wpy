@@ -2,7 +2,38 @@
     <scroll-view style="height:100vh" scroll-y bindscrolltolower="loadMore">
         <view  class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove"  wx:for="{{items}}" wx:key="{{index}}">
                 <view class="content">
-                    <commentItem :commentList.sync="[item]"></commentItem>
+                    <view class='book_comment_item' bindtap="handleGOComment({{item.id}})" data-id="{{item.id}}">
+                               <image  src='{{item.userHeadPortraitURL}}' class='comment_avatar'/>
+                               <image  wx:if="{{item.vipGrade>0}}" src="../images/crown@3x.png" class='vip'/>
+                               <view class='comment_item'>
+                                   <view style="overflow:hidden;">
+                                        <view style="float:left">
+                                            <text style="font-size:32rpx">{{item.pseudonym}}</text>
+                                            <image class='sex' wx:if="{{item.userSex==0}}" src="../images/sex-02_03@3x.png"/>
+                                            <image class='sex' wx:if="{{item.userSex==1}}" src="../images/sex-03@3x.png" />
+                                            <text class='grade'>LV{{item.userGrade}}</text>
+                                        </view>
+                                        <view style="color:#666;font-size:24rpx;float:right">
+                                            {{myWxs.getToString(item.commentDateTime,"-")}}
+                                        </view>
+                                    </view>
+                                    <view catchtap="handleBookDetail({{item.bookId}})">《{{item.bookName}}》</view>
+                                    <view style='font-size:28rpx;margin:4rpx 0;'>
+                                        {{item.commentContext}}
+                                    </view>
+                                     <!-- <view class='btn_wrap'>
+                                        <view class="reply">
+                                              <image src="../images/message@3x.png"/>
+                                              <text>{{item.replyCount}}</text>
+                                        </view>
+                                        <view class='zan' bindtap="handleLike({{item.id}})">
+                                            <image wx:if="{{item.isthumbs==0}}" src='../images/zan@3x.png'/>
+                                            <image wx:if="{{item.isthumbs==1}}" src='../images/goodzan@3x.png'/>
+                                            <text>{{item.thumbsCount}}</text>                                            
+                                        </view>
+                                    </view> -->
+                               </view>
+                        </view>
                 </view>
                 <view class="del" catchtap="del" data-id="{{item.id}}" data-index="{{index}}">删除</view>
         </view>
@@ -12,13 +43,37 @@
     import wepy from 'wepy'
     import Touch from '../mixins/touch'
     import commentItem from '../components/commentItem'
+    import {getPersonComment} from '../config/getData'
     export default class UserBookComment extends wepy.page{
         data={
             userId:0,
-            items:[]
+            items:[],
+            page:1,
+            lastPage:1
         }
         methods={
-
+            handleGOComment(id){
+                wx.navigateTo({
+                    url:'commentDetail?commentId='+id
+                })
+            },
+            handleBookDetail(bookId){
+                wx.navigateTo({
+                    url:'bookDetail?bookId='+bookId
+                })
+            },
+           async loadMore(){
+                this.page++
+                if(this.page>this.lastPage){
+                    wx.showToast({
+                        title:'没有更多了'
+                    })
+                    return 
+                }
+            let data = await getPersonComment(this.page,this.userId)
+            this.items=this.items.concat(data.list)
+            this.$apply()
+            }
         }
         components={
             commentItem
@@ -27,9 +82,11 @@
         onLoad(ops,data){
            this.items=data.preload.commentList
            this.userId=this.items[0].userId
+           this.lastPage=ops.lastPage
         }
     }
 </script>
 <style lang="less" scoped>
-@import url('../css/touch.less');    
+@import url('../css/touch.less');  
+@import url('../css/commentItem.less');
 </style>

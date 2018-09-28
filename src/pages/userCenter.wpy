@@ -86,7 +86,8 @@ export default  class UserCenter extends wepy.page{
         isz:false,
         CommentCount:0,
         isfllow:0,
-        AllCommentList:[]
+        AllCommentList:[],
+        lastPage:1
     }
     methods={
         handleFllow(){
@@ -122,7 +123,7 @@ export default  class UserCenter extends wepy.page{
         },
         handleGoAllComment(){
             this.$preload('commentList',this.AllCommentList);
-            this.$redirect('userBookComment')
+            this.$navigate('userBookComment',{lastPage:this.lastPage})
         }
     }
     onLoad(ops){
@@ -167,6 +168,7 @@ export default  class UserCenter extends wepy.page{
             if(data){
                 this.CommentCount=data.total
                 this.commentList=data.list.slice(0,2)
+                this.lastPage=data.pages
                 this.AllCommentList=data.list
                 this.$apply()
             }
