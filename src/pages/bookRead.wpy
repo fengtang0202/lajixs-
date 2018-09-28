@@ -1,9 +1,9 @@
 <template>
- <view>
-    <view class='bookName' wx:if="{{show}}">《{{bookName}}》 {{chapterName}}</view>
-    <scroll-view scroll-y scroll-top="{{scrollTop}}" enable-back-to-top bindscroll="scroll" style="height:{{mtabH-50}}px">
-      <view class='chapter'> {{chapterName}}</view>
-      <view wx:for="{{bookContent}}" wx:key="{{index}}" class='bookContent' >{{item}}</view>
+ <view style="height;100vh;background:{{backgroundColor}}">
+    <view class='bookName' style="font-size:{{20*fontSize}}rpx;color:{{fontColor}}">{{bookName}} {{chapterName}}</view>
+    <scroll-view scroll-y scroll-top="{{scrollTop}}" bindtap="handleShow" enable-back-to-top bindscroll="scroll" style="height:{{mtabH}}px">
+      <view class='chapter' style="color:{{fontColor}};font-size:{{48*fontSize>60&&60}}rpx"> {{chapterName}}</view>
+      <view wx:for="{{bookContent}}" style="color:{{fontColor}};font-size:{{32*fontSize}}rpx" wx:key="{{index}}" class='bookContent' >{{item}}</view>
       <view wx:if="{{show}}" class='authorWords' >
         <image  style="float:left;width:44rpx;height:44rpx;border-radius:50%;margin-right:20rpx"/>
         <view style="float:left;font-size:26rpx;width:480rpx">
@@ -47,26 +47,64 @@
           </view>
      </view>
      <Login></Login>
+      <view  class="reword_wrap {{isRewordShow&&'active'}}">
+        <view style="float:left">
+          <block wx:for="{{topList}}" wx:key="{{index}}">
+            <image class='pepper'  bindtap="handleShowReword({{index}})" style="width:{{index==1&&'142rpx'||index==2&&'114rpx'}}" src="{{item}}"/>
+          </block>
+        </view>
+        <view style="height:100%;width:128rpx;float:right;text-align:center;">
+          <image src="../images/dropdown.png" style="width:14rpx;height:46rpx;margin-top:41rpx"/>
+        </view>
+      </view>
+      <view class="set_wrap {{isRewordShow&&'active'}}">
+          <view class="f_1">
+             <view class="font_1">字号</view>
+              <view class='changeFont' bindtap="handleChangeFontSize(1)" style="font-size:36rpx">
+                A-
+              </view>
+              <view class='changeFont' bindtap="handleChangeFontSize(2)" style="font-size:40rpx">
+                A+
+              </view>
+              <view style="float:right">
+                <text class="font_1" style="margin-right:26rpx">自动订阅</text>
+                <switch  checked="{{isAutoBuyChapter}}" bindchange="handleIsAutoBuyBtn" color="#F77583"/>
+              </view>
+          </view>
+          <view class="f_2">
+              <block wx:for="{{colorList}}" wx:key="{{index}}">
+                <view  style="width:76rpx;height:76rpx;border-radius:50%;background:{{item.bgcolor}}" bindtap="handleChangeColor({{item}})">
+                </view>
+              </block> 
+          </view>
+      </view>
+        <RiceChilli></RiceChilli>
+        <Pepper></Pepper>
  </view>    
 </template>
 <script>
     import wepy from 'wepy'
     import Toast from '../lib/vant/toast/toast'
     import Directory from '../components/directory'
+    import RiceChilli from '../components/riceChilli'
+    import Pepper from '../components/pepper'
     import {getVolume,addBookReadHistroy,CheckSubscribe,subscribe,updateUserInfo} from '../config/getData'
     import {bookRead} from '../config/api'
     import Login from '../components/login'
     export default class BookRead extends wepy.page{
          config = {
-          navigationBarTitleText: '辣鸡小说',
+          navigationBarTitleText: '',
           usingComponents: {
             "van-toast": "../lib/vant/toast/index",
-            "van-popup": "../lib/vant/popup/index",             
+            "van-popup": "../lib/vant/popup/index", 
+            "van-stepper": "../lib/vant/stepper/index"  
           },
         }
         components={
             Directory,
-            Login
+            Login,
+            RiceChilli,
+            Pepper  
         }
         data={
           bookId:0,
@@ -84,7 +122,20 @@
           isShowBuyChapter:false,
           userMoney:0,
           readMoney:0,
-          isAutoBuyChapter:false
+          isAutoBuyChapter:false,
+          isRewordShow:false,
+          topList:['../images/dslj.png','../images/dsmj.png','../images/dsjj.png'],
+          colorList:[
+            {bgcolor:'#ffffff',fontColor:'#333333'},
+            {bgcolor:'#e5dfca',fontColor:'"#383222'},
+            {bgcolor:'#C8D7EB',fontColor:'#162a44'},
+            {bgcolor:'#CFE1CC',fontColor:'#16310e'},
+            {bgcolor:'#D2B0A6',fontColor:'#35150b'},
+            {bgcolor:'#0D1734',fontColor:'#5f8590'}
+          ],
+            fontSize:1,
+            backgroundColor:"#faefda",
+            fontColor: "#685640"
         }
         events={
           'handleEx':(chapterId)=>{
@@ -126,12 +177,54 @@
            }) 
         }
         methods={
+          handleShowReword(index){
+              console.log(index)
+              index==0&&this.$invoke('Pepper','onClose')
+              index==1&&this.$invoke('RiceChilli','onClose',index-1)
+              index==2&&this.$invoke('RiceChilli','onClose',index-1)
+          },
+          handleChangeFontSize(n){
+            if(n==1){
+              if(this.fontSize<=1){
+                Toast("最小字体,保护眼睛~")
+                return 
+              }
+              this.fontSize-=.1
+            }else{
+              if(this.fontSize>1.7){
+                Toast("最大字体,保护眼睛~")
+                return
+              }
+              this.fontSize+=.1
+            }
+            wx.setStorageSync('fontSize',this.fontSize)
+          },
+          handleChangeColor(item){
+            this.backgroundColor=item.bgcolor
+            this.fontColor=item.fontColor
+            wx.setStorageSync('set',{
+                backgroundColor:item.bgcolor,
+                fontColor:item.fontColor
+            }) 
+          },
+          handleShow(){
+              this.isRewordShow=!this.isRewordShow
+              let navColor=this.isRewordShow?"#3D3D3D":this.backgroundColor
+              wx.setNavigationBarColor({
+                  frontColor:'#ffffff',
+                  backgroundColor:navColor,
+                  animation: {
+                      duration: 400,
+                      timingFunc: 'easeIn'
+                  }
+              })
+          },
           handleBuyChapter(){
             let userInfo= wx.getStorageSync("userInfo")
             if(userInfo){
               this.buyChapter()
             }else{
-                this.$invoke('Login','onClose')
+              this.$invoke('Login','onClose')
             }
           },
           handleIsAutoBuyBtn(e){
@@ -176,12 +269,19 @@
             this.userMoney=wx.getStorageSync("userInfo").userMoney
           },
           scroll(e){
-            if(e.detail.scrollTop>10){
-              // console.log(111)
+            this.isRewordShow=false
+            if(!this.isRewordShow){
+                wx.setNavigationBarColor({
+                  frontColor:'#ffffff',
+                  backgroundColor:this.backgroundColor,
+                  animation: {
+                      duration: 400,
+                      timingFunc: 'easeIn'
+                  }
+                })
             }
           }
         }
-      
       async getNowChapterId(){
             let res = await getVolume(this.bookId)
             this.directoryChapterList=res.chapterInfo
@@ -213,9 +313,10 @@
               this.isShowBuyChapter=true
               this.$apply()
           }
+          this.isShowBuyChapter=false
           this.show=true
           this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
-          this.bookName=data.chapterInfo.bookTitle
+          this.bookName="《"+data.chapterInfo.bookTitle+"》"
           this.chapterName=data.chapterInfo.chapterTitle
           this.chapterPrice=data.chapterInfo.price 
           this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
@@ -228,7 +329,6 @@
               this.$apply()
           }
         })
-
       }
       onShow(){
         let userInfo=wx.getStorageSync('userInfo')
@@ -238,16 +338,31 @@
           this.CheckSubscribe()
         }
       }
+
       onLoad(option){
-          wx.getSystemInfo({
-            success:res=>{     
-                this.mtabH=res.windowHeight
-             }
-            })
-          this.bookId=option.bookId
-          this.chapterId=option.chapterId
-          this.getNowChapterId()  
-          this.getBookText()
+        wx.getSystemInfo({
+          success:res=>{     
+             var query = wx.createSelectorQuery();
+             query.select('.bookName').boundingClientRect(rect=> {
+                this.mtabH=res.windowHeight-rect.height
+            }).exec()  
+            }
+          })
+        var set=wx.getStorageSync("set")
+        var fontSize=wx.getStorageSync('fontSize')
+        if(set){
+          this.backgroundColor=set.backgroundColor
+          this.fontColor=set.fontColor
+        }
+        fontSize&&(this.fontSize=fontSize)
+        wx.setNavigationBarColor({
+          frontColor:'#ffffff',
+          backgroundColor:this.backgroundColor
+        })
+        this.bookId=option.bookId
+        this.chapterId=option.chapterId
+        this.getNowChapterId()  
+        this.getBookText()
        }
     }
 </script>
@@ -256,7 +371,6 @@
     box-sizing: border-box;
   }
   .bookContent{
-     font-size:32rpx;
      letter-spacing: 4rpx;
      text-indent: 2em;
      text-align: justify;
@@ -265,7 +379,6 @@
      padding:0 42rpx;
   }
   .bookName{
-    font-size:20rpx;
     color:#999;
     height:26rpx;
     height:80rpx;
@@ -274,7 +387,6 @@
 
   }
   .chapter{
-    font-size:48rpx;
     color:#999;
     height:108rpx;
     padding:0 42rpx;
@@ -306,5 +418,67 @@
     position: absolute;
     top:-60rpx;
     right:32rpx;
+  }
+  .reword_wrap{
+    width:100%;
+    height:128rpx;
+    background:#3D3D3D;
+    position:fixed;
+    top:0;
+    padding-left:98rpx;
+    box-sizing: border-box;
+    transition: transform .4s;
+    transform: translateY(-128rpx);
+  }
+  .pepper{
+    width:112rpx;
+    height:98rpx;
+    margin-top: 12rpx;
+    margin-left: 40rpx;
+  }
+  .set_wrap{
+    height:274rpx;
+    position: fixed;
+    background:#3D3D3D;
+    bottom:0;
+    width:100%;
+    box-sizing: border-box;
+    transition: transform .4s;
+    transform: translateY(274rpx);
+  }
+  .active{
+    transform: translateY(0);
+  }
+  .f_1{
+    height:124rpx;
+    border-bottom:2rpx solid #333333;
+    padding:0 34rpx;
+    color:#fff;
+    box-sizing: border-box;
+    view{
+      float:left;
+    }
+  }
+  .changeFont{
+    width:120rpx;
+    height:60rpx;
+    border-radius:16rpx;
+    border:2rpx solid #fff;
+    text-align: center;
+    line-height:60rpx;
+    margin:32rpx 30rpx 0 30rpx;
+  }
+  .font_1{
+    font-size:28rpx;
+    height:100%;
+    line-height:124rpx;
+  }
+  .f_2{
+    height:148rpx;
+    view{
+      float:left;
+      margin-top:36rpx;
+      margin-left:34rpx;
+    }
   }
 </style>

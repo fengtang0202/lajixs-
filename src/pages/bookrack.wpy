@@ -83,8 +83,8 @@
             }
         methods = {
             handleClose(index){
-               this.items[index].isTouchMove=true
-               this.$apply()
+                this.items[index].isTouchMove=true
+                this.$apply()
             },
             del(e){
               let bookId=e.currentTarget.dataset.id
