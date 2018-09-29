@@ -41,7 +41,8 @@ function request(method, requestHandler, isShowLoading = true) {
                 }else{
                         if(wx.getStorageSync('userInfo')){
                             // wx.navigateTo({url:'Login'})
-                            wx.clearStorageSync()
+                            wx.removeStorageSync("userInfo")
+                            wx.removeStorageSync("cookie")
                         }
                     }
                 } else if(res.data.returnCode==1000){

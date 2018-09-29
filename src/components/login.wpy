@@ -1,6 +1,6 @@
 <template>
    <view class="login {{show?'active':''}}" bindtap="onClose">
-       <view style="position:absolute;height:450rpx;top:50%;margin-top:-225rpx;">
+       <view style="position:absolute;height:450rpx;top:20%;">
            <view style="width:100%;text-align:center;width:750rpx;">
              <image class='img-x' src="../images/login.png" />
             </view>

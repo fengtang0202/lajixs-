@@ -15,6 +15,9 @@
                                             {{myWxs.getToString(item.commentDateTime,"-")}}
                                         </view>
                                     </view>
+                                    <view wx:if="{{isShowBookName}}" bindtap="handleGoBookDetail({{item.bookId}})" style="font-size:28rpx;">
+                                        《{{item.bookName}}》
+                                    </view>
                                     <view style='font-size:28rpx;margin:4rpx 0;'>
                                         {{item.commentContext}}
                                     </view>
@@ -47,7 +50,11 @@
           is:{
               type:Boolean,
               default:true
-          } 
+          },
+          isShowBookName:{
+              type:Boolean,
+              default:false
+          }
         }
         wxs = {
             myWxs
@@ -84,10 +91,15 @@
              wx.navigateTo({
                 url:'commentDetail?commentId='+id
             })
+          },
+          handleGoBookDetail(bookId){
+               wx.navigateTo({
+                   url:'bookDetail?bookId='+bookId
+               })    
           }
         }
     }
 </script>
 <style lang="less" scoped>
-@import url('../css/commentItem.less')
+@import url('../css/commentItem.less');
 </style>

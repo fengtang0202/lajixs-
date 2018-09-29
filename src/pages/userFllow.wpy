@@ -32,6 +32,7 @@
                 cancelFans(followId).then(data=>{
                     if(data){
                         this.fllowList.splice(index,1)
+                        this.$apply()
                    }
                 })
             }

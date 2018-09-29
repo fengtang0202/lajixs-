@@ -46,6 +46,8 @@ const give_thumbs = `${host}/api/comm-GiveThumbs`
 const hot_comment = `${host}/api/comm-HotCommentInfo`
 const add_comment = `${host}/api/add-getcomminfo`
 const add_reply = `${host}/api/add-replyInfo`
+const commentCount = `${host}/api/getBookCommentTotalCount/`
+const delComment = `${host}/api/comm-delcomminfo`
 //用户粉丝
 const addFans = `${host}/api/fans-addFans`
 const FansAndFllowCount = `${host}/api/fans-followCount/`
@@ -64,7 +66,7 @@ const delBookReadHistory = `${host}/api/person-delBookReadRecord`
 const get_volume = `${host}/api/books-volumeChapterList/`
 const get_volumeid_chapter = `${host}/api/books-getVolumeById`
 const add_book_rack = `${host}/api/bookshelf-adduserbookshelf`
-const check_book_rack = `${host}/api/bookshelf-bookshelfIsSave`
+const check_book_rack = `${host}/api/bookshelf-bookshelfIsSave/`
 const del_book_rack = `${host}/api/bookshelf-deluserbookshelf`
 const get_book_rack_recommend = `${host}/api/bookshelf-recommendPosition`
 const chapter_subscribe = `${host}/api/book-subscription`
@@ -184,4 +186,6 @@ module.exports = {
   userGoldenTicketRecord,
   spicyirewardticketlogByUserId,
   userRecommendTicketRecord,
+  commentCount,
+  delComment
 }

@@ -1,7 +1,7 @@
 <template>
    <view>
     <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{height-50}}px">
-       <commentItem :commentList.sync="commentList"></commentItem>
+       <commentItem :is="isShowMessage" :commentList.sync="commentList"></commentItem>
        <view style='margin-top: 20rpx;font-size:28rpx;color: #333;margin-left:40rpx'>相关回复</view>
        <block wx:for='{{replyList}}' wx:key='{{item.id}}'>
            <view class='reply_wrap'>
@@ -48,7 +48,8 @@ export default class CommentDetail extends wepy.page{
        height:0,
        bookId:0,
        bookName:'',
-       puserId:0
+       puserId:0,
+       isShowMessage:false
     }
     components = {
         commentItem,

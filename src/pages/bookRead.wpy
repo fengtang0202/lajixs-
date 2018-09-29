@@ -2,7 +2,7 @@
  <view style="height;100vh;background:{{backgroundColor}}">
     <view class='bookName' style="font-size:{{20*fontSize}}rpx;color:{{fontColor}}">{{bookName}} {{chapterName}}</view>
     <scroll-view scroll-y scroll-top="{{scrollTop}}" bindtap="handleShow" enable-back-to-top bindscroll="scroll" style="height:{{mtabH}}px">
-      <view class='chapter' style="color:{{fontColor}};font-size:{{48*fontSize>60&&60}}rpx"> {{chapterName}}</view>
+      <view class='chapter' style="color:{{fontColor}};font-size:{{48*fontSize>54&&54}}rpx"> {{chapterName}}</view>
       <view wx:for="{{bookContent}}" style="color:{{fontColor}};font-size:{{32*fontSize}}rpx" wx:key="{{index}}" class='bookContent' >{{item}}</view>
       <view wx:if="{{show}}" class='authorWords' >
         <image  style="float:left;width:44rpx;height:44rpx;border-radius:50%;margin-right:20rpx"/>
@@ -53,7 +53,7 @@
             <image class='pepper'  bindtap="handleShowReword({{index}})" style="width:{{index==1&&'142rpx'||index==2&&'114rpx'}}" src="{{item}}"/>
           </block>
         </view>
-        <view style="height:100%;width:128rpx;float:right;text-align:center;">
+        <view bindtap="handleShowDropDown" style="height:100%;width:128rpx;float:right;text-align:center;">
           <image src="../images/dropdown.png" style="width:14rpx;height:46rpx;margin-top:41rpx"/>
         </view>
       </view>
@@ -78,6 +78,13 @@
               </block> 
           </view>
       </view>
+      <view class="drop_down {{isDropDown&&'active'}}">
+          <block wx:for="{{rightList}}" wx:key="{{index}}">
+              <view  class="drop_down_item" bindtap="handleDropDown({{index}})">
+                  {{item}}
+              </view>
+          </block>
+      </view>
         <RiceChilli></RiceChilli>
         <Pepper></Pepper>
  </view>    
@@ -88,9 +95,10 @@
     import Directory from '../components/directory'
     import RiceChilli from '../components/riceChilli'
     import Pepper from '../components/pepper'
-    import {getVolume,addBookReadHistroy,CheckSubscribe,subscribe,updateUserInfo} from '../config/getData'
+    import {isBookRack,getVolume,addBookReadHistroy,CheckSubscribe,subscribe,updateUserInfo} from '../config/getData'
     import {bookRead} from '../config/api'
     import Login from '../components/login'
+    import Book from '../mixins/book'
     export default class BookRead extends wepy.page{
          config = {
           navigationBarTitleText: '',
@@ -107,6 +115,7 @@
             Pepper  
         }
         data={
+          type:true,
           bookId:0,
           bookContent:[],
           chapterId:0,
@@ -135,8 +144,12 @@
           ],
             fontSize:1,
             backgroundColor:"#faefda",
-            fontColor: "#685640"
+            fontColor: "#685640",
+            rightList:['书籍详情','查看书评','加入书架','举报本章'],
+            isDropDown:false,
+            collectionStatus:0,
         }
+        mixins=[Book]
         events={
           'handleEx':(chapterId)=>{
             this.chapterId=chapterId
@@ -177,8 +190,22 @@
            }) 
         }
         methods={
+          handleDropDown(index){
+            this.isRewordShow=false
+            this.isDropDown=false
+            index==0&&this.$navigate('bookDetail',{bookId:this.bookId})
+            index==1&&this.$navigate('comment',{bookId:this.bookId})
+            index==2&&this.handleAddBookRack()
+            index==3&&Toast('举报成功~')
+          },
+          handleShowDropDown(){
+              this.isDropDown=!this.isDropDown
+          },  
           handleShowReword(index){
-              console.log(index)
+              if(!wx.getStorageSync('userInfo')){
+                  this.$invoke('Login','onClose')
+                  return
+              }
               index==0&&this.$invoke('Pepper','onClose')
               index==1&&this.$invoke('RiceChilli','onClose',index-1)
               index==2&&this.$invoke('RiceChilli','onClose',index-1)
@@ -209,6 +236,7 @@
           },
           handleShow(){
               this.isRewordShow=!this.isRewordShow
+              !this.isRewordShow&&(this.isDropDown=false)
               let navColor=this.isRewordShow?"#3D3D3D":this.backgroundColor
               wx.setNavigationBarColor({
                   frontColor:'#ffffff',
@@ -252,7 +280,8 @@
           getNextPreBookText(type){
             if(type==1){
               if(this.chapterIdNum==this.chapterList.length-1){
-                Toast('目前最新一章~')
+                // Toast('目前最新一章~')
+                this.$navigate("lastPage",{bookId:this.bookId})
                 return;
                }
                this.chapterIdNum++
@@ -270,6 +299,7 @@
           },
           scroll(e){
             this.isRewordShow=false
+            this.isDropDown=false
             if(!this.isRewordShow){
                 wx.setNavigationBarColor({
                   frontColor:'#ffffff',
@@ -303,15 +333,15 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
             },
-         data:{
-           chapterId: this.chapterId,
-           readType:1
-         },
-        success:res=>{
-          let data=res.data.data
-          if(res.data.returnCode==400){
-              this.isShowBuyChapter=true
-              this.$apply()
+          data:{
+            chapterId: this.chapterId,
+            readType:1
+          },
+          success:res=>{
+            let data=res.data.data
+            if(res.data.returnCode==400){
+                this.isShowBuyChapter=true
+                this.$apply()
           }
           this.isShowBuyChapter=false
           this.show=true
@@ -330,15 +360,27 @@
           }
         })
       }
+      computed = {
+        
+      }
+      checkBookRack(){
+          isBookRack(this.bookId).then(data=>{
+              if(!data){
+                  this.collectionStatus=1
+                  this.rightList[2]='已在书架'
+                  this.$apply()
+              }
+          })
+      }
       onShow(){
         let userInfo=wx.getStorageSync('userInfo')
         if(userInfo){
           this.userMoney=userInfo.userMoney
           this.readMoney=userInfo.userReadTicket
           this.CheckSubscribe()
+          this.checkBookRack()
         }
       }
-
       onLoad(option){
         wx.getSystemInfo({
           success:res=>{     
@@ -445,6 +487,23 @@
     box-sizing: border-box;
     transition: transform .4s;
     transform: translateY(274rpx);
+  }
+  .drop_down{
+    text-align: center;
+    position: fixed;
+    top:128rpx;
+    right:0;
+    background: #3D3D3D;
+    color:#fff;
+    transition: all .4s;
+    transform: translateY(-416rpx);
+  }
+  .drop_down_item{
+    width:176rpx;
+    height:72rpx;
+    border-bottom:2rpx solid #333333;
+    line-height:72rpx;
+    font-size:32rpx;
   }
   .active{
     transform: translateY(0);

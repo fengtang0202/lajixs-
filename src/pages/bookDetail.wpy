@@ -148,7 +148,7 @@
 <script>
     import wepy from 'wepy'
     import {connect} from "wepy-redux"
-    import {getVolume,getBookInfo,getHotComments,updateLike,addFans,CheckSubscribe,addBookRack,bookReadHistory} from '../config/getData'
+    import {getVolume,getBookInfo,getHotComments,updateLike,addFans,CheckSubscribe,bookReadHistory} from '../config/getData'
     import BookLabel from '../components/bookLabel'
     import myWxs from '../filter/myWxs.wxs'
     import CommentItem from '../components/commentItem'
@@ -157,6 +157,7 @@
     import Pepper from '../components/pepper'
     import Directory from '../components/directory'
     import Login from '../components/login'
+    import book from '../mixins/book'
     @connect({
         //state
     },
@@ -186,6 +187,7 @@
           Login
       }
       data = {
+        type:false,
         bookInfo:{},
         bookLables:[],
         bookId:0,
@@ -216,6 +218,7 @@
       watch = {
           
       }
+    mixins = [book]
     async getBookChapterId(){
         if(wx.getStorageSync('userInfo')){
             let data = await  bookReadHistory(wx.getStorageSync("userInfo").userId,this.bookId)
@@ -245,6 +248,31 @@
         }
     }
     methods = {
+        handleAddBookRack(){
+            this.handleAddBookRack()
+        },
+        handleSubscribe() {
+            if (!wx.getStorageSync('userInfo')) {
+                this.$invoke('Login', 'onClose')
+                return;
+            }
+            if (this.subscribe == 1) {
+                this.subscribe = 0
+            } else {
+                this.subscribe = 1
+            }
+            CheckSubscribe(this.bookId, 'update', this.subscribe).then(res => {
+                if (res) {
+                this.subscribe = res.isClose
+                if (res.isClose == 1) {
+                    Toast('开启自动订阅~')
+                } else {
+                    Toast('关闭自动订阅~')
+                }
+                this.$apply()
+                }
+            })
+        },
         handleGoPerson(res){
               let userId=res||this.authorInfo.userId
                 wx.navigateTo({
@@ -269,52 +297,12 @@
                     this.$invoke('Login','onClose')
             }
         },
-       async handleBookRead(){  
+        async handleBookRead(){  
           await this.getBookChapterId()
           wx.navigateTo({
               url:'bookRead?chapterId='+this.chapterId+"&bookId="+this.bookId
           })
         },
-     async   handleAddBookRack(){
-            if(!wx.getStorageSync('userInfo')){
-                this.$invoke('Login','onClose')
-                return;
-            }
-         var data =await  addBookRack(wx.getStorageSync('userInfo').pseudonym,this.bookId,this.bookName)
-           if(data){
-               if(this.collectionStatus==0){
-                    this.collectionStatus=1
-                    Toast('添加成功~')
-                    this.$apply()
-                }else{
-                    this.collectionStatus=0
-                    Toast('删除成功~')
-                    this.$apply()
-                }
-           }
-        },
-        handleSubscribe(){
-            if(!wx.getStorageSync('userInfo')){
-                this.$invoke('Login','onClose')
-                return;
-            }
-            if(this.subscribe==1){
-                this.subscribe=0
-            }else{
-                this.subscribe=1
-            }
-            CheckSubscribe(this.bookId,'update',this.subscribe).then(res=>{
-                if(res) {
-                    this.subscribe=res.isClose
-                    if(res.isClose==1){
-                        Toast('开启自动订阅~')
-                    }else{
-                        Toast('关闭自动订阅~')
-                    }
-                    this.$apply()
-                }
-            })
-          },
         handlefollow(){
             if(this.authorInfo.isfollow==1){
                 return 

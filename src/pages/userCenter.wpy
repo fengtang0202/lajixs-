@@ -3,7 +3,7 @@
         <view class='userInfo'>
             <view style="height:160rpx;">
                 <image  style='margin-left:288rpx;margin-right:130rpx;vertical-align:middle;height:160rpx;width:160rpx;border-radius:50%' src="{{PersonInfo.userHeadPortraitURL}}"/>
-                <view bindtap="handleFllow" style="text-align:center;display:inline-block;width:68rpx;height:68rpx;border-radius:50%;background:#fff;line-height:76rpx;">
+                <view bindtap="handleFllow" style="text-align:center;display:inline-block;width:68rpx;height:68rpx;border-radius:50%;background:#fff;line-height:80rpx;">
                   <van-icon wx:if="{{isfllow==0||!isfllow}}" name="like-o"  color="#F77583"/>
                   <van-icon wx:if="{{isfllow==1}}" name="like" color="#F77583"/>
                 </view>
@@ -17,7 +17,7 @@
                 {{PersonInfo.userAutograph}}
             </view>
             <view style="height:20rpx;width:380rpx;background:#D6D6D6;border-radius:11rpx;margin:8rpx auto;">
-                <view style="padding:0 8rpx;border-radius:11rpx;background:#30E7F7;font-size:18rpx;height:100%;line-height:20rpx;width:{{PersonInfo.userGrade/20*380}}rpx">
+                <view style="border-radius:11rpx;background:#30E7F7;text-align:center;font-size:18rpx;height:100%;line-height:20rpx;width:{{PersonInfo.userGrade/20*380<60&&60}}rpx">
                     LV{{PersonInfo.userGrade}}
                 </view>
             </view>
@@ -49,7 +49,7 @@
             </view>
             <view class='comment_wrap'>
                 <view style="text-align:center;margin-top:30rpx">Ta的书评</view>
-                <commentList :is="isz" :commentList.sync="commentList"></commentList>
+                <commentList :is="isz" :isShowBookName="isShowBookName" :commentList.sync="commentList"></commentList>
                 <view class='all' bindtap="handleGoAllComment" wx:if="{{CommentCount>2}}">
                     查看全部{{CommentCount}}评论
                 </view>
@@ -87,7 +87,8 @@ export default  class UserCenter extends wepy.page{
         CommentCount:0,
         isfllow:0,
         AllCommentList:[],
-        lastPage:1
+        lastPage:1,
+        isShowBookName:true
     }
     methods={
         handleFllow(){

@@ -1,6 +1,6 @@
 <template>
     <van-popup show="{{ pepperShow }}" position="bottom"  bind:close="onClose">
-        <view style='width:100%;height:899rpx;background:#3D3D3D'>
+        <view class='pepper_wrap'>
             <view style='height:80rpx;border-bottom:2rpx solid #333333;text-align:center;color:#FFC3C3;font-size:29rpx;line-height:80rpx;'>给作者打赏</view>
             <view style="padding:0 25rpx">
                 <view style="height:139rpx;color:#fff;font-size:25rpx;">
@@ -83,6 +83,11 @@
 <style lang="less" scoped>
     view{
         box-sizing: border-box;
+    }
+    .pepper_wrap{
+        width:100%;
+        height:899rpx;
+        background:#3D3D3D;
     }
     .pepper_item{
         width:165rpx;

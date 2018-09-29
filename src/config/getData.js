@@ -435,6 +435,26 @@ const getUserRecommendTicketRecord=(userid,startpage)=>{
         }
     })
 }
+const isBookRack=bookId=>{
+    return get({url:api.check_book_rack+bookId},false)
+}
+const getCommentCount=bookId=>{
+    return get({
+      url: api.commentCount,
+      params:{
+          bookId:bookId
+      }
+    })
+}
+const delComment=(id,type=0)=>{
+    return post({
+        url:api.delComment,
+        params:{
+            id:id,
+            type:type
+        }
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -490,5 +510,7 @@ module.exports = {
     getSubscriptionRecord,
     getUserGoldenTicketRecord,
     getSpicyirewardticketlogByUserId,
-    getUserRecommendTicketRecord
+    getUserRecommendTicketRecord,
+    isBookRack,
+    getCommentCount
 }

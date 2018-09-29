@@ -6,7 +6,7 @@
                 <view style='height:90rpx;' wx:if="{{showLogin}}">
                       <view style='font-size:32rpx'>{{userInfo.pseudonym}}</view>
                       <view class='grade'>
-                          <view style='width:{{userInfo.userGrade/20*320}}rpx'>LV{{userInfo.userGrade}}</view>
+                          <view style='width:{{userInfo.userGrade/20*320<60&&60}}rpx'>LV{{userInfo.userGrade}}</view>
                       </view>
                 </view>
                 <view wx:if="{{!showLogin}}" bindtap="handleLogin" style='height:90rpx;line-height:90rpx;font-size:32rpx'>
@@ -73,7 +73,7 @@
       }
 
       data={
-        grade:10,
+        grade:0,
         userInfo:null,
         showLogin:true,
         fans:0,
@@ -171,7 +171,7 @@ view{
          width:200rpx;
          height:20rpx;
          background:#74F3FE;
-         padding-left:14rpx;
+         text-align: center;
          line-height:20rpx;
       }
   }

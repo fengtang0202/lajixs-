@@ -42,7 +42,8 @@ export default class extends wepy.app {
       'pages/userFans',
       'pages/fansBank',
       'pages/record',
-      'pages/userBookComment'
+      'pages/userBookComment',
+      'pages/lastPage'
     ],
     window: {
       backgroundTextStyle: '#fff',

@@ -46,13 +46,13 @@
                 let userId=item.userId
                 let followUserName=item.followUserName
                  if(wx.getStorageSync('userInfo')){
-                if(item.isfollow==0){
-                    addFans(userId,followUserName).then(data=>{
-                        if(data){
-                            this.List[index].isfollow=1
-                            this.$apply()
-                        }
-                   })
+                    if(item.isfollow==0){
+                        addFans(userId,followUserName).then(data=>{
+                            if(data){
+                                this.List[index].isfollow=1
+                                this.$apply()
+                            }
+                    })
                 }else{
                     cancelFans(userId).then(data=>{
                         if(data){
