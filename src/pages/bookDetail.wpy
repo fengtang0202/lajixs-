@@ -281,9 +281,10 @@
         },
       async  handleDiretory(){
             let data=await getVolume(this.bookId)
+            await this.getBookChapterId()
             this.chapterList=data.chapterInfo
             this.$apply()
-            this.$invoke('Directory','onClose')            
+            this.$invoke('Directory','onClose',this.chapterId)            
         },
         handleReward(index){
             if(wx.getStorageSync('userInfo')){

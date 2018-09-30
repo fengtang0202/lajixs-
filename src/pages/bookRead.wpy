@@ -60,10 +60,10 @@
       <view class="set_wrap {{isRewordShow&&'active'}}">
           <view class="f_1">
              <view class="font_1">字号</view>
-              <view class='changeFont' bindtap="handleChangeFontSize(1)" style="font-size:36rpx">
+              <view class='changeFont' catchtap="handleChangeFontSize(1)" style="font-size:36rpx">
                 A-
               </view>
-              <view class='changeFont' bindtap="handleChangeFontSize(2)" style="font-size:40rpx">
+              <view class='changeFont' catchtap="handleChangeFontSize(2)" style="font-size:40rpx">
                 A+
               </view>
               <view style="float:right">

@@ -1,10 +1,10 @@
 <template>
  <van-popup show="{{ show }}" position="left" bind:close="onClose">
-  <scroll-view scroll-into-view="a{{Activeindex}}"  style='padding:0 28rpx;height:100vh;width:700rpx;' scroll-y bindscrolltolower="loadVolume">
+    <scroll-view scroll-into-view="{{Activeindex}}"  style='padding:0 28rpx;height:100vh;width:700rpx;' scroll-y bindscrolltolower="loadVolume">
         <block wx:for='{{chapterList}}' wx:key="{{index}}">
             <view class='chapter' style='font-size:32rpx;'>{{item.volumeName}}</view>
-                <view   class='chapter'  bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}' style="font-size:28rpx;position:relative;color:{{item.id==chapterId&&'#FB5E6F'}}">
-                    <text style="color:{{item.chapterIsvip&&'#999999'}}">{{item.chapterTitle}}</text>
+                <view   class='chapter'  bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}' id="{{'a'+item.id}}" style="font-size:28rpx;position:relative;">
+                    <text style="color:{{item.id==chapterId&&'#FB5E6F'||item.chapterIsvip&&'#999999'}}">{{item.chapterTitle}}</text>
                     <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
                     <text class='words'>{{item.chapterLength}}</text>
                 </view>
@@ -28,12 +28,13 @@
         data={
             show:false,
             volumeIndex:13,
-            Activeindex:' ',
+            Activeindex:'',
         }
         methods={
             onClose(chapterId){
                 this.show=!this.show
-                this.Activeindex=chapterId
+                this.Activeindex='a'+chapterId
+                this.$apply()
             },
             handle(chapterId){
                 this.$emit('handleEx',chapterId)
