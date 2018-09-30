@@ -17,7 +17,7 @@
                 {{PersonInfo.userAutograph}}
             </view>
             <view style="height:20rpx;width:380rpx;background:#D6D6D6;border-radius:11rpx;margin:8rpx auto;">
-                <view style="border-radius:11rpx;background:#30E7F7;text-align:center;font-size:18rpx;height:100%;line-height:20rpx;width:{{PersonInfo.userGrade/20*380<60&&60}}rpx">
+                <view style="border-radius:11rpx;background:#30E7F7;text-align:center;font-size:18rpx;height:100%;line-height:20rpx;width:{{PersonInfo.userGrade/20*380}}rpx">
                     LV{{PersonInfo.userGrade}}
                 </view>
             </view>

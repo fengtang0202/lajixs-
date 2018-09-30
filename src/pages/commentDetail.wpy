@@ -4,8 +4,8 @@
        <commentItem :is="isShowMessage" :commentList.sync="commentList"></commentItem>
        <view style='margin-top: 20rpx;font-size:28rpx;color: #333;margin-left:40rpx'>相关回复</view>
        <block wx:for='{{replyList}}' wx:key='{{item.id}}'>
-           <view class='reply_wrap'>
-               <image src='{{item.userHeadPortraitURL}}' style='width:76rpx;height:76rpx;margin:0 40rpx;float:left;border-radius:50%'/>
+           <view class='reply_wrap' >
+               <image src='{{item.userHeadPortraitURL}}' bindtap="handleGoPerson({{item.userId}})" style='width:76rpx;height:76rpx;margin:0 40rpx;float:left;border-radius:50%'/>
                <view style='float:left;width:550rpx;'>
                     <view>
                         <view>
@@ -56,6 +56,9 @@ export default class CommentDetail extends wepy.page{
         commentInput
     }
     methods = {
+        handleGoPerson(userId){
+            this.$navigate('userCenter',{userId:userId})
+        },
         loadMore(){
             this.page++
             if(this.page>this.lastPage){

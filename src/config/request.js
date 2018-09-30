@@ -37,7 +37,7 @@ function request(method, requestHandler, isShowLoading = true) {
                     resolve(res.data.data)
                 } else if(res.data.returnCode==400) {
                     if (res.data.data) {
-                    resolve(res.data)
+                    resolve(res.data.data)
                 }else{
                         if(wx.getStorageSync('userInfo')){
                             // wx.navigateTo({url:'Login'})

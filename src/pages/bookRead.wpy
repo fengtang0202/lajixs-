@@ -13,9 +13,9 @@
         <image src="../images/authorSaid.png" class="authorImg"/>
       </view>
       <view wx:if="{{show}}" style="height:194rpx;padding:78rpx  42rpx 48rpx;">
-        <view class='page' style="width:156rpx;margin-right:20rpx;" bindtap="getNextPreBookText(2)">上一章</view>
-        <view class='page' style="width:192rpx;" bindtap="getNextPreBookText(1)">下一章</view>
-        <view class='page' style="float:right;width:156rpx;" bindtap="handleDiretory">目录</view>
+        <view class='page' style="width:156rpx;margin-right:20rpx;" catchtap="getNextPreBookText(2)">上一章</view>
+        <view class='page' style="width:192rpx;" catchtap="getNextPreBookText(1)">下一章</view>
+        <view class='page' style="float:right;width:156rpx;" catchtap="handleDiretory">目录</view>
       </view>
       <van-toast id="van-toast" />
     </scroll-view>
@@ -40,9 +40,9 @@
                <text>总动购买下一章，不再提醒</text>
             </view>
             <view wx:if="{{show}}" style="height:130rpx;padding:20rpx  42rpx;">
-              <view class='page' style="width:156rpx;margin-right:20rpx;" bindtap="getNextPreBookText(2)">上一章</view>
-              <view class='page' style="width:192rpx;" bindtap="getNextPreBookText(1)">下一章</view>
-              <view class='page' style="float:right;width:156rpx;" bindtap="handleDiretory">目录</view>
+              <view class='page' style="width:156rpx;margin-right:20rpx;" catchtap="getNextPreBookText(2)">上一章</view>
+              <view class='page' style="width:192rpx;" catchtap="getNextPreBookText(1)">下一章</view>
+              <view class='page' style="float:right;width:156rpx;" catchtap="handleDiretory">目录</view>
             </view>
           </view>
      </view>
@@ -153,7 +153,7 @@
         events={
           'handleEx':(chapterId)=>{
             this.chapterId=chapterId
-            this.$invoke('Directory','onClose')
+            this.$invoke('Directory','onClose',chapterId)
             this.handleClickDiretoryBookText()
           },
           "reload":()=>{
@@ -275,7 +275,7 @@
             }
           },
           handleDiretory(){
-              this.$invoke('Directory','onClose')            
+              this.$invoke('Directory','onClose',this.chapterId)            
           },
           getNextPreBookText(type){
             if(type==1){
@@ -338,11 +338,7 @@
             readType:1
           },
           success:res=>{
-            let data=res.data.data
-            if(res.data.returnCode==400){
-                this.isShowBuyChapter=true
-                this.$apply()
-          }
+          let data=res.data.data
           this.isShowBuyChapter=false
           this.show=true
           this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
@@ -352,6 +348,10 @@
           this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
           let userInfo = wx.getStorageSync('userInfo')
           userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
+          if(res.data.returnCode==400){
+                this.isShowBuyChapter=true
+                this.$apply()
+          }
           if(res.data.returnCode==500){
               this.isShowBuyChapter=!this.isAutoBuyChapter
               this.isAutoBuyChapter&&this.buyChapter()

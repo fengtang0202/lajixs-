@@ -1,7 +1,7 @@
 <template>
    <view>
      <view class="add_comment">
-            <input type="text" cursor-spacing='{{10}}' bindinput="changeValue" placeholder="{{placeholder}}"   value="{{commentConent}}" maxlength='51' class='comment_text' />
+            <input type="text" bindinput="changeValue" placeholder="{{placeholder}}"   value="{{commentConent}}" maxlength='51' class='comment_text' />
             <button class='comment_btn' bindtap="addComment">发送</button>
      </view> 
    </view>
@@ -63,6 +63,8 @@
         border-radius:52rpx;
         border:2rpx solid rgba(253,166,171,1);
         float:left;
+        padding:0 40rpx;
+        box-sizing: border-box;
   }
   .comment_btn{
         width:120rpx;

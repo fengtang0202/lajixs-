@@ -30,7 +30,7 @@
           usingComponents:{
               "van-toast": "../lib/vant/toast/index"
           }
-      }
+      } 
         data={
            hotCommentList:[],
            newCommentList:[],
@@ -120,16 +120,5 @@
   } 
 </script>
 <style lang="less" scoped>
-  .add_comment{
-      width:100%;
-      height:98rpx;
-      background: #efefef;
-      padding:20rpx;
-      box-sizing: border-box;   
-  }
-  .comment_text{
-      background:#fff;
-      height:58rpx;
-      border-radius:10rpx;
-  }
+  
 </style>

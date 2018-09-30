@@ -1,14 +1,14 @@
 <template>
-    <van-popup show="{{ pepperShow }}" position="bottom"  bind:close="onClose">
+    <van-popup show="{{ pepperShow }}" custom-class="bottom" position="bottom"  bind:close="onClose">
         <view class='pepper_wrap'>
             <view style='height:80rpx;border-bottom:2rpx solid #333333;text-align:center;color:#FFC3C3;font-size:29rpx;line-height:80rpx;'>给作者打赏</view>
-            <view style="padding:0 25rpx">
+            <view style="padding:25rpx">
                 <view style="height:139rpx;color:#fff;font-size:25rpx;">
                     <view style="line-height:139rpx;float:left">您的余额:{{pepper}}</view>
                     <view style="float:right;margin-top:44rpx;width:178rpx;height:51rpx;background:#F77583;border-radius:31px;line-height:51rpx;text-align:center;">充值</view>
                 </view>
                 <view style='width:100%;height:127rpx;position:relative;font-size:25rpx;color:#999'>                
-                    <textarea value="{{greet}}" bindinput="handleInput" maxlength="100"  style="box-sizing:border-box;padding:13rpx;width:100%;height:100%;background:#fff;border-radius:7rpx;" placeholder="么么哒~" placeholder-style="color:#999"/>
+                    <textarea  fixed="{{textFixed}}" value="{{greet}}" bindinput="handleInput" maxlength="100"  style="box-sizing:border-box;padding:13rpx;width:100%;height:100%;background:#fff;border-radius:7rpx;" placeholder="么么哒~" placeholder-style="color:#999"/>
                     <text style="position:absolute;bottom:10rpx;right:10rpx;">{{greet.length}}/100</text>
                 </view> 
                 <view class='pepper_wrap' style="overflow:hidden;">
@@ -42,7 +42,8 @@
             ],
             activeIndex:0,
             pepperCount:188,
-            pepper:0
+            pepper:0,
+            textFixed:true
         }
         methods={
             handleChangePepper(item,index){
@@ -84,9 +85,11 @@
     view{
         box-sizing: border-box;
     }
+    .bottom{
+        height:899rpx;
+    }
     .pepper_wrap{
         width:100%;
-        height:899rpx;
         background:#3D3D3D;
     }
     .pepper_item{

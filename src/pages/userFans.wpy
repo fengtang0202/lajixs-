@@ -1,8 +1,8 @@
 <template>
-     <scroll-view style="height:{{height-20}}px" scroll-y bindscrolltolower="loadMore">
+     <scroll-view style="height:{{height}}px" scroll-y bindscrolltolower="loadMore">
        <FansAndFllowItem :is="type" :List.sync="FansList"></FansAndFllowItem>
     </scroll-view>    
-</template>
+</template> 
 <script>
     import wepy from 'wepy'
     import {getUserFans} from '../config/getData'
@@ -28,7 +28,6 @@
         methods={
            loadMore(){
                 this.page++
-                console.log(this.page,this.lastPage)
                 if(this.page>this.lastPage){
                     wx.showToast({
                         title:'没有更多了'

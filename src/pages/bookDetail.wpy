@@ -139,8 +139,8 @@
             </view>
         </view>
         <van-toast id="van-toast" />
-        <RiceChilli></RiceChilli>
         <Pepper></Pepper>
+        <RiceChilli></RiceChilli>
         <Directory :chapterId.sync="chapterId" :chapterList.sync='chapterList'></Directory>
         <Login></Login>
      </view>
