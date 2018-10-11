@@ -120,7 +120,7 @@ export default class LastPage extends wepy.page{
             this.$navigate('fansBank',{bookId:this.bookId})
         },
         handleGo(bookId){
-            this.$navigate('bookDetail',{bookId:this.bookId})            
+            this.$navigate('bookDetail',{bookId:bookId})            
         },
         handleSwitch(key){
         if (this.currentTab == key) {

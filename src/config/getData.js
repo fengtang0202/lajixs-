@@ -455,6 +455,20 @@ const delComment=(id,type=0)=>{
         }
     })
 }
+const getTask=()=>{
+    return post({
+        url: api.personTask
+    })
+}
+const updateTask = (userId,id) => {
+    return post({
+         url: updateUserTask,
+         params:{
+             userId:userId,
+             id:id
+         }
+    })
+}
 module.exports = {
     getHomePageBooks,
     getBookClass,
@@ -512,5 +526,8 @@ module.exports = {
     getSpicyirewardticketlogByUserId,
     getUserRecommendTicketRecord,
     isBookRack,
-    getCommentCount
+    delComment,
+    getCommentCount,
+    getTask,
+    updateTask
 }

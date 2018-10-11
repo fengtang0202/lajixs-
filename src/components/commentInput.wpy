@@ -30,8 +30,12 @@
                         if(this.commentConent.length>50){
                            Toast('评论字数，不能超过五十个字~')
                         }else{
-                           this.$emit('addComment',this.commentConent);
-                           this.commentConent=' '
+                            if(wx.getStorageSync('userInfo')){
+                                this.$emit('addComment',this.commentConent);
+                                this.commentConent=' '
+                            }else{
+                                this.$parent.$invoke('Login','onClose')   
+                            }
                     }
                }else{
                   Toast('不能包含表情~')

@@ -1,0 +1,124 @@
+<template>
+    <view class="task_wrap">
+        <view class="task_title">成长任务</view>
+        <view class="task_list">
+            <view wx:for="{{personTaskList}}" wx:key="{{index}}" class="task_item">
+                <view style="float:left;">
+                    <view style="margin:20rpx 0">{{item.taskName}}</view>
+                    <view style="font-size:24rpx;color:#FF83A6">{{item.gift}}</view>
+                </view>
+                <view style="float:right;height:100%;">
+                    <button class="binding s{{item.status}}">{{myWxs.taskPersoStatus(item.status)}}</button>
+                </view>
+            </view>
+        </view>
+        <view class="task_title">每日任务</view>
+         <view class="task_list">
+            <view wx:for="{{everyTaskList}}" wx:key="{{index}}" class="task_item">
+                <view style="float:left;">
+                    <view style="margin:20rpx 0">{{item.taskName}}</view>
+                    <view style="font-size:24rpx;color:#FF83A6">{{item.gift}}</view>
+                </view>
+                <view style="float:right;height:100%;">
+                    <button class="binding s{{item.status}}">{{myWxs.taskEveryStatus(item.status)}}</button>
+                </view>
+            </view>
+        </view>
+    </view>    
+</template>
+<script>
+    import wepy from 'wepy'
+    import {getTask,updateTask} from '../config/getData'
+    import myWxs from '../filter/myWxs.wxs'
+    export default class Task extends wepy.page{
+        data={
+             personTaskList:[
+                {taskName:"绑定手机号码",gift:"奖励+200积分，+50辣椒券",status:0},
+                {taskName:"首次将小说加入书架",gift:"奖励+50积分，+10辣椒券",status:0},
+                {taskName:"首次关注一位作者",gift:"奖励+50积分，+10辣椒券",status:0},
+                {taskName:"首次订阅小说",gift:"奖励+50积分，+10辣椒券",status:0},
+                {taskName:"首次打赏辣椒",gift:"奖励+300积分，+100辣椒券",status:0}
+            ],
+             everyTaskList:[
+                {taskName:"签到",gift:"奖励+10积分，+5辣椒券",status:0},
+                {taskName:"投喂小米椒",gift:"奖励+10积分",status:0},
+                {taskName:"订阅",gift:"奖励+10积分",status:0},
+                {taskName:"点赞一条书评/吐槽",gift:"奖励+10积分",status:0},
+                {taskName:"完成所有日常",gift:"奖励+50积分",status:0}
+                // 1=>领取  2=>未领取   0  1  3=>已完成
+            ]
+        }
+        methods={
+
+        }
+        wxs={
+            myWxs
+        }
+        onShow(){
+             if(wx.getStorageSync('userInfo')){
+                 getTask().then(data=>{
+                         let everydayTasks=data.everydayTasks
+                         let personalCenterTask=data.personalCenterTask
+                         this.personTaskList[0].status=personalCenterTask.isBindingPhoneOK 
+                         this.personTaskList[1].status=personalCenterTask.isAddBookshelfOK 
+                         this.personTaskList[2].status=personalCenterTask.isFollowAuthorOk
+                         this.personTaskList[3].status=personalCenterTask.isFirstSubscriptionOK 
+                         this.personTaskList[4].status=personalCenterTask.isFirstReward 
+                         this.everyTaskList[0].status=everydayTasks.signOK
+                         this.everyTaskList[1].status=everydayTasks.recommendTicketOK                         
+                         this.everyTaskList[2].status=everydayTasks.subscript                         
+                         this.everyTaskList[3].status=everydayTasks.giveThumbs                         
+                         this.everyTaskList[4].status=everydayTasks.personalCenterTaskAllOK                         
+                         this.$apply()
+                 })
+              }
+             }
+        onLoad(){
+        } 
+      }
+</script>
+<style lang="less" scoped>
+    view{
+        box-sizing: border-box;
+    }
+    .task_title{
+        height:72rpx;
+        background:#F8F8F8;
+        line-height:72rpx;
+        font-size:24rpx;
+        padding-left:30rpx;
+    }
+    .task_list{
+        padding:0 42rpx 0 30rpx;
+    }
+    .task_item{
+        height: 140rpx;
+        border-bottom:2rpx solid #EFEFEF;
+        font-size:32rpx;
+    }
+    .binding{
+        width:160rpx;
+        height:60rpx;
+        font-size:32rpx;
+        line-height:60rpx;
+        border-radius:32rpx;
+        margin-top:40rpx;
+        color:#fff;
+    }
+    .binding::after{
+        border: none; 
+    }
+    .s0{
+        background:#FF83A6;
+    }
+    .s1{
+        background:#86DC49;         
+    }
+    .s2{
+        background:#86DC49;
+    }
+    .s3{
+        color:#FF83A6;
+        background:#fff;
+    }
+</style>

@@ -1,5 +1,5 @@
-// let host=`https://www.lajixs.com`
-let host = `http://192.168.0.136:8081`
+let host=`https://www.lajixs.com`
+// let host = `http://192.168.0.136:8081`
 // 用户中心
 const login = `${host}/api/person-login`
 const login_out = `${host}/api/person-ClearUserInfo`
@@ -102,6 +102,9 @@ const subscriptionRecord = `${host}/api/userSubscriptionRecord`
 const userGoldenTicketRecord = `${host}/api/userGoldenTicketRecord`
 const spicyirewardticketlogByUserId = `${host}/api/spicyirewardticketlogByUserId`
 const userRecommendTicketRecord = `${host}/api/userRecommendTicketRecord`
+//个人任务
+const personTask = `${host}/api/person-PersonalCenterTask`
+const updateUserTask = `${host}/api/updatePersonalCenterTaskInfo`
 module.exports = {
   login,
   get_user_info,
@@ -187,5 +190,7 @@ module.exports = {
   spicyirewardticketlogByUserId,
   userRecommendTicketRecord,
   commentCount,
-  delComment
+  delComment,
+  personTask,
+  updateUserTask
 }

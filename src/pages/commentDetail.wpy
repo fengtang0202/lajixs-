@@ -22,6 +22,7 @@
            </view>
        </block>
     </scroll-view>
+    <Login></Login>
     <commentInput  placeholder="回复评论~"></commentInput>
     <van-toast id="van-toast" />
     </view>    
@@ -32,6 +33,7 @@ import commentItem from '../components/commentItem'
 import commentInput from '../components/commentInput'
 import {getNewComments,getReplyComment,addReply} from '../config/getData'
 import Toast from '../lib/vant/toast/index'
+import Login from '../components/login'
 export default class CommentDetail extends wepy.page{
     config={
         navigationBarTitleText:"回复评论",
@@ -53,7 +55,8 @@ export default class CommentDetail extends wepy.page{
     }
     components = {
         commentItem,
-        commentInput
+        commentInput,
+        Login
     }
     methods = {
         handleGoPerson(userId){

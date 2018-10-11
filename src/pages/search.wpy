@@ -26,7 +26,7 @@
          </veiw>
          <view wx:if='{{!showSearch}}'>
              <searchBookList :list.sync="searchBookList"></searchBookList>
-         </view>
+       </view>
        </scroll-view>
 </view>
 </template>
@@ -87,8 +87,8 @@ export default  class Search extends wepy.page{
         this.searchPage=1
         this.scroll==1?this.scroll=0:this.scroll=1
         this.search()
-    }
-    }
+         }
+       }
     events = {
        'saveWords':()=>{
          if(this.keyWord){

@@ -28,7 +28,8 @@ function request(method, requestHandler, isShowLoading = true) {
             method: method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             header: {
                 'Content-Type': method === 'POST' ? 'application/x-www-form-urlencoded' : 'application/json',
-                'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
+                'Cookie': 'SESSION=' + wx.getStorageSync('cookie'),
+                'VisitType': 'WeChatApplet'
             },
             success: function (res) {
                 isShowLoading && wx.hideLoading && wx.hideLoading()

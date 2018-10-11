@@ -1,5 +1,5 @@
 <template>
-     <block wx:for-items="{{list}}" wx:key='{{item.bookId}}'>
+         <block wx:for="{{list}}" wx:key="index">
               <view class='new_book' data-id="{{item.bookId}}" bindtap='handle'>
                       <image src="{{item.bookImage}}"/>
                       <view class='book_detail'>
@@ -14,12 +14,12 @@
                                 </view>
                               </view>
                            <view style='overflow:hidden;clear:both;'>
-                              <block wx:for-items="{{item.booklableList}}" wx:key="{{item.id}}">
+                              <block wx:for="{{item.booklableList}}" wx:key="{{item.id}}">
                                  <text class='label' wx:if="{{index<3}}" style='color:{{item.bookColor}};border:2rpx solid {{item.bookColor}}'>{{item.bookLableName}}</text>
                               </block>
                            </view>
                            <view class='bookIntroduction'>
-                                {{item.bookIntroduction}}
+                                {{myWxs.strSlice(item.bookIntroduction,32)}}
                            </view>
                       </view>   
               </view>
@@ -32,7 +32,8 @@
      props={
          list:{
              type:Array,
-             default:[]
+             default:[],
+             twoWay: true
          }
      }
       wxs = {
@@ -80,8 +81,6 @@
 .bookIntroduction{
     font-size:28rpx;
     width:500rpx;
-    height:77rpx;
-    overflow: hidden;
     color:#666;
 }
 .book_class{

@@ -38,7 +38,7 @@
                    this.FansList=this.FansList.concat(data.list)
                    this.$apply()
               })
-            }   
+           }
         }
         onShow(){
              getUserFans(this.userId,1).then(data=>{

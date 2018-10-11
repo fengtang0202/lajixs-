@@ -15,6 +15,7 @@
             <CommentItem :commentList.sync="newCommentList"></CommentItem>
     </scroll-view> 
         <commentInput   placeholder="填写评论~"></commentInput>
+        <Login></Login>
         <van-toast id="van-toast" />
 </view>
 </template>
@@ -24,6 +25,7 @@
   import {getHotComments,getNewComments,addComment,getServerTime} from '../config/getData'
   import commentInput from '../components/commentInput'
    import Toast from '../lib/vant/toast/index'
+   import Login from '../components/login'
   export default class Comment extends wepy.page{
       config={
           navigationBarTitleText:'书评',
@@ -59,24 +61,12 @@
                   this.$apply()                   
                })
             },
-        }
+    }
         events={
             'addComment':(commentContent)=>{
-                //本地用户信息,临时用
                 let userInfo=wx.getStorageSync('userInfo')
                 addComment(this.bookId,commentContent,userInfo.pseudonym,this.bookName).then(res=>{
                     if(res==1){
-                        // let option={}
-                        // option.userHeadPortraitURL=userInfo.userHeadPortraitURL
-                        // option.pseudonym=userInfo.pseudonym
-                        // option.userSex=userInfo.userSex
-                        // option.userGrade=userInfo.userGrade
-                        // option.commentDateTime=this.timer
-                        // option.replyCount=0
-                        // option.isthumbs=0
-                        // option.thumbsCount=0
-                        // option.commentContext=commentContent
-                        // this.newCommentList.unshift(option)
                         Toast('评论成功~')
                         getNewComments(this.bookId,this.page).then(res=>{
                             this.newCommentList=res.list
@@ -90,7 +80,8 @@
         components = {
            CommentItemHot: CommentItem,
            CommentItem:CommentItem,
-           commentInput:commentInput
+           commentInput:commentInput,
+           Login:Login
         }
         onLoad(option){
             this.bookId=option.bookId
@@ -120,5 +111,5 @@
   } 
 </script>
 <style lang="less" scoped>
-  
+
 </style>

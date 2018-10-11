@@ -24,7 +24,6 @@ export default class extends wepy.app {
       'pages/comment',
       'pages/commentDetail',
       'pages/categoryDetail',
-      'pages/directory',
       'pages/bookRead',
       'pages/rewordArea',
       'pages/active',
@@ -34,8 +33,6 @@ export default class extends wepy.app {
       'pages/customerService',
       'pages/accountRecharge',
       'pages/coupon',
-      'pages/del',
-      'pages/reader',
       'pages/search',
       'pages/userCenter',
       'pages/userFllow',
@@ -43,7 +40,9 @@ export default class extends wepy.app {
       'pages/fansBank',
       'pages/record',
       'pages/userBookComment',
-      'pages/lastPage'
+      'pages/lastPage',
+      'pages/task',
+      'pages/share'
     ],
     window: {
       backgroundTextStyle: '#fff',

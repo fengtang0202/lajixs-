@@ -6,7 +6,7 @@
                                <view class='comment_item'>
                                    <view style="overflow:hidden;">
                                         <view style="float:left">
-                                            <text style="font-size:32rpx">{{item.pseudonym}}</text>
+                                            <text style="font-size:32rpx">{{myWxs.strSlice(item.pseudonym,5)}}</text>
                                             <image class='sex' wx:if="{{item.userSex==0}}" src="../images/sex-02_03@3x.png"/>
                                             <image class='sex' wx:if="{{item.userSex==1}}" src="../images/sex-03@3x.png" />
                                             <text class='grade'>LV{{item.userGrade}}</text>

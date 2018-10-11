@@ -19,7 +19,10 @@
                    <image src="{{item.bookImage}}" style="border-radius:10rpx;width:162rpx;height:216rpx;float:left;margin-right:10rpx"/>
                    <view class="bookDetail"> 
                         <view style="font-size:32rpx;color:#333;">{{myWxs.strSlice(item.bookName,10)}}</view>
-                        <view style="font-size:28rpx;margin:14rpx 0 50rpx 0">作者:{{myWxs.strSlice(item.writerName,10)}}</view>
+                        <view style="font-size:28rpx;margin:14rpx 0 50rpx 0;overflow:hidden">
+                            <view style="float:left">作者:{{myWxs.strSlice(item.writerName,5)}}</view>
+                            <view class="count" wx:if="{{item.tempTicketSum!=0}}">{{myWxs.numToFixed(item.tempTicketSum)}}{{text}}</view>
+                        </view>
                         <view style="font-size:26rpx;">{{myWxs.strSlice(item.bookIntroduction,24)}}</view>
                    </view>
                 </view>
@@ -42,20 +45,21 @@
         data = {
              topNavList:[
                  [
-                    {day:'总榜',key:2,type:"total"},
+                     {day:'总榜',key:2,type:"total"},
                     {day:'月榜',key:1,type:"month"},
-                    {day:'周榜',key:0,type:"week"}
+                     {day:'周榜',key:0,type:"week"}
                  ],
                  [
                      {day:'总榜',key:0,type:'newBookRankingList'}
                  ],
                  [
-                    {day:'总榜',key:2,type:"total"},
-                    {day:'月榜',key:1,type:"month"},
-                    {day:'周榜',key:0,type:"week"}
+                     {day:'总榜',key:2,type:"total"},
+                     {day:'月榜',key:1,type:"month"},
+                     {day:'周榜',key:0,type:"week"}
                  ],
-                 [   {day:'总榜',key:1,type:'total'},
-                     {day:'月榜',key:0,type:'month'}
+                 [
+                     {day:'总榜',key:1,type:'total'},
+                    {day:'月榜',key:0,type:'month'}
                  ]
              ],
              topIndex:0,
@@ -72,7 +76,8 @@
                  {text:'打赏榜',type:8,key:2},
                  {text:'金椒榜',type:1,key:3}
              ],
-             scroll:0
+             scroll:0,
+             text:"次点击"
         }
         methods={
             handleGoDetail(bookid){
@@ -85,11 +90,26 @@
                this.type=item.key
                this.leftIndex=item.key
                this.topIndex=0
-               this.dayType=this.topNavList[item.key][0].type
+               let index=this.topNavList[item.key].length-1
+               this.dayType=this.topNavList[item.key][index].type
                if(this.scroll==0){
                    this.scroll=1
                }else{
                    this.scroll=0
+               }
+               switch(item.key){
+                   case 0:
+                    this.text='次点击'
+                    break;
+                   case 1:
+                    this.text='a'
+                    break;
+                   case 2:
+                    this.text='辣椒'
+                    break;
+                   case 3:
+                    this.text="金椒"   
+                    break;
                }
                this.getBookList(this.dayType)
                this.$apply()
@@ -124,6 +144,7 @@
                 this.lastPage=data[dayType].pages
                 this.$apply()
             })
+
         }
         onLoad(){
              wx.getSystemInfo({
@@ -174,5 +195,15 @@ view{
       float:left;
       width:352rpx;
       color:#999
+  }
+  .count{
+      float:right;
+      height:36rpx;
+      border-radius:8rpx;
+      border:2rpx solid #F73D51;
+      text-align:center;
+      line-height:36rpx;
+      font-size:24rpx;
+      color:#F73D51;
   }
 </style>

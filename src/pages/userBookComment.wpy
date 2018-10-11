@@ -1,7 +1,7 @@
 <template>
     <scroll-view style="height:100vh" scroll-y bindscrolltolower="loadMore">
         <commentItem :commentList.sync="items" :isShowBookName="isShowBookName">
-        </commentItem>
+        </commentItem>  
     </scroll-view>  
 </template>
 <script>

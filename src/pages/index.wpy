@@ -1,18 +1,6 @@
 <template>
 <view>
-  <!-- <view  class="weui-navbar">
-     <block wx:for-items="{{tabs}}"  wx:key="tabs">
-        <view id="{{index}}"   class="default-item" bindtap="tabClick" style="width:{{tabW}}px;height:60rpx">
-          <text style='padding-bottom:2rpx;' wx:if='{{item.text}}' class="{{activeIndex == index ?'item_on':''}}">{{item.text}}</text>
-          <zan-icon  wx:if='{{item.icon}}' name="search"/>
-        </view>
-     </block>
-  </view> -->
- 
-<!-- <swiper current="{{activeIndex}}"   class="swiper-box"  style='height:{{mtabH}}px' duration="500" bindchange="bindChange"> -->
-    <!-- <swiper-item class="swiper-item"> -->
        <scroll-view enable-back-to-top style='height:{{mtabH}}px' scroll-y bindscrolltolower="loadMore">
-         <!-- <view  scroll-y> -->
             <van-search
             value="{{ keyWord }}"
             placeholder="搜索作者或作品..."
@@ -37,7 +25,7 @@
                   <image src='../images/more@3x.png' />
               </view>
            </view>
-           <BookItem :list.sync="HostXiaoBianRecommend"></BookItem>
+           <BookItem   :list.sync="HostXiaoBianRecommend"></BookItem>
            <!-- 广告图 -->
            <view class='adv-img' bindtap='handleGoActive'>
                 <image  src='{{homeInfo.activityRecommendedPositionList[0].activityImgURL}}'/>
@@ -68,7 +56,7 @@
                  <text bindtap="changeLabel" style='font-size:32rpx;float:right;margin-bottom:30rpx'>换一换</text>
                  <view class='label_wrap'>
                     <block wx:for='{{labelList}}' wx:key="{{item.id}}">
-                      <text bindtap="handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.bookLableName}})" style='background:{{item.bookColor}}'>{{item.bookLableName}}</text>  
+                      <text  bindtap="handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.bookLableName}})" style="background:{{item.bookColor}};margin-right:{{(index+1)%5==0&&'0'}}">{{item.bookLableName}}</text>  
                     </block>
                  </view>
               </view>
@@ -81,87 +69,14 @@
               </view>
            </view>
           <BookDetailItem  :list.sync='newBooks'></BookDetailItem>
-         <!-- </view> -->
       </scroll-view>
-    <!-- </swiper-item> -->
-     <!-- <swiper-item class="swiper-item">
-       <scroll-view style='height:100%' scroll-y>
-          <view class='biaoqian'>
-              <view style='font-size:32rpx;margin-top:16rpx;margin-bottom:34rpx;'>
-                <text>本周热门</text>
-              </view>
-              <view style='overflow:hidden'>
-                <view wx:for="{{hots}}" class='hots' bindtap='handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.bookLableName}})' style="margin-right:{{index==2?'0':'46rpx'}}" wx:key='{{index}}'>
-                    <image src="{{item.img}}" alt=""/>
-                    <text style="width:{{item.bookLableName.length==3?'86rpx':'60rpx'}};top:{{item.bookLableName.length!=4?'36rpx':'24rpx'}}">{{item.bookLableName}}</text>
-                </view>
-              </view>
-              <view style='font-size:32rpx;;clear:both;margin-top:47rpx;margin-bottom:28rpx;'>
-                  <text>更多标签</text>
-              </view>
-              <view class='tabs' wx:for='{{lables}}' bindtap='handleGo(categoryDetail?categoryId={{item.id}}&categoryName={{item.bookLableName}})' style="border:4rpx  solid {{item.bookColor}};margin-right:{{(index+1)%4==0?'0':'16rpx'}};color:{{item.bookColor}}" wx:key='{{index}}'>
-                {{item.bookLableName}}
-                <text class='gl' style="color:{{item.bookColor}}">.></text>
-              </view>
-          </view>
-       </scroll-view>
-    </swiper-item> -->
-     <!-- <swiper-item class="swiper-item">
-          <van-search
-            value="{{ keyWord }}"
-            placeholder="搜索作者或作品..."
-            background="#F73D51"
-            bind:change='onSearch'
-            maxlength='20'  
-          /> -->
-       <!-- <scroll-view class='hot_wrap'  style='height:100%;padding-bottom:80rpx' scroll-y bindscrolltolower="loadSearchBookList"> -->
-        <!-- 搜索模块 -->
-         <!-- <veiw wx:if='{{showSearch}}'>
-           <view class='t'>热门搜索</view>
-              <block wx:for="{{hotWords}}" wx:key='{{index}}'>
-                    <view class='search_hot' bindtap='handleLabel({{item.hotWords}})'  wx:if='{{item.hotWords}}' style="color:{{item.color}};border:2rpx solid {{item.color}}">{{item.hotWords}}</view>
-              </block>
-            <view class='t' style=' border-top:8rpx solid #EFEFEF'>历史搜索</view>
-            <van-cell-group>
-               <block wx:for="{{keyWordList}}" wx:key="{{index}}">
-                 <van-cell title="{{item}}" bindtap="handleLabel({{item}})" icon="clock" border="{{ keyWordList.length-1==index?false:true}}" />
-               </block>
-            </van-cell-group>
-         </veiw>
-         <view wx:if='{{!showSearch}}'>
-             <searchBookList :list.sync="searchBookList"></searchBookList>
-         </view> -->
-       <!-- </scroll-view> -->
-    <!-- </swiper-item> -->
-<!-- </swiper> -->
 </view>
 </template>
 <script>
   import wepy from 'wepy'
-  import { connect } from 'wepy-redux'
-  import { INCREMENT, DECREMENT,LOGIN_STATE } from '../store/types/counter'
   import {getHomePageBooks,getBookClass,getFreeBook,getNewBooks,getSearchHotWords,searchBook} from '../config/getData'
   import BookItem from '../components/bookItem'
   import BookDetailItem from '../components/bookDetailItem'
-  @connect({
-    login(state){
-      return state.counter.loginState
-    },
-    num (state) {
-      return state.counter.num
-    },
-    asyncNum (state) {
-      return state.counter.asyncNum
-    },
-    sumNum (state) {
-      return state.counter.num + state.counter.asyncNum
-    }
-  },
-      {
-        increment:INCREMENT,
-        loginState:LOGIN_STATE
-      }
-  )
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '辣鸡小说',
@@ -172,8 +87,8 @@
     }
     components = {
       BookItem:BookItem,
-      BookDetailItem:BookDetailItem,
-      searchBookList:BookDetailItem
+      BookDetailItem:BookDetailItem
+
     }
     data = {
      tabs:[
@@ -321,7 +236,7 @@
          }
       }
     }
-    onLoad() {
+  async  onLoad() {
      wx.getSystemInfo({
         success:res=>{     
             this.mtabW = res.windowWidth
@@ -330,29 +245,19 @@
             this.tabW=this.mtabW/this.tabs.length
         }
       })
-      //  getBookClass.then(data=>{
-      //   this.hots=data.slice(0,3)
-      //   for(var i=0;i<this.hots.length;i++){
-      //       this.hots[i].img=this.hotImg[i]
-      //   }
-      //   this.lables=data.slice(3)
-      //   this.$apply()
-      // })
-      getHomePageBooks.then(data=>{
-        this.homeInfo=data
-        this.booklableList=data.booklableList
-        this.labelList=this.getRandomArrayElements(data.booklableList,10)
-        this.HostXiaoBianRecommend=data.HostXiaoBianRecommend
-        this.$apply()
-      })
-      getFreeBook.then(data=>{
-        this.FreeBook=data.data
-      })
-      getNewBooks(this.page,this.size).then(data=>{
-          this.newBooks=data.list
-          this.lastPage=data.pages
+        this.homeInfo= await  getHomePageBooks
+        this.booklableList=this.homeInfo.booklableList
+        this.labelList=this.getRandomArrayElements(this.homeInfo.booklableList,10)
+        this.HostXiaoBianRecommend=this.homeInfo.HostXiaoBianRecommend
+        getFreeBook.then(data=>{
+          this.FreeBook=data.data
           this.$apply()
-     })
+        })
+        getNewBooks(this.page,this.size).then(data=>{
+            this.newBooks=data.list
+            this.lastPage=data.pages
+            this.$apply()
+      })
     }
   }
 </script>
@@ -464,7 +369,7 @@ image{
   padding:8rpx 0rpx;
 }
 .lables_content{
-  width:674rpx;
+  width:720rpx;
   overflow:hidden;
   background: #fff;
   border-radius: 14rpx;
@@ -479,11 +384,13 @@ image{
     font-size:24rpx;
     color:#fff;
     float:left;
-    margin-right:30rpx;
-    margin-bottom:44rpx;
+    width:120rpx;
+    height:44rpx;
+    margin-right:20rpx;
+    margin-bottom:24rpx;
     border-radius: 72rpx;
-    padding:6rpx;
     text-align: center;
+    line-height:44rpx;
   }
 }
 
