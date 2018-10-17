@@ -5,48 +5,97 @@
          <view class='f_1' bindtap='handleGo' style="font-size:24rpx;color:#4A90E2;margin-right:34rpx;float:right">领券免费看>></view>
      </view>
      <view class='money_warp'>
-         <view class='money_item' style="margin-right:{{(index+1)%2==0&&'0'}}" wx:for="{{payCategoryList}}" wx:key="{{index}}">
-            <view style='font-size:28rpx;margin-top:20rpx'>{{item.price}}元</view>
+         <view class='money_item' style="margin-right:{{(index+1)%2==0&&'0'}}" wx:for="{{payCategoryList}}" wx:key="{{index}}" bindtap="handlePay({{item.price}},{{item.gift}})">
+            <view style='font-size:28rpx;margin-top:20rpx'>购买{{item.price}}元点卡 </view>
             <view style="margin:8rpx 0">             
                 <image src='../images/lj.png' style="width:14rpx;height:21rpx;margin-right:16rpx;vertical-align:middle;"/>
                 <text>{{item.price*100}}</text>
             </view>
             <view style='color:#FE4D60'>
-                {{item.gift}}
+                首充送{{item.gift}}辣椒券+免费小说
             </view>
             <image  src="../images/sclb.png" class='zs'/>
          </view>
      </view>
      <view class='ts'>
          <view style="font-size:26rpx;color:#999">温馨提示：</view>
-         <!-- <view>1.首充双倍加送免费小说</view> -->
+         <view>1.首充双倍加送免费小说</view>
          <view>1.每充值12元送1个金椒</view>
      </view>
-    <FirstGift></FirstGift>
+    <FirstGift :bookInfo.sync='giftBook'></FirstGift>
+    <Login></Login>
  </view>    
 </template>
 <script>
 import wepy from 'wepy'
 import FirstGift from '../components/firstGift'
+import Login from '../components/login'
+import {wechatPay,firstPay} from '../config/getData'
 export default class AccountRecharge extends wepy.page{
     config={
         navigationBarTitleText:'账户充值'
     }
     data={
          payCategoryList:[
-           {price:6,gift:'首充送600辣椒券+免费小说'},
-           {price:12,gift:'首充送600辣椒券+免费小说'},
-           {price:30,gift:'首充送3000辣椒券+免费小说'},
-           {price:50,gift:'首充送5000辣椒券+免费小说'},
-           {price:98,gift:'首充送9800辣椒券+免费小说'},
-           {price:198,gift:'首充送19800辣椒券+免费小说'},           
+           {price:6,gift:600},
+           {price:12,gift:600},
+           {price:30,gift:3000},
+           {price:50,gift:5000},
+           {price:98,gift:9800},
+           {price:198,gift:19800}          
        ],
-       userMoney:0
+       userMoney:0,
+       userInfo:{}
     }
     components={
-        FirstGift
+        FirstGift,
+        Login
+    }
+    events={
+        'reload':()=>{
+            this.userInfo=wx.getStorageSync("userInfo")
+            this.userMoney=this.userInfo.userMoney
+        }
     }
     methods={
+       async handlePay(price,gift){
+           if(this.userInfo){
+             let data = await wechatPay(wx.getStorageSync("openId"),this.userInfo.pseudonym,price)
+             wx.requestPayment(
+                {
+                timeStamp:data.timeStamp,
+                nonceStr: data.nonceStr,
+                package: 'prepay_id='+data.info.prepay_id,
+                signType: 'MD5',
+                paySign: data.sign,
+                success:res=>{
+                    firstPay(price,this.userInfo.pseudonym).then(res=>{
+                        if(res.orderCount!='NO'){
+                            res.giveBookInfo.gift=gift
+                            this.$invoke('FirstGift','onClose', res.giveBookInfo) 
+                            this.userMoney=this.userInfo.userMoney+price*100+gift
+                        }else{
+                            this.userMoney=this.userInfo.userMoney+price*100
+                        }
+                        this.userInfo.userMoney=this.userMoney
+                        this.$apply()
+                        wx.setStorageSync("userInfo",this.userInfo)
+                        wx.navigateTo({
+                            url:'cashCard'
+                        })
+                    })
+                },
+                fail:res=>{
+                    console.log(res)
+                },
+                complete:function(res){
+
+                }
+                })
+           }else{
+               this.$invoke('Login','onClose')            
+           }
+        },
         handleGo(){
           wx.navigateTo({
               url:'coupon'
@@ -54,13 +103,13 @@ export default class AccountRecharge extends wepy.page{
         }
     }
     onShow(){
-        let userInfo=wx.getStorageSync("userInfo")
-        if(userInfo){
-            this.userMoney=userInfo.userMoney           
+        this.userInfo=wx.getStorageSync("userInfo")
+        if(this.userInfo){
+            this.userMoney=this.userInfo.userMoney           
         }
     }
     onLoad(){
-
+       
     }
 }
 </script>

@@ -1,0 +1,195 @@
+<template>
+<view>
+     <view class="login {{show?'active':''}}" bindtap="onClose"></view>    
+       <view class="bindPhone_wrap" wx:if="{{show}}">
+           <view style="height:513rpx;line-height:513rpx;">
+             <image class='img-x' src="../images/bindphone.png" />
+            </view>
+            <view class='bindPhone'>
+                <view style="height:138rpx;text-align:center;line-height:138rpx;font-size:40rpx;color:#FF4E61;font-weight:400">绑定手机</view>
+                <view class="input_box">
+                    <text>+86</text>
+                    <image src="../images/Combine.png" style="margin:0 10rpx;width:28rpx;height:28rpx;margin-top:19rpx"/>
+                    <input bindinput="handlePhoneValue" style="width:250rpx;height:100%" type="text" placeholder='请输入手机号码'/>
+                </view>
+                <view class='input_box' style="margin-top:24rpx">
+                    <input  bindinput="handleVerification" type="text" style="width:230rpx;height:100%;padding-left:20rpx" placeholder='请输入验证码' />
+                    <button class='getYzm' bindtap="handleGet">{{code}}</button>
+                </view>
+                <view style="text-align:center;margin-top:60rpx">
+                    <button class='ok' bindtap="handleSubmit">确定</button>
+                </view>
+            </view>
+       </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import {checkPhone,getVerification,bindPhone,checkCode} from '../config/getData'
+import Toast from '../lib/vant/toast/toast'
+   export default class BindPhone extends wepy.component{
+       data={
+           show:false,
+           code:'获取验证码',
+           isOvertime:false,
+           phone:0,
+           verification:0
+       }
+       sendMessage(){
+                if (this.isOvertime) {
+                    return false;
+                }
+                let time = 60;
+                var sendTimer = setInterval(()=>{
+                    this.isOvertime = true;
+                    time--;
+                    this.code = time+"s";
+                    this.$apply()
+                    if(time==0){
+                        this.isOvertime = false;
+                        clearInterval(sendTimer);
+                        this.code = "获取验证码";
+                        this.$apply()
+                    }
+                },1000)
+        }
+       methods = {
+           handleVerification(e){
+             this.verification=e.detail.value
+           },
+           handlePhoneValue(e){
+             this.phone=e.detail.value
+           },
+            async  handleGet(){
+                if(this.phone){
+                    let isPhone=await checkPhone(this.phone)
+                        if(isPhone){
+                        let Verification = await getVerification(this.phone)
+                        if(Verification=='OK'){
+                            Toast('验证码发送成功~')
+                            this.sendMessage()
+                        }else{
+                           Toast('发送失败~') 
+                        }
+                        }else{
+                            Toast('该手机已绑定,请更换手机号~')
+                        }
+                }else{
+                   Toast('手机号码不能为空~') 
+                }
+            },
+            onClose(){
+                this.show=!this.show
+            },
+            async  handleSubmit(){
+                if(this.phone){
+                    if(this.verification){
+                      let isCode = await checkCode(this.verification,this.phone)
+                        if(isCode){
+                         let isPhone =await bindPhone(this.phone)
+                          if(isPhone){
+                            Toast('绑定成功~')  
+                          }else{
+                            Toast('绑定失败,请重试~') 
+                          }
+                        }else{
+                           Toast('验证码错误~') 
+                        }
+                    }else{
+                    Toast('请输入手机号码~')
+                }
+                }else{
+                    Toast('请输入手机号码~')
+                }
+            }
+       }
+       onLoad(){
+
+       }
+   } 
+</script>
+<style lang="less" scoped>
+.login{
+    width:750rpx;
+    height:0;
+    background-color:rgba(0,0,0,.4);
+    position:fixed;
+    top:0;
+    opacity:0;
+    overflow: hidden;
+    transition: opacity .5s;
+}
+.bindPhone{
+    width:560rpx;
+    height:513rpx;
+    border:6rpx solid #F77583;
+    border-radius:16rpx;
+    background: #fff;
+}
+.img-x{
+    width:168rpx;
+    height:276rpx;  
+    vertical-align: middle;
+}
+.login_text{
+    height:162rpx;
+    line-height:162rpx;
+    font-size:36rpx;
+    border-bottom:2rpx solid #EFEFEF;
+}
+.active{
+    opacity:1;
+    height:100vh;
+}
+.login_btn{
+    background-color:#fff;
+    color:#F77583;
+    height:76rpx;
+    line-height:76rpx;
+    background:#fff;
+}
+.login_btn::after{
+    border: none;
+}
+.bindPhone_wrap{
+    display:flex; 
+    flex-direction:row;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height:513rpx;
+    width:100%;
+}
+.input_box{
+    width:432rpx;
+    height:76rpx;
+    border:2rpx solid #F77583;
+    margin:0 auto;
+    border-radius:20rpx;
+    font-size:32rpx;
+    line-height:76rpx;
+    display:flex;
+    flex-direction: row;
+}
+.getYzm{
+    width:160rpx;
+    height:60rpx;
+    border-radius:20rpx;
+    background: #F87684;
+    color:#fff;
+    font-size:24rpx;
+    margin-top:8rpx;
+}
+.ok{
+    width:320rpx;
+    height:72rpx;
+    background: #F77583;
+    color:#fff;
+    font-size:40rpx;
+    line-height: 72rpx;
+    border-radius:36rpx;
+}
+</style>

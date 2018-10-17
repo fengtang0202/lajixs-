@@ -11,7 +11,6 @@ import {getAppid} from './config/getData'
 
 const store = configStore()
 setStore(store)
-
 export default class extends wepy.app {
   config = {
     pages: [
@@ -42,7 +41,8 @@ export default class extends wepy.app {
       'pages/userBookComment',
       'pages/lastPage',
       'pages/task',
-      'pages/share'
+      'pages/share',
+      'pages/cashCard'
     ],
     window: {
       backgroundTextStyle: '#fff',

@@ -75,8 +75,8 @@
         height:80rpx;
         background:rgba(247,117,131,1);
         border-radius:16rpx;
+        font-size:30rpx;
         float:right;
         color:#fff;
-        font-size:32rpx;
   }
 </style>

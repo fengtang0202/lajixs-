@@ -5,7 +5,7 @@
         <view bindtap="handleGo({{item.chapterId}},{{item.bookId}})" style="float:left;margin-left:28rpx">
           <view style="color:#999999;font-size:28rpx">{{item.bookName}}著</view>
           <view>{{item.writerName}}</view>
-          <view>阅读至:{{item.chapterName}}</view>
+          <view>阅读至:{{myWxs.strSlice(item.chapterName,11)}}</view>
         </view>
         <view style="color:#999;font-size:24rpx;float:right;margin-right:30rpx">
           {{myWxs.getToString(item.dateTimes,'-')}}

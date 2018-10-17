@@ -1,5 +1,5 @@
 <template>
-    <view class="login {{showFirst?'active':''}}" bindtap="onClose">
+    <view wx:if="{{showFirst}}" class="login {{showFirst?'active':''}}" bindtap="onClose">
         <view class="gift_wrap">
             <view style="width:100%;text-align:center;">
                 <image class='img-x' src="../images/login.png" />
@@ -8,13 +8,13 @@
                     <view style="font-size:32rpx;text-align:center;padding-top:20rpx">恭喜获得首充礼包哦～</view>
                     <view class="gift_detail">
                         <view style="float:left;text-align:center">
-                          <image style="width:162rpx;height:208rpx;border-radius:20rpx;"/>
-                            <view>书名</view>
+                          <image catchtap="handleGoBook({{bookInfo.bookId}})" src="{{bookInfo.bookCover}}" style="width:162rpx;height:208rpx;border-radius:20rpx;"/>
+                            <view style="font-size:28rpx">{{myWxs.strSlice(bookInfo.bookName,5)}}</view>
                             <view style="color:#FE4D60;font-size:16rpx">已加入书架</view>
                         </view>
                         <view style="font-size:72rpx;float:left;height:208rpx;line-height:208rpx;margin-left:20rpx;margin-right:24rpx">+</view>
                         <view style="float:left;height:208rpx;line-height:208rpx">
-                            <text>19800</text>
+                            <text>{{bookInfo.gift}}</text>
                           <image  src="../images/lj.png" style="width:24rpx;height:36rpx;margin-left:12rpx"/>
                         </view>
                     </view>
@@ -24,12 +24,23 @@
 </template>
 <script>
     import wepy from 'wepy'
+    import myWxs from '../filter/myWxs.wxs'
     export default class FirstGift extends wepy.component{
         data={
-            showFirst:true
+            showFirst:false,
+            bookInfo:{}
+        }
+        wxs={
+            myWxs
         }
         methods={
-            onClose(){
+            handleGoBook(bookId){
+                wx.navigateTo({
+                    url:'bookDetail?bookId='+bookId
+                })
+            },
+            onClose(bookInfo){
+                this.bookInfo=bookInfo
                 this.showFirst=!this.showFirst
             }
         }

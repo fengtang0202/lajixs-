@@ -7,8 +7,8 @@
       <view wx:if="{{show}}" class='authorWords' >
         <image  style="float:left;width:44rpx;height:44rpx;border-radius:50%;margin-right:20rpx"/>
         <view style="float:left;font-size:26rpx;width:480rpx">
-          <view style="margin-bottom:14rpx;">作者昵称</view>
-          <view style="color:#999;">内容内容内容内容内容内容内容内容内容内容内容内容内容内。</view>
+          <view style="margin-bottom:14rpx;">{{writerName}}</view>
+          <view style="color:#999;">{{myWxs.strSlice(writerMessage,30)}}</view>
         </view>
         <image src="../images/authorSaid.png" class="authorImg"/>
       </view>
@@ -148,6 +148,8 @@
             rightList:['书籍详情','查看书评','加入书架','举报本章'],
             isDropDown:false,
             collectionStatus:0,
+            writerName:'',
+            writerMessage:''
         }
         mixins=[Book]
         events={
@@ -337,8 +339,7 @@
                 'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
             },
           data:{
-            chapterId: this.chapterId,
-            readType:1
+            chapterId: this.chapterId
           },
           success:res=>{
           let data=res.data.data
@@ -347,7 +348,9 @@
           this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')
           this.bookName="《"+data.chapterInfo.bookTitle+"》"
           this.chapterName=data.chapterInfo.chapterTitle
+          this.writerName=data.bookInfo.writerName
           this.chapterPrice=data.chapterInfo.price 
+          this.writerMessage=data.chapterInfo.authorWords
           this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
           let userInfo = wx.getStorageSync('userInfo')
           userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)

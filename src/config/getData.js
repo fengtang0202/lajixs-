@@ -462,11 +462,56 @@ const getTask=()=>{
 }
 const updateTask = (userId,id) => {
     return post({
-         url: updateUserTask,
+         url: api.updateUserTask,
          params:{
              userId:userId,
              id:id
          }
+    })
+}
+const share = get({url: api.shareApi},false)
+const wechatPay = (openId,nickName,howmuch, channelId = 'LG20180608000', rechargeChannelId = 'LG20180608000') => {
+        return post({
+            url:api.wechatPay,
+            params:{
+                openId: openId,
+                nickName:nickName,
+                howmuch:howmuch,
+                channelId:channelId,
+                rechargeChannelId:rechargeChannelId
+            }
+        },true)
+}
+const firstPay=(money,userName)=>{
+    return get({url:api.FirstPay+money+'/'+userName})
+}
+const checkPhone=phone=>{
+    return get({url:api.checkPhone+phone})
+}
+const getVerification=(userMob,type="bangDing")=>{
+    return post({
+        url:api.getVerification,
+        params:{
+            userMob:userMob,
+            type:type
+        }
+    },true)
+}
+const checkCode = (checkCode, phoneId)=>{
+    return post({
+        url:api.checkCode,
+        params:{
+            checkCode:checkCode,
+            phoneId:phoneId
+        }
+    })
+}
+const bindPhone = userPhone => {
+    return post({
+        url:api.bindPhone,
+        params:{
+            userPhone: userPhone
+        }
     })
 }
 module.exports = {
@@ -529,5 +574,12 @@ module.exports = {
     delComment,
     getCommentCount,
     getTask,
-    updateTask
+    updateTask,
+    share,
+    wechatPay,
+    firstPay,
+    checkPhone,
+    getVerification,
+    checkCode,
+    bindPhone
 }

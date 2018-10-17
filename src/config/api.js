@@ -12,7 +12,6 @@ const refresh_user = `${host}/api/person-refreshUserinfo`
 const get_user_info = `${host}/api/person-info`
 const register_user = `${host}/api/person-regInfo`
 const remember_login = `${host}/api/person-remembermeLogin`
-const update_user_info = `${host}/api/person-updateInfo`
 const update_pwd = `${host}/api/person-updatepwd`
 const get_fans_follow_count = `${host}/api/fans-followCount/`
 const get_code = `${host}/api/verification/getCode`
@@ -105,6 +104,16 @@ const userRecommendTicketRecord = `${host}/api/userRecommendTicketRecord`
 //个人任务
 const personTask = `${host}/api/person-PersonalCenterTask`
 const updateUserTask = `${host}/api/updatePersonalCenterTaskInfo`
+const shareApi = `${host}/api/SharingOperationRecord`
+//微信充值
+const wechatPay = `${host}/api/app/wxPaySmallProgramGetInfo`
+//首冲送书
+const FirstPay = `${host}/api/getUserRechargerecordSum/`
+//验证码
+const checkPhone = `${host}/api/person-checkNickPhone/`
+const getVerification = `${host}/api/verification/sys-getShortMessage`
+const checkCode = `${host}/api/verification/person-checkedCode`
+const bindPhone = `${host}/api/person-updateInfo`
 module.exports = {
   login,
   get_user_info,
@@ -117,7 +126,6 @@ module.exports = {
   refresh_user,
   register_user,
   remember_login,
-  update_user_info,
   update_pwd,
   get_fans_follow_count,
   get_code,
@@ -192,5 +200,12 @@ module.exports = {
   commentCount,
   delComment,
   personTask,
-  updateUserTask
+  updateUserTask,
+  shareApi,
+  wechatPay,
+  FirstPay,
+  checkPhone,
+  getVerification,
+  bindPhone,
+  checkCode
 }

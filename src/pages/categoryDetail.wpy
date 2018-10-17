@@ -1,6 +1,6 @@
 <template>
     <view style='position: relative;'>
-        <view class='classNav'>
+        <!-- <view class='classNav'>
             <view bindtap='handleShowBank(1)'>
                 <text style="color:{{showCategory&&'#FB5E6F'}}">排行</text>
                 <text class="arrow {{showCategory&&'activeArrow'}}" ></text>
@@ -9,8 +9,8 @@
                 <text style="color:{{showTj&&'#FB5E6F'}}">筛选</text>
                 <text class="arrow {{showTj&&'activeArrow'}}"></text>
             </view>
-        </view>
-        <scroll-view scroll-y bindscrolltolower="loadMore" style='height:{{mtabH*2-100}}rpx'>
+        </view> -->
+        <scroll-view scroll-y bindscrolltolower="loadMore" style='height:{{mtabH}}px'>
             <bookDetailItem :list.sync='bookList'></bookDetailItem>  
         </scroll-view>
         <view class='bank' style="height:{{showCategory?'188rpx':'0'}}">

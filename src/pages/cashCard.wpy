@@ -1,0 +1,56 @@
+<template>
+    <view style="position:relative">
+        <image src="../images/ka.png" style="margin-left:25rpx;width:700rpx;height:370rpx"/>
+        <view style="position:absolute;bottom:142rpx;left:120rpx">
+            <text style="font-size:30rpx;color:#fff;margin-right:30rpx" wx:for="{{code}}" wx:key="{{index}}">{{item}}</text>
+        </view>
+        <view style="text-align:center">
+            <button bindtap="handleBack" class='duihuan'>立即兑换</button>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+export default class CashCard extends wepy.page{
+    data={
+        code:[]
+    }
+    methods = {
+        handleBack(){
+            wx.showToast({
+                    title: '兑换成功~',
+                    icon: 'success',
+                    duration: 1500
+            })
+            setTimeout(() => {
+                wx.navigateBack()
+            }, 1500);
+        } 
+    }
+   async getCode(){
+        var str=''
+        for(let i=0;i<20;i++){
+            var num = Math.floor(Math.random() * 10 + 1);
+            if(i%4==0){
+                str+='a'
+            }
+            str=await str+num
+        }
+        this.code=str.split('a').slice(1)
+        this.$apply()
+    }
+    onLoad(){
+        this.getCode()
+    }
+}
+</script>
+<style lang="less" scoped>
+    .duihuan{
+        width:370rpx;
+        height:72rpx;
+        background: #F77583;
+        color:#fff;
+        font-size:30rpx;
+        border-radius:50rpx;
+    }
+</style>

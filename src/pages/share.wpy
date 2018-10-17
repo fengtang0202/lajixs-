@@ -12,8 +12,8 @@
             </view>
             <image class="authorHeader" src="../images/shareHead.png"/>
             <view style="text-align:center;margin-bottom:60rpx">
-                <image wx:if="{{type==1}}" src="../images/shareCenterTitle.png" style="width:230rpx;height:33rpx"/>
-                <image wx:if="{{type==2}}" src="../images/InviteCenterTitle.png" style="width:320rpx;height:33rpx"/>                
+                <image wx:if="{{type==1}}" src="../images/InviteCenterTitle.png" style="width:320rpx;height:33rpx"/>                
+                <image wx:if="{{type==2}}" src="../images/shareCenterTitle.png" style="width:230rpx;height:33rpx"/>
             </view>
             <view  style="display:flex;flex-direction:row;">
                 <view>
@@ -148,15 +148,15 @@
        async onLoad(ops){
             this.bookId=ops.bookId
             this.type=ops.type
-           let book =await getBookInfo(this.bookId)
-           this.collectionStatus=book.bookListInfo.collectionStatus
-           this.bookInfo=book.bookListInfo
-           this.chapterId=book.chapterOne.id
-           let data =await bookRead(this.chapterId)
-           this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')      
-           let  commentList=await getNewComments(this.bookId,1)
-           this.commentList=commentList.list
-           this.$apply()
+            let book =await getBookInfo(this.bookId)
+            this.collectionStatus=book.bookListInfo.collectionStatus
+            this.bookInfo=book.bookListInfo
+            this.chapterId=book.chapterOne.id
+            let data =await bookRead(this.chapterId)
+            this.bookContent=data.chapterInfo.chapterContent.replace(/<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/LG>/ig,'<br>').replace(/<LG>.*?<\/LG>/g,'').replace(/<br>\s*<br>/ig,'<br>').split('<br>')      
+            let  commentList=await getNewComments(this.bookId,1)
+            this.commentList=commentList.list
+            this.$apply()
         }
     }
 </script>

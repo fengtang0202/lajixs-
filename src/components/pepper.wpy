@@ -99,7 +99,7 @@
         float: left;
         text-align:center;
         color:#333;
-        margin-right: 105rpx;
+        margin-right: 102rpx;
         margin-top:43rpx;
         border-radius: 7rpx;
     }

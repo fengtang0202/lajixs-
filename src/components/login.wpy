@@ -31,6 +31,7 @@
                 getAppid(res.code).then(res=>{
                     if (e.detail.userInfo) {
                     let userInfo=e.detail.userInfo
+                    wx.setStorageSync("openId",res.openid)
                     let object={}
                     object.unionid=res.unionid
                     object.terminal=4

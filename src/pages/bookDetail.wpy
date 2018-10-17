@@ -155,6 +155,7 @@
       </scroll-view>
     </van-popup> 
         <Login></Login>
+        <BindPhone></BindPhone>
      </view>
 </template>
 <script>
@@ -170,6 +171,7 @@
     import Directory from '../components/directory'
     import Login from '../components/login'
     import book from '../mixins/book'
+    import BindPhone from '../components/bindPhone'
     @connect({
         //state
     },
@@ -196,7 +198,8 @@
           RiceChilli,
           Pepper,
           Directory,
-          Login
+          Login,
+          BindPhone
       }
       data = {
         type:false,
@@ -348,23 +351,6 @@
             })
         }
     }
-    onShareAppMessage(options){
-        var that=this
-        var shareObj = {
-    　　　　 title: that.bookName,        
-    　　　　 path: 'pages/bookDetail?bookId='+this.bookId,
-    　　　　 imgUrl: that.bookInfo.bookListInfo.bookImage, 
-        success:function(res){
-            console.log(res)
-        //  var shareTicket=res.shareTickets[0]
-        },    
-    　　complete:res=>{
-    　　　　
-    　　}
-    };
-        　　return shareObj;
-    }
-
         getBookInfo(){
              getBookInfo(this.bookId).then(data=>{
                this.bookInfo=data

@@ -39,12 +39,13 @@ function request(method, requestHandler, isShowLoading = true) {
                 } else if(res.data.returnCode==400) {
                     if (res.data.data) {
                     resolve(res.data.data)
-                }else{
-                        if(wx.getStorageSync('userInfo')){
-                            // wx.navigateTo({url:'Login'})
-                            wx.removeStorageSync("userInfo")
-                            wx.removeStorageSync("cookie")
-                        }
+                    }else{
+                            if(wx.getStorageSync('userInfo')){
+                                // wx.navigateTo({url:'Login'})
+                                wx.removeStorageSync("userInfo")
+                                wx.removeStorageSync("cookie")
+                                wx.removeStorageSync('openId')
+                            }
                     }
                 } else if(res.data.returnCode==1000){
                     // wx.showToast({
