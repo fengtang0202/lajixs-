@@ -17,6 +17,8 @@
   "author": "Haru <603926774@qq.com>",
   "license": "MIT",
   "dependencies": {
+    "crypto": "^1.0.1",
+    "js-md5": "^0.7.3",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
     "redux-promise": "^0.5.3",

@@ -51,8 +51,11 @@
             <view>
                 <view style="margin:0 auto;" bindtap="handleGoBookRead" class="btn">阅读正文</view>
             </view>
-            <view style="text-align:center;margin-top:60rpx">
+            <view style="text-align:center;margin-top:40rpx">
                 <image style="width:223rpx;height:62rpx;" src="../images/zzdh.png"/>
+            </view>
+            <view style="text-align:right;font-size:28rpx;color:#666666;height:78rpx;line-height:78rpx">
+                <text style="margin-right:34rpx;" bindtap='handleGoIndex'>返回首页></text>
             </view>
             <view class="addComment_wrap">
                 <textarea placeholder="发表评论" value="{{commentContent}}" bindinput="handleInput" type="text" class="addComment" />
@@ -103,6 +106,11 @@
             }
         }
         methods={
+            handleGoIndex(){
+               wx.switchTab({
+                url: 'index'
+                })
+            },
             handleInput(e){
                 this.commentContent=e.detail.value
                 this.$apply()
@@ -148,6 +156,7 @@
        async onLoad(ops){
             this.bookId=ops.bookId
             this.type=ops.type
+            this.$parent.globalData.userCode=ops.userCode||"LG20180608000"
             let book =await getBookInfo(this.bookId)
             this.collectionStatus=book.bookListInfo.collectionStatus
             this.bookInfo=book.bookListInfo

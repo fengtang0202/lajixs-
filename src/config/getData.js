@@ -6,7 +6,19 @@ const getHomePageBooks = get({url:api.homePageRecommended},true)
 const getBookClass=get({url:api.get_label},true)
 
 const getFreeBook=get({url:api.book_freetime},true)
-
+const login = (userName, pwd, terminal=3) => {
+    return post({
+        url:api.login,
+        params:{
+            userName:userName,
+            userPassword:pwd,
+            terminal: terminal
+        }
+    })
+}
+const loginOut=post({
+    url:api.login_out
+})
 const getNewBooks=(page,size)=>{
     return get({url:`${api.new_book}${page}/${size}`},true)
 }
@@ -460,12 +472,13 @@ const getTask=()=>{
         url: api.personTask
     })
 }
-const updateTask = (userId,id) => {
+const updateTask = (userId,id,param) => {
     return post({
          url: api.updateUserTask,
          params:{
              userId:userId,
-             id:id
+             id:id,
+             param
          }
     })
 }
@@ -486,7 +499,7 @@ const firstPay=(money,userName)=>{
     return get({url:api.FirstPay+money+'/'+userName})
 }
 const checkPhone=phone=>{
-    return get({url:api.checkPhone+phone})
+    return get({url:api.checkPhone+phone},false)
 }
 const getVerification=(userMob,type="bangDing")=>{
     return post({
@@ -515,6 +528,8 @@ const bindPhone = userPhone => {
     })
 }
 module.exports = {
+    login,
+    loginOut,
     getHomePageBooks,
     getBookClass,
     getFreeBook,

@@ -41,6 +41,12 @@ function request(method, requestHandler, isShowLoading = true) {
                     resolve(res.data.data)
                     }else{
                             if(wx.getStorageSync('userInfo')){
+                                wx.showToast({
+                                    title: '登录过期~',
+                                    image: '../images/jg.png',
+                                    duration: 1000,
+                                    mask: true
+                                })
                                 // wx.navigateTo({url:'Login'})
                                 wx.removeStorageSync("userInfo")
                                 wx.removeStorageSync("cookie")

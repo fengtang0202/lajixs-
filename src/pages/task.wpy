@@ -2,7 +2,7 @@
     <view class="task_wrap">
         <view class="task_title">成长任务</view>
         <view class="task_list">
-            <view wx:for="{{personTaskList}}" wx:key="{{index}}" class="task_item">
+            <view wx:for="{{personTaskList}}"  wx:key="{{index}}" class="task_item">
                 <view style="float:left;">
                     <view style="margin:20rpx 0">{{item.taskName}}</view>
                     <view style="font-size:24rpx;color:#FF83A6">{{item.gift}}</view>
@@ -33,10 +33,10 @@
     export default class Task extends wepy.page{
         data={
              personTaskList:[
-                {taskName:"绑定手机号码",gift:"奖励+200积分，+50辣椒券",status:0},
-                {taskName:"首次将小说加入书架",gift:"奖励+50积分，+10辣椒券",status:0},
-                {taskName:"首次关注一位作者",gift:"奖励+50积分，+10辣椒券",status:0},
-                {taskName:"首次订阅小说",gift:"奖励+50积分，+10辣椒券",status:0},
+                {taskName:"绑定手机号码",gift:"奖励+200积分，+20辣椒券",status:0},
+                {taskName:"首次将小说加入书架",gift:"奖励+50积分，+6辣椒券",status:0},
+                {taskName:"首次关注一位作者",gift:"奖励+50积分，+6辣椒券",status:0},
+                {taskName:"首次订阅小说",gift:"奖励+50积分，+6辣椒券",status:0},
                 {taskName:"首次打赏辣椒",gift:"奖励+300积分，+100辣椒券",status:0}
             ],
              everyTaskList:[
@@ -53,6 +53,9 @@
         }
         wxs={
             myWxs
+        }
+        updateTask(){
+            
         }
         onShow(){
              if(wx.getStorageSync('userInfo')){

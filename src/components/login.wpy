@@ -1,13 +1,19 @@
-<template>
+    <template>
    <view class="login {{show?'active':''}}" bindtap="onClose">
        <view style="position:absolute;height:450rpx;top:20%;">
-           <view style="width:100%;text-align:center;width:750rpx;">
-             <image class='img-x' src="../images/login.png" />
-            </view>
          <view class='login_wrap'>
-            <view class='login_text'>登陆后解锁更多权限</view>
-            <view  style="height:76rpx;font-size:32rpx;">
-               <button class="login_btn"  open-type="getUserInfo" bindgetuserinfo="handleUserLogin">登录</button> 
+             <view class='wq'>
+                 <veiw>
+                  <button class="login_btn"  open-type="getUserInfo" bindgetuserinfo="handleUserLogin"><image class='btn_img' src="../images/wxlogin.png"/></button> 
+                  <text style="font-size:24rpx;">微信登录</text>  
+                </veiw>
+                <view>
+               <button class="login_btn"><image class='btn_img' src="../images/qqlogin.png"/></button> 
+                  <text style="font-size:24rpx;">QQ登录</text>  
+                </view>
+            </view>
+            <view class='qt' catchtap="handleGoUserLogin">
+                其他方式登录>>
             </view>
          </view>
        </view>
@@ -21,11 +27,17 @@
             show:false
         }
         methods = {
+            handleGoUserLogin(){
+                wx.navigateTo({
+                    url:'phoneLogin'
+                })
+                this.show=false
+            },
             onClose(){
                 this.show=!this.show
             },
-        async  handleUserLogin(e){
-            await  wx.login({
+            async  handleUserLogin(e){
+             await  wx.login({
                 success:res=>{
                 if (res.code) {
                 getAppid(res.code).then(res=>{
@@ -35,12 +47,12 @@
                     let object={}
                     object.unionid=res.unionid
                     object.terminal=4
-                    object.userCode='LG20180608000'
+                    object.userCode=this.$parent.$parent.globalData.userCode
                     object.province=userInfo.province
-                    object.nickname=userInfo.nickname
+                    object.nickname=userInfo.nickName
                     object.sex =userInfo.gender
                     object.headimgurl =userInfo.avatarUrl
-                    object.city=userInfo.city     
+                    object.city=userInfo.city 
                     let weChatServerJson=JSON.stringify(object)
                     wxLogin(weChatServerJson).then(res=>{
                         this.$parent.$parent.globalData=res
@@ -78,13 +90,21 @@
     transition: opacity .5s;
 }
 .login_wrap{
-    width:560rpx;
-    height:240rpx;
+    width:540rpx;
+    height:372rpx;
     box-shadow:0px 0px 8rpx 0px rgba(250,89,107,0.5);
     border-radius:16rpx;
-    text-align:center;
-    margin:-8rpx auto;
+    margin-left:105rpx;
     background: #fff;
+    box-sizing: border-box;
+}
+.wq{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding:0 92rpx;
+    box-sizing: border-box;
+    height:272rpx;
 }
 .img-x{
     width:228rpx;
@@ -103,11 +123,28 @@
 .login_btn{
     background-color:#fff;
     color:#F77583;
-    height:76rpx;
-    line-height:76rpx;
+    height:84rpx;
+    width:84rpx;
+    border-radius: 50%;
     background:#fff;
+    padding:0;
+    margin-top:98rpx;
+}
+.btn_img{
+    width:84rpx;
+    height:84rpx;
 }
 .login_btn::after{
     border: none;
+}
+.qt{
+    height:98rpx;
+    width:500rpx;
+    margin-left:20rpx;
+    border-top:2rpx solid #E0E0E0;
+    font-size:24rpx;
+    text-align: center;
+    color:#999999;
+    line-height:98rpx;
 }
 </style>

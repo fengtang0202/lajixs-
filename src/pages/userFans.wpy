@@ -1,5 +1,5 @@
 <template>
-     <scroll-view style="height:{{height}}px" scroll-y bindscrolltolower="loadMore">
+     <scroll-view style="height:{{height-20}}px" scroll-y bindscrolltolower="loadMore">
        <FansAndFllowItem :is="type" :List.sync="FansList"></FansAndFllowItem>
     </scroll-view>    
 </template> 

@@ -193,6 +193,10 @@
         }
         methods={
           handleGoShare(){
+            if(!wx.getStorageSync('userInfo')){
+                  this.$invoke('Login','onClose')
+                  return
+              }
             this.$navigate('coupon',{bookId:this.bookId})
           },
           handleDropDown(index){
@@ -355,10 +359,13 @@
           let userInfo = wx.getStorageSync('userInfo')
           userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
           if(res.data.returnCode==400){
+            //小程序规则 vip 章节 true=>false 
                 this.isShowBuyChapter=true
                 this.$apply()
           }
           if(res.data.returnCode==500){
+              // 小程序 vip 规则  this.isShowBuyChapter=!this.isAutoBuyChapter => this.isShowBuyChapter=false
+              // this.isShowBuyChapter=false
               this.isShowBuyChapter=!this.isAutoBuyChapter
               this.isAutoBuyChapter&&this.buyChapter()
           }

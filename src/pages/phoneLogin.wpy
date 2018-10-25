@@ -1,0 +1,73 @@
+<template>
+<view>
+    <input type="text" bindinput="handlePhone" placeholder="请输入手机号码或用户名" style="margin-top:104rpx;margin-bottom:34rpx" class='inputBox'/>
+    <input type="password" bindinput="handlePwd" placeholder='请输入密码' class='inputBox'/>
+    <button class='btnLogin' bindtap='handleLogin'>登录</button>
+    <van-toast id="van-toast" />
+</view>    
+</template>
+<script>
+    import wepy from 'wepy'
+    import md5 from 'js-md5'
+    import Toast from '../lib/vant/toast/toast'
+    import {checkPhone,login} from '../config/getData'
+    export default class PhoneLogin extends wepy.page{
+        data={
+            phone:0,
+            pwd:0
+        }
+        config = {
+        navigationBarTitleText: '账号登录',
+        usingComponents: {
+            "van-toast": "../lib/vant/toast/index"
+          }
+        }
+        methods={
+            handlePhone(e){
+                this.phone=e.detail.value
+            },
+            handlePwd(e){
+                this.pwd=e.detail.value
+            },
+            async  handleLogin(){
+                if(this.phone&&this.pwd){
+                  let data =await  login(this.phone,md5(this.pwd)) 
+                  if(data){
+                    wx.setStorageSync('cookie',data.token)
+                    wx.setStorageSync('userInfo',data)
+                    Toast('登录成功~')
+                    setTimeout(() => {
+                        wx.navigateBack()
+                    },2000);
+                  }else{
+                      Toast('用户名或密码错误 请你好好想想密码哦~')
+                    }
+                }else{
+                    Toast('手机号码或密码不能为空~')
+                }
+            }
+        }
+        onLoad(){
+
+        }
+    } 
+</script>
+<style lang="less" scoped>
+    .inputBox{
+        width:608rpx;
+        height:88rpx;
+        border:2rpx solid #979797;
+        border-radius:8rpx;
+        margin-left:71rpx;
+        padding-left:28rpx;
+        box-sizing: border-box;
+    }  
+    .btnLogin{
+        width:608rpx;
+        height:88rpx;
+        background: #F77583;
+        color:#fff;
+        font-size:36rpx;
+        margin-top:170rpx;
+    }
+</style>

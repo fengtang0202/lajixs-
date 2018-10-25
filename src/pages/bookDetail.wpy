@@ -20,6 +20,7 @@
                                   }}
                                 </view>
                               <BookLabel :list.sync="bookLables"></BookLabel>
+                              <!-- 打赏模块 -->
                               <view class='dasang' >
                                   <block wx:for="{{reward}}" wx:key="{{index}}">
                                    <view bindtap="handleReward({{index}})" class='reward_wrap' style="width:{{index==1?'120rpx':'104rpx'}};margin-right:{{index==2?'0':'62rpx'}}">
@@ -36,12 +37,12 @@
                        </view>
                   </view>
                 </view>
-                <view class='book_data'>
+                <!-- <view class='book_data'>
                       <view>{{myWxs.numToFixed(bookInfo.bookdate.bookClickCount)}}点击</view>
                       <view>{{myWxs.numToFixed(bookInfo.bookdate.areward)}}打赏</view>
                       <view>{{myWxs.numToFixed(bookInfo.bookdate.bookRecommend)}}小米椒</view>
                       <view style='border:0'>{{myWxs.numToFixed(bookInfo.bookdate.goldenTicket)}}金椒</view>
-                </view>
+                </view> -->
                 <!-- <van-cell-group>
                     <van-cell
                         title="打赏区"
@@ -155,8 +156,8 @@
       </scroll-view>
     </van-popup> 
         <Login></Login>
-        <BindPhone></BindPhone>
-     </view>
+        <BindPhone :areaCode.sync="areaCode"></BindPhone>
+     </view> 
 </template>
 <script>
     import wepy from 'wepy'
@@ -199,7 +200,7 @@
           Pepper,
           Directory,
           Login,
-          BindPhone
+          BindPhone,
       }
       data = {
         type:false,
@@ -228,7 +229,8 @@
         subscribe:0,
         collectionStatus:0,
         currentTab:0,
-        chapterList:[]
+        chapterList:[],
+        areaCode:86
       }
       watch = {
           
@@ -304,8 +306,12 @@
         handleReward(index){
             if(wx.getStorageSync('userInfo')){
                 if(index==1||index==2){
-                    this.currentTab=index
-                    this.$invoke('RiceChilli','onClose',index-1)
+                    if(wx.getStorageSync('userInfo').userPhone!='9527'){
+                        this.currentTab=index
+                        this.$invoke('RiceChilli','onClose',index-1)
+                    }else{
+                        this.$invoke('BindPhone','onClose')
+                    }
                 }else{
                     this.$invoke('Pepper','onClose')
                 }

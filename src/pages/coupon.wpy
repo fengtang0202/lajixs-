@@ -8,8 +8,8 @@
             <button  class='tickBtn'  open-type='share'>{{item.btnName}}</button>
     </view>
     <view style="margin-top:40rpx;font-size:26rpx;color:999">温馨提示：</view>
-    <view class="tips">1. 10辣椒券分享成功后立即到账（每日仅能获取1次）</view>
-    <view class='tips'>2. 20辣椒券需好友注册成功后到账（不限次数）</view>
+    <view class="tips">1. 5辣椒券分享成功后立即到账（每日仅能获取1次）</view>
+    <view class='tips'>2. 10辣椒券需好友注册成功后到账（不限次数）</view>
 </view>    
 </template>
 <script>
@@ -33,11 +33,11 @@
        onShareAppMessage(options){
         return {
     　　　　 title:this.bookInfo.bookName,        
-    　　　　 path: '/pages/share?bookId='+this.bookId+'&type=1',
+    　　　　 path: '/pages/share?bookId='+this.bookId+'&type=1&userCode=LGYQ001'+wx.getStorageSync('userInfo').userId,
     　　　　 imageUrl:this.bookInfo.bookImage, 
             success:res=>{
               share.then(res=>{
-                  console.log(1)    
+                  console.log(res)    
               })
             },
             fail:res=>{

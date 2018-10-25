@@ -1,0 +1,62 @@
+<template>
+    <scroll-view style="position:relative;height:100vh" scroll-y scroll-into-view="{{scorllId}}">
+        <view wx:for="{{cityData}}" wx:key="{{index}}">
+          <view id="{{item.name}}" class="{{item.name}}" style="height:72rpx;background:#efefef;font-size:32rpx;line-height:72rpx;">
+              <text style="margin-left:28rpx">{{item.name}}</text>
+          </view>
+          <view wx:for="{{item.items}}" wx:key="{{index}}" bindtap="handleBindPhone({{item.value}})" style='line-height:72rpx;font-size:28rpx;height:72rpx;border-bottom:2rpx solid #efefef'>
+              <view style="margin-left:28rpx;float:left">{{item.name}}</view>
+              <view style="float:right;margin-right:70rpx;">+{{item.value}}</view>
+          </view>
+        </view>
+        <view class="nav">
+            <view wx:for="{{nav}}"  catchtap="handleScorll({{item}})" wx:key="{{index}}">{{item}}</view>
+        </view>
+    </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+import {cityData} from '../config/areaCode'
+export default class AreaCode extends wepy.page{
+    config={
+        navigationBarTitileText:'选择国家或区号'
+    }
+    data={
+        nav:['热门','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
+        cityData:[],
+        scorllId:'热门',
+        scroll:true
+   }
+    methods = {
+        handleBindPhone(value){
+            var pages = getCurrentPages();
+            // wx.navigateBack()
+            this.$apply()
+        },
+        handleScorll(id){
+            this.scorllId=id
+            this.$apply()
+        }
+    }
+    onLoad(){
+        this.cityData=cityData
+        var query = wx.createSelectorQuery();
+        setTimeout(() => {
+            query.select('.C').boundingClientRect(rect=>{
+                console.log(rect)
+            }).exec();
+        }, 300);
+    }
+}
+</script>
+<style lang="less" scoped>
+    .nav{
+        color:#f77583;
+        font-size:24rpx;
+        position: fixed;
+        right:0;
+        top:120rpx;  
+        text-align:center;
+    }
+</style>
+    

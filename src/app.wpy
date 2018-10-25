@@ -42,7 +42,9 @@ export default class extends wepy.app {
       'pages/lastPage',
       'pages/task',
       'pages/share',
-      'pages/cashCard'
+      'pages/cashCard',
+      'pages/areaCode',
+      'pages/phoneLogin'
     ],
     window: {
       backgroundTextStyle: '#fff',
@@ -85,7 +87,8 @@ export default class extends wepy.app {
   globalData = {
     userInfo:null,
     mh:0,
-    cookie:''
+    cookie:'',
+    userCode:0
   }
 
   constructor () {

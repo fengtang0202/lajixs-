@@ -46,7 +46,8 @@
                <image slot="icon" class='list_nav' src="../images/lxkf.png"/>
            </van-cell>
         </van-cell-group>
-            <button class='goApp' open-type="launchApp" app-parameter="参数" binderror="launchAppError">前往App</button>
+            <!-- <button class='goApp' open-type="launchApp" app-parameter="参数" binderror="launchAppError">前往App</button> -->
+            <button class='goApp' wx:if="{{showLogin}}" bindtap='handleLoginOut'>退出登录</button>
             <Login></Login>
      </view>
 </template>
@@ -54,7 +55,7 @@
     import wepy from 'wepy'
     import {connect} from "wepy-redux"
     import Login from '../components/login'
-    import {FansAndFllowCount} from '../config/getData'
+    import {FansAndFllowCount,loginOut} from '../config/getData'
     @connect({
         //state
     },
@@ -89,6 +90,20 @@
           }
       }
       methods={
+          async  handleLoginOut(){
+            let isLoginOut=await loginOut
+            wx.removeStorageSync("userInfo")
+            wx.removeStorageSync("cookie")
+            wx.removeStorageSync('openId')
+            wx.showToast({
+                title: '退出成功~',
+                duration: 1000,
+                mask: true
+            })
+            this.userInfo={}
+            this.showLogin=false    
+            this.$apply()
+          },
           handleGo(res){
               if(wx.getStorageSync('userInfo')){
                   wx.navigateTo({
@@ -119,6 +134,7 @@
         let userInfo=wx.getStorageSync('userInfo')
           if(userInfo){
                 this.userInfo = userInfo
+                this.showLogin=true
                 this.getFansAndCount()
                 this.$apply()
           }else{
