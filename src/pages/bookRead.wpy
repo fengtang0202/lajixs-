@@ -30,7 +30,7 @@
             <view style="font-size:28rpx;margin-top:32rpx;">价格:{{chapterPrice}}辣椒</view>
             <view style="font-size:24rpx;margin-top:6rpx;">
               <text>余额:{{userMoney}}</text>
-              <text style="margin-left:20rpx;">辣椒劵:{{readMoney}}</text>
+              <text style="margin-left:20rpx;">辣椒券:{{readMoney}}</text>
             </view>
             <view style="margin-top:32rpx">
                 <button bindtap="handleBuyChapter" style="border-radius:100rpx;line-height:72rpx;background:#F77583;width:444rpx;height:72rpx;color:#fff;font-size:32rpx">购买本章</button>
@@ -87,6 +87,7 @@
       </view>
         <RiceChilli></RiceChilli>
         <Pepper></Pepper>
+        <BindPhone :areaCode.sync="areaCode"></BindPhone>
  </view>    
 </template>
 <script>
@@ -99,6 +100,7 @@
     import {bookRead} from '../config/api'
     import Login from '../components/login'
     import Book from '../mixins/book'
+    import BindPhone from '../components/bindPhone'
     export default class BookRead extends wepy.page{
          config = {
           navigationBarTitleText: '',
@@ -112,7 +114,8 @@
             Directory,
             Login,
             RiceChilli,
-            Pepper  
+            Pepper,
+            BindPhone  
         }
         data={
           type:true,
@@ -149,7 +152,8 @@
             isDropDown:false,
             collectionStatus:0,
             writerName:'',
-            writerMessage:''
+            writerMessage:'',
+            areaCode:86
         }
         mixins=[Book]
         events={
@@ -214,6 +218,10 @@
               if(!wx.getStorageSync('userInfo')){
                   this.$invoke('Login','onClose')
                   return
+              }
+              if((wx.getStorageSync('userInfo').userPhone=='0'||wx.getStorageSync('userInfo').userPhone=='9527')&&index==1){
+                  this.$invoke('BindPhone','onClose')
+                  return;
               }
               index==0&&this.$invoke('Pepper','onClose')
               index==1&&this.$invoke('RiceChilli','onClose',index-1)

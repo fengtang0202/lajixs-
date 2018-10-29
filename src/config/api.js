@@ -1,5 +1,5 @@
-let host=`https://www.lajixs.com`
-// let host = `http://192.168.0.136:8081`
+// let host=`https://www.lajixs.com`
+let host = `http://192.168.0.136:8081`
 // 用户中心
 const login = `${host}/api/person-login`
 const login_out = `${host}/api/person-ClearUserInfo`

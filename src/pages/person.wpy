@@ -42,10 +42,16 @@
            <van-cell title="我的消息"  is-link url="message">
                <image slot="icon" class='list_nav' src="../images/mymessage.png"/>
            </van-cell>
-           <van-cell title="联系客服"  is-link url="customerService">
+           <van-cell title="我的消息"  is-link url="customerService">
                <image slot="icon" class='list_nav' src="../images/lxkf.png"/>
            </van-cell>
         </van-cell-group>
+           <!-- <view class='lianxi'>
+               <button open-type="contact" class='btn_server'>
+                  <image slot="icon"  src="../images/lxkf.png"/>
+                  <text style="font-size:28rpx;color:#333 ;margin-left:20rpx">联系客服</text>
+               </button>
+           </view> -->
             <!-- <button class='goApp' open-type="launchApp" app-parameter="参数" binderror="launchAppError">前往App</button> -->
             <button class='goApp' wx:if="{{showLogin}}" bindtap='handleLoginOut'>退出登录</button>
             <Login></Login>
@@ -91,18 +97,20 @@
       }
       methods={
           async  handleLoginOut(){
-            let isLoginOut=await loginOut
-            wx.removeStorageSync("userInfo")
-            wx.removeStorageSync("cookie")
-            wx.removeStorageSync('openId')
-            wx.showToast({
-                title: '退出成功~',
-                duration: 1000,
-                mask: true
-            })
-            this.userInfo={}
-            this.showLogin=false    
-            this.$apply()
+            let isLogin=await loginOut() 
+            if(isLogin==2){
+                wx.removeStorageSync("userInfo")
+                wx.removeStorageSync("cookie")
+                wx.removeStorageSync('openId')
+                wx.showToast({
+                    title: '退出成功~',
+                    duration: 1000,
+                    mask: true
+                })
+                this.userInfo={}
+                this.showLogin=false 
+                this.$apply()
+            } 
           },
           handleGo(res){
               if(wx.getStorageSync('userInfo')){
@@ -114,7 +122,7 @@
               }
           },
           launchAppError(e){
-                console.log(e.detail.errMsg) 
+                // console.log(e.detail.errMsg) 
           },
           handleLogin(){
                this.$invoke('Login','onClose')
@@ -233,5 +241,32 @@ view{
     position: absolute;
     top:86rpx;
     left:104rpx;
+}
+.btn_server{
+    height:40rpx;
+    padding:0;
+    background: #fff;
+    line-height:40rpx;
+    margin:0;
+    image{
+      width:40rpx;
+      height:40rpx;  
+      vertical-align: middle; 
+    }
+}
+.lianxi{
+    display:flex;
+    flex-direction:row;
+    padding:20rpx 30rpx;
+    box-sizing:border-box;
+    line-height:48rpx;
+    position:relative;
+    background-color:#fff;
+    color:#333;
+    font-size:28rpx;
+    border-bottom:2rpx solid #efefef;
+}
+.btn_server:after{
+    border:none;
 }
 </style>

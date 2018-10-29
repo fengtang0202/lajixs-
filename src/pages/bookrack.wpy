@@ -14,10 +14,10 @@
          <!-- adv -->
          <view>
             <swiper class='swiper' indicator-dots="{{true}}"
-               autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:240rpx">
-              <block wx:for="{{imgUrls}}" wx:key="{{item.bookId}}">
-                <swiper-item style='margin:10rpx 0;height:100%'>
-                  <image src="{{item}}"  style="width:100%;"  mode="widthFix"  data-id='{{index}}'/>
+               autoplay="{{autoplay}}" interval="{{interval}}" circular="{{circular}}" duration="{{duration}}"  style="height:{{imgheights}}rpx">
+              <block wx:for="{{recommendList}}" wx:key="{{item.bookId}}">
+                <swiper-item style='margin:10rpx 0;height:100%' bindtap="handleGo({{item.bookId}})">
+                  <image bindload='imageLoad' src="{{item.activityImgURL}}"  style="width:100%;"  mode="widthFix"  data-id='{{index}}'/>
                 </swiper-item> 
               </block>
             </swiper>
@@ -47,9 +47,9 @@
   import { connect } from 'wepy-redux'
   import myWxs from '../filter/myWxs.wxs'
   import Touch from '../mixins/touch'
-  import {userSiginState} from '../config/api'
+  import {userSiginState,updateUserInfo} from '../config/api'
   import Login from '../components/login'
-  import {getPersonBookRack,delBookRack,userSignin} from '../config/getData'
+  import {getPersonBookRack,delBookRack,userSignin,recommendPosition} from '../config/getData'
     @connect({
         //state
     },
@@ -71,11 +71,7 @@
           mixins = [Touch]
           data ={
              days:[],
-              imgUrls: [
-                'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-                'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-                'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-                ],
+                recommendList: [],
                 indicatorDots: false,
                 autoplay: true,
                 interval: 2000,
@@ -85,9 +81,17 @@
                 page:1,
                 lastPage:1,
                 height:0,
-                isSignin:false
+                isSignin:false,
+                imgheights:0
             }
         methods = {
+             imageLoad (e) {//获取图片真实宽度  
+                var imgwidth = e.detail.width,
+                imgheight = e.detail.height,
+                ratio = imgwidth / imgheight;
+                var viewHeight = 750 / ratio;
+                this.imgheights=viewHeight
+            },
             handleClose(index){
                 this.items[index].isTouchMove=true
                 this.$apply()
@@ -127,6 +131,7 @@
                         wx.showToast({
                             title:"签到成功~"
                         })
+                        updateUserInfo()
                         this.isSignin=false
                         this.$apply()
                     }
@@ -149,12 +154,15 @@
               }
               this.initItems(this.items)
           }
-          onLoad(){
+        async  onLoad(){
             wx.getSystemInfo({
                 success:res=>{     
                     this.height=res.windowHeight
                 }
             })
+            let recommendList=await recommendPosition()
+            this.recommendList=recommendList
+            this.$apply()
              wx.request({
                 url:userSiginState,
                 header: {

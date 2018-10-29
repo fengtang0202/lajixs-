@@ -38,7 +38,7 @@
             moneyList:[
                 {img:'../images/zj.png',price:0,type:'金椒',gift:'每充值12元送一张金椒',width:40},
                 {img:'../images/mj.png',price:0,type:'小米椒',gift:'每日登陆小米椒+1,隔天清零,快去送给你喜欢的作者吧！',width:44},
-                {img:'../images/juan@3x.png',price:0,type:'辣椒劵',gift:'只用于作品订阅，阅读券优先于辣椒使用',width:38}
+                {img:'../images/juan@3x.png',price:0,type:'辣椒券',gift:'只用于作品订阅，阅读券优先于辣椒使用',width:38}
             ],
         }
         methods={

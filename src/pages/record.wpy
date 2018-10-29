@@ -140,7 +140,15 @@
             // }
         }
         onShow(){
-            
+            let userInfo=wx.getStorageSync("userInfo")
+            if(userInfo){
+                this.userId=userInfo.userId
+                this.getRecordList(getRechargeRecord,'RechargeRecord')
+                this.getRecordList(getSubscriptionRecord,'SubscriptionRecord')
+                this.getRecordList(getUserGoldenTicketRecord,'UserGoldenTicketRecord')
+                this.getRecordList(getSpicyirewardticketlogByUserId,'SpicyirewardticketlogByUserId')
+                this.getRecordList(getUserRecommendTicketRecord,'UserRecommendTicketRecord')
+            } 
         }
         async getRecordList(ajax,dataList,page=1){
             let data=await ajax(this.userId,page)
@@ -156,15 +164,6 @@
                     this.$apply()
                 }
             })
-            let userInfo=wx.getStorageSync("userInfo")
-            if(userInfo){
-                this.userId=userInfo.userId
-                this.getRecordList(getRechargeRecord,'RechargeRecord')
-                this.getRecordList(getSubscriptionRecord,'SubscriptionRecord')
-                this.getRecordList(getUserGoldenTicketRecord,'UserGoldenTicketRecord')
-                this.getRecordList(getSpicyirewardticketlogByUserId,'SpicyirewardticketlogByUserId')
-                this.getRecordList(getUserRecommendTicketRecord,'UserRecommendTicketRecord')
-            }
         }
     }
 </script>

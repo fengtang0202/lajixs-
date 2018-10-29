@@ -1,5 +1,6 @@
 <template>
     <scroll-view style="height:100vh" scroll-y>
+    <!-- <view> -->
     <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}} ReadHistoryItem" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{items}}" wx:key="">
       <view class="content" style="font-size:28rpx">
         <view bindtap="handleGo({{item.chapterId}},{{item.bookId}})" style="float:left;margin-left:28rpx">
@@ -15,6 +16,7 @@
       </view>
       <van-toast id="van-toast" />
     </scroll-view>
+    <!-- </view> -->
 </template>
 <script>
 import wepy from 'wepy'
@@ -49,7 +51,6 @@ export default class ReadHistory extends wepy.page {
             this.$apply()
             }
         })
-
       },
       handleGo(chapterId,bookId){
          wx.navigateTo({
@@ -66,6 +67,17 @@ export default class ReadHistory extends wepy.page {
     })
     this.initItems(this.items)
   }
+  // onPullDownRefresh() {
+  //   wx.showNavigationBarLoading() //在标题栏中显示加载
+  //   setTimeout(function () {
+  //   // complete
+  //   wx.hideNavigationBarLoading() //完成停止加载
+  //   wx.stopPullDownRefresh() //停止下拉刷新
+  //   }, 1500);
+  // }
+  // onReachBottom(){
+  //   console.log(111)
+  // }
 }
   </script>
   <style lang="less" scoped>

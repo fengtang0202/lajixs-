@@ -12,7 +12,7 @@
                    <van-icon name="like" color="#F77583"/>
                    <text>已关注</text>
                 </view>
-                 <view wx:if="{{is==1}}" style="width:{{item.isfollow==0?'140':'160'}}rpx;"  class="fllow_btn"  bindtap="handleFans({{index}},{{item}})">
+                 <view wx:if="{{is==1&&item.userId!=userId}}" style="width:{{item.isfollow==0?'140':'160'}}rpx;"  class="fllow_btn"  bindtap="handleFans({{index}},{{item}})">
                    <van-icon wx:if="{{item.isfollow==0||!item.isfollow}}" name="like-o"  color="#F77583"/>
                    <van-icon wx:if="{{item.isfollow==1}}" name="like" color="#F77583"/> 
                    <text>{{item.isfollow==1?'已关注':'关注'}}</text>
@@ -37,6 +37,9 @@
         }
         wxs={
            myWxs 
+        }
+        data={
+            userId:0
         }
         methods={
             handleCancel(index,followId,userId){
@@ -69,6 +72,12 @@
                 wx.navigateTo({
                     url:"userCenter?userId="+id
                 })
+            }
+        }
+        onLoad(){
+            if(wx.getStorageSync('userInfo')){
+                this.userId=wx.getStorageSync('userInfo').userId
+                this.$apply()
             }
         }
     }

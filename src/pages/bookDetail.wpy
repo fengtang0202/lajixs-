@@ -305,13 +305,13 @@
         },
         handleReward(index){
             if(wx.getStorageSync('userInfo')){
+                if((wx.getStorageSync('userInfo').userPhone=='0'||wx.getStorageSync('userInfo').userPhone=='9527')&&index==1){
+                    this.$invoke('BindPhone','onClose')
+                    return;
+                }
                 if(index==1||index==2){
-                    if(wx.getStorageSync('userInfo').userPhone!='9527'){
                         this.currentTab=index
                         this.$invoke('RiceChilli','onClose',index-1)
-                    }else{
-                        this.$invoke('BindPhone','onClose')
-                    }
                 }else{
                     this.$invoke('Pepper','onClose')
                 }

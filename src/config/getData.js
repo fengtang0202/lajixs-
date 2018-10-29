@@ -16,9 +16,11 @@ const login = (userName, pwd, terminal=3) => {
         }
     })
 }
-const loginOut=post({
-    url:api.login_out
-})
+const loginOut=()=>{
+    return post({
+     url: api.login_out
+   })
+}
 const getNewBooks=(page,size)=>{
     return get({url:`${api.new_book}${page}/${size}`},true)
 }
@@ -527,6 +529,14 @@ const bindPhone = userPhone => {
         }
     })
 }
+const recommendPosition = (version=2.0)=>{
+    return post({
+        url:api.get_book_rack_recommend,
+        params:{
+           version: version
+        }
+    })
+}
 module.exports = {
     login,
     loginOut,
@@ -596,5 +606,6 @@ module.exports = {
     checkPhone,
     getVerification,
     checkCode,
-    bindPhone
+    bindPhone,
+    recommendPosition
 }

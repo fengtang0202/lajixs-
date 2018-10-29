@@ -14,15 +14,15 @@
 </template>
 <script>
     import wepy from 'wepy'
-    import {getBookInfo,share} from '../config/getData'
+    import {getBookInfo,share,updateUserInfo} from '../config/getData'
     
     export default class Coupon extends wepy.page{
         config={
-            navigationBarTitleText:"邀请领劵"
+            navigationBarTitleText:"邀请领券"
         }
         data={
             ticks:[
-                {tickName:'邀请好友',gift:'分享+10辣椒券，好友注册回礼+20辣椒券',btnName:'去邀请'}
+                {tickName:'邀请好友',gift:'分享+5辣椒券，好友注册回礼+10辣椒券',btnName:'去邀请'}
             ],
             bookId:0,
             bookInfo:{}   
@@ -37,7 +37,9 @@
     　　　　 imageUrl:this.bookInfo.bookImage, 
             success:res=>{
               share.then(res=>{
-                  console.log(res)    
+                  if(res){
+                      updateUserInfo()
+                  }   
               })
             },
             fail:res=>{

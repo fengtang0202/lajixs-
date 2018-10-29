@@ -99,7 +99,10 @@ import Toast from '../lib/vant/toast/toast'
                         if(isCode){
                          let isPhone =await bindPhone(this.phone)
                           if(isPhone){
-                            Toast('绑定成功~')  
+                            Toast('绑定成功~')
+                            let userInfo=wx.getStorageSync('userInfo')
+                            userInfo.userPhone=this.phone
+                            wx.setStorageSync("userInfo",userInfo) 
                           }else{
                             Toast('绑定失败,请重试~') 
                           }

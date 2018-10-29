@@ -5,7 +5,7 @@
             <view style="padding:25rpx">
                 <view style="height:139rpx;color:#fff;font-size:25rpx;">
                     <view style="line-height:139rpx;float:left">您的余额:{{pepper}}</view>
-                    <view style="float:right;margin-top:44rpx;width:178rpx;height:51rpx;background:#F77583;border-radius:31px;line-height:51rpx;text-align:center;">充值</view>
+                    <view bindtap="handleGo" style="float:right;margin-top:44rpx;width:178rpx;height:51rpx;background:#F77583;border-radius:31px;line-height:51rpx;text-align:center;">充值</view>
                 </view>
                 <view style='width:100%;height:127rpx;position:relative;font-size:25rpx;color:#999'>                
                     <textarea  fixed="{{textFixed}}" value="{{greet}}" bindinput="handleInput" maxlength="100"  style="box-sizing:border-box;padding:13rpx;width:100%;height:100%;background:#fff;border-radius:7rpx;" placeholder="么么哒~" placeholder-style="color:#999"/>
@@ -46,6 +46,12 @@
             textFixed:true
         }
         methods={
+            handleGo(){
+                wx.navigateTo({
+                    url:'accountRecharge'
+                })
+                this.pepperShow=false
+            },
             handleChangePepper(item,index){
               this.activeIndex=index
               this.pepperCount=item.num

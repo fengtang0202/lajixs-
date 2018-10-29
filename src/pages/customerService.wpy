@@ -1,16 +1,31 @@
 <template>
-    <view>客服</view>
+<view class="box">
+    <image  bindtap="previewImage" src='../images/erweima@2x.png' style="width:430rpx;height:430rpx;" />
+    <view style="font-size:36rpx;">打开微信搜索“辣鸡小说”</view>
+    <view  style="font-size:32rpx;margin-top:32rpx;">
+        <view>保存二维码识别关注辣鸡小说</view>
+        <view>公众号可直接咨询您想要了解的</view>
+        <view>问题哦！</view>
+    </view>
+</view>
 </template>
 <script>
     import wepy from 'wepy'
     export default class CustomerService extends wepy.page{
         config = {
-            navigationBarTitleText:"客服",
+            navigationBarTitleText:"联系我们",
             usingComponents:{
             }
         }
         data = {
 
+        }
+        methods={
+            previewImage(){
+                wx.previewImage({
+                    urls:["https://www.lajixs.com/erweima@2x.png"]
+                })
+            }
         }
         onLoad(){
 
@@ -18,5 +33,13 @@
     }
 </script>
 <style lang="less" scoped>
-
+    .box{
+        width:608rpx;
+        height:754rpx;
+        border-radius:14rpx;
+        border:2rpx solid #FB5E6F;
+        position: relative;
+        margin:58rpx auto;
+        text-align:center;
+    }
 </style>

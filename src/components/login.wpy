@@ -3,14 +3,14 @@
        <view style="position:absolute;height:450rpx;top:20%;">
          <view class='login_wrap'>
              <view class='wq'>
-                 <veiw>
+                 <veiw style="margin:0 auto">
                   <button class="login_btn"  open-type="getUserInfo" bindgetuserinfo="handleUserLogin"><image class='btn_img' src="../images/wxlogin.png"/></button> 
                   <text style="font-size:24rpx;">微信登录</text>  
                 </veiw>
-                <view>
+                <!-- <view>
                <button class="login_btn"><image class='btn_img' src="../images/qqlogin.png"/></button> 
                   <text style="font-size:24rpx;">QQ登录</text>  
-                </view>
+                </view> -->
             </view>
             <view class='qt' catchtap="handleGoUserLogin">
                 其他方式登录>>

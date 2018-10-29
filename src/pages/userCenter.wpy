@@ -2,8 +2,8 @@
     <view class='userCenter'>
         <view class='userInfo'>
             <view style="height:160rpx;">
-                <image  style='margin-left:288rpx;margin-right:130rpx;vertical-align:middle;height:160rpx;width:160rpx;border-radius:50%' src="{{PersonInfo.userHeadPortraitURL}}"/>
-                <view bindtap="handleFllow" style="text-align:center;display:inline-block;width:68rpx;height:68rpx;border-radius:50%;background:#fff;line-height:80rpx;">
+                <image   bindtap="previewImage" style='margin-left:288rpx;margin-right:130rpx;vertical-align:middle;height:160rpx;width:160rpx;border-radius:50%' src="{{PersonInfo.userHeadPortraitURL}}"/>
+                <view wx:if="{{userId!=myUserId}}" bindtap="handleFllow" style="text-align:center;display:inline-block;width:68rpx;height:68rpx;border-radius:50%;background:#fff;line-height:80rpx;">
                   <van-icon wx:if="{{isfllow==0||!isfllow}}" name="like-o"  color="#F77583"/>
                   <van-icon wx:if="{{isfllow==1}}" name="like" color="#F77583"/>
                 </view>
@@ -75,6 +75,7 @@ export default  class UserCenter extends wepy.page{
     }
     data={
         userId:0,
+        myUserId:0,
         PersonInfo:{},
         dz:false,
         fllow:0,
@@ -91,6 +92,11 @@ export default  class UserCenter extends wepy.page{
         isShowBookName:true
     }
     methods={
+        previewImage(){
+            wx.previewImage({
+                urls:[this.PersonInfo.userHeadPortraitURL]
+            })
+        },
         handleFllow(){
             if(wx.getStorageSync('userInfo')){
                 if(this.isfllow==0){
@@ -129,6 +135,10 @@ export default  class UserCenter extends wepy.page{
     }
     onLoad(ops){
         this.userId=ops.userId
+       if(wx.getStorageSync('userInfo')){
+                this.myUserId=wx.getStorageSync('userInfo').userId
+                this.$apply()
+        }
         wx.setNavigationBarColor({
           frontColor:'#ffffff',
           backgroundColor:'#F55968'
