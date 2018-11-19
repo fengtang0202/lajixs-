@@ -15,10 +15,13 @@
 <script>
     import wepy from 'wepy'
     import {getBookInfo,share,updateUserInfo} from '../config/getData'
-    
+    import Toast from '../lib/vant/toast/toast'    
     export default class Coupon extends wepy.page{
         config={
-            navigationBarTitleText:"邀请领券"
+            navigationBarTitleText:"邀请领券",
+            usingComponents:{
+               "van-toast": "../lib/vant/toast/index",
+            }
         }
         data={
             ticks:[
@@ -36,10 +39,10 @@
     　　　　 path: '/pages/share?bookId='+this.bookId+'&type=1&userCode=LGYQ001'+wx.getStorageSync('userInfo').userId,
     　　　　 imageUrl:this.bookInfo.bookImage, 
             success:res=>{
-              share.then(res=>{
-                  if(res){
-                      updateUserInfo()
-                  }   
+              share().then(res=>{
+                if(res){
+                    updateUserInfo()
+                }
               })
             },
             fail:res=>{

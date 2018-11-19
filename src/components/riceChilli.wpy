@@ -71,6 +71,7 @@
                 this.min=userInfo.userRecommendTicket-this.minCount
                 userInfo.userRecommendTicket=this.min
                 wx.setStorageSync("userInfo",userInfo)
+                this.Riceshow=false
                 this.$apply()
             }else{
                 Toast('小米椒不足~')

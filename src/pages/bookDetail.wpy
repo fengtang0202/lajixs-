@@ -2,7 +2,7 @@
      <view style="padding-bottom:98rpx;">
          <scroll-view scroll-y>
                 <view class='bookInfo_header'>
-                   <image style='width:100%;height:400rpx; filter: blur(12rpx);' src="{{bookInfo.bookListInfo.bookImage}}"/>
+                   <image style='width:100%;height:400rpx;filter:blur(12rpx);' src="{{bookInfo.bookListInfo.bookImage}}"/>
                    <view class='book_detail'>
                        <view class='bookName'>
                          {{bookName}}

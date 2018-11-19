@@ -1,5 +1,5 @@
-// let host=`https://www.lajixs.com`
-let host = `http://192.168.0.136:8081`
+let host=`https://www.lajixs.com`
+// let host = `http://192.168.0.136:8081`
 // 用户中心
 const login = `${host}/api/person-login`
 const login_out = `${host}/api/person-ClearUserInfo`
@@ -19,7 +19,7 @@ const check_code = `${host}/api/verification/person-checkedCode`
 const register_code = `${host}/api/verification/sys-getShortMessage`
 //小程序登录api
 const wxCode = `${host}/api/getWeChartLoginInfo`
-const wxLogin = `${host}/api/person-LaJiXiaoShuoAppWeChatLogin`
+const wxLogin = `${host}/api/person-laJiXiaoShuoSmallProgramWeChatLogin`
 //用户打赏
 const RecommendationTicket = `${host}/api/user-RecommendationTicket`
 const RewardGonderTicket = `${host}/api/user-RewardGonderTicket`
@@ -114,6 +114,8 @@ const checkPhone = `${host}/api/person-checkNickPhone/`
 const getVerification = `${host}/api/verification/sys-getShortMessage`
 const checkCode = `${host}/api/verification/person-checkedCode`
 const bindPhone = `${host}/api/person-updateInfo`
+//获取作者信息
+const getAuthorInfo = `${host}/api/getAuthorInfoBySimplify`
 module.exports = {
   login,
   get_user_info,
@@ -207,5 +209,6 @@ module.exports = {
   checkPhone,
   getVerification,
   bindPhone,
-  checkCode
+  checkCode,
+  getAuthorInfo
 }

@@ -39,6 +39,14 @@
                 <view class="del" catchtap="del" data-id="{{item.id}}" data-index="{{index}}">删除</view>
                 </view>
           </view>
+          <view wx:if="{{showNoBook}}" class='noBook'>  
+                  <image src="../images/nobookReack.png" style="width:260rpx;height:264rpx;" />
+                 <view style="font-size:24rpx;">暂无书籍哦～</view>
+                 <button class='addBook' bindtap='handleGoIndex'>
+                     <image src='../images/addBook.png' style="margin-right:8rpx;width:32rpx;height:32rpx;vertical-align:middle" />
+                    <text style="color:#F77583;font-size:32rpx">加点新书吧</text>
+                 </button>
+          </view>
           <Login></Login>
     </scroll-view>
 </template>
@@ -47,9 +55,9 @@
   import { connect } from 'wepy-redux'
   import myWxs from '../filter/myWxs.wxs'
   import Touch from '../mixins/touch'
-  import {userSiginState,updateUserInfo} from '../config/api'
+  import {userSiginState} from '../config/api'
   import Login from '../components/login'
-  import {getPersonBookRack,delBookRack,userSignin,recommendPosition} from '../config/getData'
+  import {getPersonBookRack,updateUserInfo,delBookRack,userSignin,recommendPosition} from '../config/getData'
     @connect({
         //state
     },
@@ -82,9 +90,28 @@
                 lastPage:1,
                 height:0,
                 isSignin:false,
-                imgheights:0
+                imgheights:0,
+                showNoBook:true
             }
+         events={
+            "reload":()=>{
+                let userInfo=wx.getStorageSync('userInfo')
+                getPersonBookRack(this.page,userInfo.userId).then(data=>{
+                    if(data){
+                        this.items=data.list
+                        this.lastPage=data.pages
+                        this.$apply()
+                    } 
+                })
+                this.fistSign() 
+            }
+         }   
         methods = {
+            handleGoIndex(){
+                wx.switchTab({
+                    url:'index'
+                })  
+            },
              imageLoad (e) {//获取图片真实宽度  
                 var imgwidth = e.detail.width,
                 imgheight = e.detail.height,
@@ -101,6 +128,9 @@
               delBookRack(bookId).then(data=>{
                   if(data==1){
                       this.items.splice(e.currentTarget.dataset.index, 1)
+                      if(this.items.length==0){
+                          this.showNoBook=true
+                      }
                       this.$apply()
                       wx.showToast({
                           title:'删除成功~'
@@ -143,27 +173,26 @@
               if(userInfo){
                   getPersonBookRack(this.page,userInfo.userId).then(data=>{
                     if(data){
+                        if(data.list.length>0){
+                            this.showNoBook=false
+                        }
                         this.items=data.list
                         this.lastPage=data.pages
                         this.$apply()
-                    } 
+                    }
+                    // else{
+                    //  this.$invoke('Login', 'onClose')
+                    // } 
                 })
               }else{
-                
                 this.items=[] 
+                // this.$invoke('Login', 'onClose')
               }
               this.initItems(this.items)
+              this.fistSign()
           }
-        async  onLoad(){
-            wx.getSystemInfo({
-                success:res=>{     
-                    this.height=res.windowHeight
-                }
-            })
-            let recommendList=await recommendPosition()
-            this.recommendList=recommendList
-            this.$apply()
-             wx.request({
+          fistSign(){
+               wx.request({
                 url:userSiginState,
                 header: {
                     'Content-Type': 'application/json',
@@ -174,6 +203,8 @@
                     if(data.returnCode==400){
                         wx.removeStorageSync("userInfo")
                         wx.removeStorageSync("cookie")
+                        this.isSignin=false
+                        this.$apply()
                     }
                     if(data.returnCode==700){
                         this.isSignin=true
@@ -182,6 +213,16 @@
                     }
                 }
              })
+          }
+        async  onLoad(){
+            wx.getSystemInfo({
+                success:res=>{     
+                    this.height=res.windowHeight
+                }
+            })
+            let recommendList=await recommendPosition()
+            this.recommendList=recommendList
+            this.$apply()
           }
   }
 </script>
@@ -240,18 +281,19 @@ view{
     margin-bottom:38rpx;
     float:left;
  }
- .addBook{
-     width:208rpx;
-     height:272rpx;
-     border:4rpx dotted #FF8E8E;
-     box-sizing: border-box;
-     float:left;
-     border-radius: 10rpx;
-     text-align:center;
-     image{
-         width:164rpx;
-         height:164rpx;
-         margin-top:54rpx;
-     }
+.noBook{
+    text-align:center;
+    margin-top:152rpx;
+    color:#F77583;
+}
+.addBook{
+    width:240rpx;
+    height:76rpx;
+    background:rgba(255,255,255,1);
+    border-radius:40rpx;
+    border:2rpx solid #FFA9B2;
+    margin:0 auto;
+    line-height:70rpx;
+    margin-top:54rpx;
 }
 </style>

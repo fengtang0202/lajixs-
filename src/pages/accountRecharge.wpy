@@ -31,7 +31,7 @@
 import wepy from 'wepy'
 import FirstGift from '../components/firstGift'
 import Login from '../components/login'
-import {wechatPay,firstPay} from '../config/getData'
+import {wechatPay,firstPay,updateUserInfo} from '../config/getData'
 export default class AccountRecharge extends wepy.page{
     config={
         navigationBarTitleText:'账户充值'
@@ -39,7 +39,7 @@ export default class AccountRecharge extends wepy.page{
     data={
          payCategoryList:[
            {price:6,gift:600},
-           {price:12,gift:600},
+           {price:12,gift:1200},
            {price:30,gift:3000},
            {price:50,gift:5000},
            {price:98,gift:9800},
@@ -78,9 +78,10 @@ export default class AccountRecharge extends wepy.page{
                         }else{
                             this.userMoney=this.userInfo.userMoney+price*100
                         }
-                        this.userInfo.userMoney=this.userMoney
                         this.$apply()
-                        wx.setStorageSync("userInfo",this.userInfo)
+                        // this.userInfo.userMoney=this.userMoney
+                        // wx.setStorageSync("userInfo",this.userInfo)
+                        updateUserInfo()
                         wx.navigateTo({
                             url:'cashCard'
                         })

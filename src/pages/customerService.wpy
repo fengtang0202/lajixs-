@@ -1,6 +1,6 @@
 <template>
 <view class="box">
-    <image  bindtap="previewImage" src='../images/erweima@2x.png' style="width:430rpx;height:430rpx;" />
+    <image  bindtap="previewImage" src='https://www.lajixs.com/erweima@2x.png' style="width:430rpx;height:430rpx;" />
     <view style="font-size:36rpx;">打开微信搜索“辣鸡小说”</view>
     <view  style="font-size:32rpx;margin-top:32rpx;">
         <view>保存二维码识别关注辣鸡小说</view>

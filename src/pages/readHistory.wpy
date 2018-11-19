@@ -15,6 +15,7 @@
       <view class="del" catchtap="del" data-index="{{index}}">删除</view>
       </view>
       <van-toast id="van-toast" />
+      <NoData wx:if='{{showData}}' msg="还没有阅读记录~"></NoData>
     </scroll-view>
     <!-- </view> -->
 </template>
@@ -22,12 +23,14 @@
 import wepy from 'wepy'
 import Touch from '../mixins/touch'
 import myWxs from '../filter/myWxs.wxs'
-import Toast from '../lib/vant/toast/toast';
+import Toast from '../lib/vant/toast/toast'
+import NoData from '../components/noData'
 import {getBookReadHistory,delBookReadHistory} from '../config/getData'
 export default class ReadHistory extends wepy.page {
     data={
         page:1,
-        lastPage:1
+        lastPage:1,
+        showData:true
     }
   config = {
     navigationBarTitleText: '阅读记录',
@@ -36,7 +39,7 @@ export default class ReadHistory extends wepy.page {
     }
   }
   components = {
-
+    NoData
   }
   wxs={
     myWxs
@@ -62,6 +65,7 @@ export default class ReadHistory extends wepy.page {
   onShow(){
     let userInfo=wx.getStorageSync('userInfo')
     getBookReadHistory(userInfo.userId,1).then(data=>{
+        this.showData=false
         this.items=data.list
         this.$apply()
     })

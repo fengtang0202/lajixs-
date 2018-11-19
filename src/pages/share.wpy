@@ -2,18 +2,18 @@
    <view class="share">
        <image class="ShareBg" src="https://www.lajixs.com/shareBg.png"/>
         <view class="info">
-            <image wx:if="{{type==1}}" style="width:497rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="../images/InviteTitle.png"/>
-            <image wx:if="{{type==2}}" style="width:553rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="../images/shareTitle.png"/>            
+            <image wx:if="{{a==1}}" style="width:497rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="../images/InviteTitle.png"/>
+            <image wx:if="{{a==2}}" style="width:553rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="../images/shareTitle.png"/>            
             <view class="box authorMessage">
                 <view style="padding-left:70rpx">
-                  {{type==1?'我最近在追这本小说，来了解一下？':'实不相瞒，我其实是个深藏不露的小说作者。'}}
+                  {{a==1?'我最近在追这本小说，来了解一下？':'实不相瞒，我其实是个深藏不露的小说作者。'}}
                 </view>
                 <view style="text-align:right;margin-top:47rpx">——{{bookInfo.writerName}}</view>
             </view>
             <image class="authorHeader" src="../images/shareHead.png"/>
             <view style="text-align:center;margin-bottom:60rpx">
-                <image wx:if="{{type==1}}" src="../images/InviteCenterTitle.png" style="width:320rpx;height:33rpx"/>                
-                <image wx:if="{{type==2}}" src="../images/shareCenterTitle.png" style="width:230rpx;height:33rpx"/>
+                <image wx:if="{{a==1}}" src="../images/InviteCenterTitle.png" style="width:320rpx;height:33rpx"/>                
+                <image wx:if="{{a==2}}" src="../images/shareCenterTitle.png" style="width:230rpx;height:33rpx"/>
             </view>
             <view  style="display:flex;flex-direction:row;">
                 <view>
@@ -92,12 +92,21 @@
             chapterId:0,
             collectionStatus:0,
             //1=>邀请 2=>分享
-            type:1
+            a:1
         }
         mixins=[book]
         components={
             commentItem,
             Login
+        }
+        events={
+            async reload(){
+                let book =await getBookInfo(this.bookId)
+                this.collectionStatus=book.bookListInfo.collectionStatus
+                let  commentList=await getNewComments(this.bookId,1)
+                this.commentList=commentList.list
+                this.$apply()
+            }
         }
         async getBookChapterId(){
             if(wx.getStorageSync('userInfo')){
@@ -153,10 +162,7 @@
                 this.handleAddBookRack()
             }
         }
-       async onLoad(ops){
-            this.bookId=ops.bookId
-            this.type=ops.type
-            this.$parent.globalData.userCode=ops.userCode||"LG20180608000"
+       async onShow(){
             let book =await getBookInfo(this.bookId)
             this.collectionStatus=book.bookListInfo.collectionStatus
             this.bookInfo=book.bookListInfo
@@ -166,6 +172,11 @@
             let  commentList=await getNewComments(this.bookId,1)
             this.commentList=commentList.list
             this.$apply()
+        }
+       async onLoad(ops){
+            this.bookId=ops.bookId
+            this.a=ops.type
+            this.$parent.globalData.userCode=ops.userCode||"LG20180608000"
         }
     }
 </script>

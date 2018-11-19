@@ -32,6 +32,7 @@
                         </view>
                     </view>
                     </block>
+                    <NoData wx:if="{{isShowComment}}" msg="还没有评论~"></NoData>
                 </scroll-view>
             </swiper-item>
             <swiper-item>
@@ -40,7 +41,7 @@
                     <view class='tz'>
                         <view style="margin-bottom:40rpx;">
                             <text style='font-size:32rpx;'>{{item.title}}</text>
-                            <text style='font-size:20rpx;color:#999999;margin-left:260rpx'>{{myWxs.getToString(item.dateTimes,'-')}}</text>
+                            <text style='font-size:20rpx;color:#999999;margin-left:160rpx'>{{myWxs.getToString(item.dateTimes,'-')}}</text>
                         </view>
                         <view style='font-size:24rpx;color:#666666;line-height:40rpx'>
                             {{item.messageContent}}
@@ -57,6 +58,7 @@
     import {connect} from "wepy-redux"
     import {getUserReplyInfo,getSystemMsg} from '../config/getData'
     import myWxs from '../filter/myWxs.wxs'
+    import NoData from '../components/noData'
     @connect({
         //state
     },
@@ -72,6 +74,9 @@
       wxs={
           myWxs
       }
+      components={
+          NoData
+      }
       data={
           active:0,
           currentTab:0,
@@ -79,7 +84,8 @@
           page:1,
           lastPage:1,
           ReplyList:[],
-          sysMsgList:[]
+          sysMsgList:[],
+          isShowComment:true
       }
       methods = {
         handleSwitch(key){
@@ -111,6 +117,9 @@
           if(userInfo){
               getUserReplyInfo(userInfo.userId,this.page).then(data=>{
                   if(data){
+                      if(data.list.length!=0){
+                          this.isShowComment=false
+                      }
                       this.ReplyList=data.list
                       this.lastPage=data.pages
                       this.$apply()

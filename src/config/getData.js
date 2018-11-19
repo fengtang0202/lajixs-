@@ -6,7 +6,7 @@ const getHomePageBooks = get({url:api.homePageRecommended},true)
 const getBookClass=get({url:api.get_label},true)
 
 const getFreeBook=get({url:api.book_freetime},true)
-const login = (userName, pwd, terminal=3) => {
+const login = (userName, pwd, terminal=5) => {
     return post({
         url:api.login,
         params:{
@@ -104,7 +104,7 @@ const getAppid = (code) => {
     return get({
         url:api.wxCode,
         params:{
-            code:code
+            code:code,
         }
     })
 }
@@ -454,10 +454,7 @@ const isBookRack=bookId=>{
 }
 const getCommentCount=bookId=>{
     return get({
-      url: api.commentCount,
-      params:{
-          bookId:bookId
-      }
+      url: api.commentCount+bookId,
     })
 }
 const delComment=(id,type=0)=>{
@@ -484,7 +481,11 @@ const updateTask = (userId,id,param) => {
          }
     })
 }
-const share = get({url: api.shareApi},false)
+const share = ()=>{
+   return get({
+        url: api.shareApi
+    },false)
+}
 const wechatPay = (openId,nickName,howmuch, channelId = 'LG20180608000', rechargeChannelId = 'LG20180608000') => {
         return post({
             url:api.wechatPay,
@@ -534,6 +535,14 @@ const recommendPosition = (version=2.0)=>{
         url:api.get_book_rack_recommend,
         params:{
            version: version
+        }
+    })
+}
+const getAuthorInfo=(bookId)=>{
+    return post({
+        url: api.getAuthorInfo,
+        params:{
+            bookId:bookId
         }
     })
 }
@@ -607,5 +616,6 @@ module.exports = {
     getVerification,
     checkCode,
     bindPhone,
-    recommendPosition
+    recommendPosition,
+    getAuthorInfo
 }

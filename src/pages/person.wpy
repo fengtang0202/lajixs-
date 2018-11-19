@@ -42,7 +42,7 @@
            <van-cell title="我的消息"  is-link url="message">
                <image slot="icon" class='list_nav' src="../images/mymessage.png"/>
            </van-cell>
-           <van-cell title="我的消息"  is-link url="customerService">
+           <van-cell title="联系客服"  is-link url="customerService">
                <image slot="icon" class='list_nav' src="../images/lxkf.png"/>
            </van-cell>
         </van-cell-group>
@@ -108,6 +108,8 @@
                     mask: true
                 })
                 this.userInfo={}
+                this.fans=0
+                this.fllow=0
                 this.showLogin=false 
                 this.$apply()
             } 

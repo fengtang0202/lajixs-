@@ -14,7 +14,7 @@
                 </view>
                 <view class='input_box' style="margin-top:24rpx">
                     <input  bindinput="handleVerification" type="text" style="width:230rpx;height:100%;padding-left:20rpx" placeholder='请输入验证码' />
-                    <button class='getYzm' bindtap="handleGet">{{code}}</button>
+                    <button class='getYzm' disabled="{{isOvertime}}" bindtap="handleGet">{{code}}</button>
                 </view>
                 <view style="text-align:center;margin-top:60rpx">
                     <button class='ok' bindtap="handleSubmit">确定</button>
@@ -25,7 +25,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import {checkPhone,getVerification,bindPhone,checkCode} from '../config/getData'
+import {checkPhone,getVerification,bindPhone,checkCode,updateUserInfo} from '../config/getData'
 import Toast from '../lib/vant/toast/toast'
    export default class BindPhone extends wepy.component{
        data={
@@ -100,9 +100,12 @@ import Toast from '../lib/vant/toast/toast'
                          let isPhone =await bindPhone(this.phone)
                           if(isPhone){
                             Toast('绑定成功~')
-                            let userInfo=wx.getStorageSync('userInfo')
-                            userInfo.userPhone=this.phone
-                            wx.setStorageSync("userInfo",userInfo) 
+                            // let userInfo=wx.getStorageSync('userInfo')
+                            // userInfo.userPhone=this.phone
+                            // wx.setStorageSync("userInfo",userInfo)
+                            updateUserInfo()
+                            this.show=false
+                            this.$apply()
                           }else{
                             Toast('绑定失败,请重试~') 
                           }
@@ -199,6 +202,9 @@ import Toast from '../lib/vant/toast/toast'
     color:#fff;
     font-size:24rpx;
     margin-top:8rpx;
+}
+.getYzm:after{
+    border:none;
 }
 .ok{
     width:320rpx;

@@ -5,10 +5,10 @@
       <view class='chapter' style="color:{{fontColor}};font-size:{{48*fontSize>54&&54}}rpx"> {{chapterName}}</view>
       <view wx:for="{{bookContent}}" style="color:{{fontColor}};font-size:{{32*fontSize}}rpx" wx:key="{{index}}" class='bookContent' >{{item}}</view>
       <view wx:if="{{show}}" class='authorWords' >
-        <image  style="float:left;width:44rpx;height:44rpx;border-radius:50%;margin-right:20rpx"/>
-        <view style="float:left;font-size:26rpx;width:480rpx">
+        <image src="{{authorHeadImg}}" style="width:44rpx;height:44rpx;border-radius:50%;margin-right:20rpx"/>
+        <view style="font-size:26rpx;width:480rpx;line-height:1.6;">
           <view style="margin-bottom:14rpx;">{{writerName}}</view>
-          <view style="color:#999;">{{myWxs.strSlice(writerMessage,30)}}</view>
+          <view style="color:#999;">{{writerMessage}}</view>
         </view>
         <image src="../images/authorSaid.png" class="authorImg"/>
       </view>
@@ -96,11 +96,12 @@
     import Directory from '../components/directory'
     import RiceChilli from '../components/riceChilli'
     import Pepper from '../components/pepper'
-    import {isBookRack,getVolume,addBookReadHistroy,CheckSubscribe,subscribe,updateUserInfo} from '../config/getData'
+    import {getAuthorInfo,isBookRack,getVolume,addBookReadHistroy,CheckSubscribe,subscribe,updateUserInfo} from '../config/getData'
     import {bookRead} from '../config/api'
     import Login from '../components/login'
     import Book from '../mixins/book'
     import BindPhone from '../components/bindPhone'
+    import myWxs from '../filter/myWxs.wxs'
     export default class BookRead extends wepy.page{
          config = {
           navigationBarTitleText: '',
@@ -153,9 +154,14 @@
             collectionStatus:0,
             writerName:'',
             writerMessage:'',
-            areaCode:86
+            areaCode:86,
+            authorInfo:{},
+            authorHeadImg:''
         }
         mixins=[Book]
+        wxs={
+          myWxs
+        }
         events={
           'handleEx':(chapterId)=>{
             this.chapterId=chapterId
@@ -363,6 +369,7 @@
           this.writerName=data.bookInfo.writerName
           this.chapterPrice=data.chapterInfo.price 
           this.writerMessage=data.chapterInfo.authorWords
+          this.authorInfo.userId=data.chapterInfo.bookWriterId
           this.scrollTop==0?this.scrollTop=1:this.scrollTop=0
           let userInfo = wx.getStorageSync('userInfo')
           userInfo&&addBookReadHistroy(userInfo.pseudonym,this.bookId,this.bookName,this.chapterId,this.chapterName)
@@ -402,7 +409,7 @@
           this.checkBookRack()
         }
       }
-      onLoad(option){
+    async  onLoad(option){
         wx.getSystemInfo({
           success:res=>{     
              var query = wx.createSelectorQuery();
@@ -424,8 +431,12 @@
         })
         this.bookId=option.bookId
         this.chapterId=option.chapterId
-        this.getNowChapterId()  
-        this.getBookText()
+       await this.getNowChapterId()  
+       await this.getBookText()
+        getAuthorInfo(this.bookId).then(res=>{
+            this.authorHeadImg=res.authorInfo.authorHeadImg
+            this.$apply()
+        })
        }
     }
 </script>
@@ -456,7 +467,9 @@
   }
   .authorWords{
     width:620rpx;
-    height:192rpx;
+    display:flex;
+    flex-direction: row;
+    min-height:192rpx;
     border:2rpx solid #F4F5FA;
     background: #F7F8FA;
     border-radius:24rpx;

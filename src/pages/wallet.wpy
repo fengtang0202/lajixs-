@@ -26,6 +26,7 @@
 </template>
 <script>
     import wepy from 'wepy'
+    import {updateUserInfo} from '../config/getData'
     export default class Wallet extends wepy.page{
         config={
             navigationBarTitleText:"我的钱包",
@@ -48,7 +49,8 @@
                 })
             }
         }
-        onShow(){
+        async  onShow(){
+            await  updateUserInfo()   
             let userInfo=wx.getStorageSync("userInfo")
             if(userInfo){
                  this.userMoney=userInfo.userMoney
@@ -56,6 +58,10 @@
                  this.moneyList[1].price=userInfo.userRecommendTicket
                  this.moneyList[2].price=userInfo.userReadTicket
                  this.$apply()
+            }else{
+                this.moneyList[0].price=0
+                this.moneyList[1].price=0
+                this.moneyList[2].price=0  
             }
         }
         onLoad(){

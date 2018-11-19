@@ -28,6 +28,7 @@
                             </view>
                         </view>
                     </block>
+                  <noData wx:if='{{RechargeRecord.length==0}}' msg='暂无数据~'></noData>
                 </scroll-view>
             </swiper-item>
             <swiper-item>
@@ -45,6 +46,7 @@
                             <view style="font-size:28rpx">{{item.bookChapterName}}</view> 
                         </view>
                     </block>
+                  <noData wx:if='{{SubscriptionRecord.length==0}}' msg='暂无数据~'></noData>
                 </scroll-view>
             </swiper-item>
              <swiper-item>
@@ -62,6 +64,7 @@
                             <view style="font-size:28rpx">{{item.bookChapterName}}</view> 
                         </view>
                     </block>
+                  <noData wx:if='{{UserGoldenTicketRecord.length==0}}' msg='暂无数据~'></noData>
                 </scroll-view>
             </swiper-item>
              <swiper-item>
@@ -78,11 +81,12 @@
                             <view style="font-size:28rpx">{{item.bookName}}</view>
                         </view>
                     </block>
+                  <noData wx:if='{{showNoData}}' msg='暂无数据~'></noData>
                 </scroll-view>
             </swiper-item>
              <swiper-item>
                 <scroll-view scroll-y bindscrolltolower="loadMore(5)">
-                   <block wx:for="{{SpicyirewardticketlogByUserId}}" wx:key="{{index}}">
+                   <block wx:for="{{UserRecommendTicketRecord}}" wx:key="{{index}}">
                         <view class='item' style="height:146rpx;padding:0 28rpx">
                             <view style="overflow:hidden">
                                 <view style="font-size:32rpx;float:left">
@@ -94,6 +98,7 @@
                             <view style="font-size:28rpx">{{item.bookName}}</view>
                         </view>
                     </block>
+                  <noData wx:if='{{UserRecommendTicketRecord.length==0}}' msg='暂无数据~'></noData>
                 </scroll-view>
             </swiper-item>
         </swiper>
@@ -102,6 +107,7 @@
 <script>
     import wepy  from 'wepy'
     import myWxs from '../filter/myWxs.wxs'
+    import noData from '../components/noData'
     import {getRechargeRecord,getSubscriptionRecord,getUserGoldenTicketRecord,getSpicyirewardticketlogByUserId,getUserRecommendTicketRecord} from '../config/getData'
     export default class Record extends wepy.page{
         config={
@@ -117,7 +123,11 @@
             UserGoldenTicketRecord:[],
             SpicyirewardticketlogByUserId:[],
             UserRecommendTicketRecord:[],
-            userId:0
+            userId:0,
+            showNoData:true
+        }
+        components={
+            noData
         }
         wxs={
             myWxs

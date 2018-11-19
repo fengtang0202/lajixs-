@@ -2,11 +2,11 @@
 
 // 签名
 import wepy from 'wepy'
+import md5 from 'js-md5'
 function sign(signObj = {}) {
     // 自行加密
     return signObj
 }
-
 // GET请求
 function GET(requestHandler, isShowLoading) {
     return request('GET', sign(requestHandler), isShowLoading)
@@ -21,6 +21,9 @@ function request(method, requestHandler, isShowLoading = true) {
     // 加密
     let params = requestHandler.params
     isShowLoading && wx.showLoading && wx.showLoading({ title: '加载中...' })
+    var  phoneInfo = wx.getStorageSync('phoneInfo')
+    var uuid = wx.getStorageSync('uuid')
+    var timestr = parseInt(Date.parse(new Date()) / 180 / 1000)
     return new Promise((resolve, reject) => {
         wx.request({
             url: requestHandler.url,
@@ -28,8 +31,14 @@ function request(method, requestHandler, isShowLoading = true) {
             method: method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
             header: {
                 'Content-Type': method === 'POST' ? 'application/x-www-form-urlencoded' : 'application/json',
-                'Cookie': 'SESSION=' + wx.getStorageSync('cookie'),
-                'VisitType': 'WeChatApplet'
+                // 'Cookie': 'SESSION=' + wx.getStorageSync('cookie'),
+                'token': wx.getStorageSync('cookie'),
+                'VisitType': 'WeChatApplet',
+                'timestr': timestr,
+                "equipmentIdentification": wx.getStorageSync('uuid'),
+                "equipmentName": phoneInfo.equipmentName,
+                "equipmentType": phoneInfo.equipmentType,
+                'sign': md5(uuid+'#'+phoneInfo.equipmentName + "#" + phoneInfo.equipmentType + '#' +md5(uuid.substring(7, 25)) + "#" + timestr)
             },
             success: function (res) {
                 isShowLoading && wx.hideLoading && wx.hideLoading()

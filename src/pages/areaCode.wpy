@@ -1,5 +1,6 @@
 <template>
-    <scroll-view style="position:relative;height:100vh" scroll-y scroll-into-view="{{scorllId}}">
+    <view>
+    <scroll-view style="position:relative;height:99vh" scroll-y scroll-into-view="{{scorllId}}">
         <view wx:for="{{cityData}}" wx:key="{{index}}">
           <view id="{{item.name}}" class="{{item.name}}" style="height:72rpx;background:#efefef;font-size:32rpx;line-height:72rpx;">
               <text style="margin-left:28rpx">{{item.name}}</text>
@@ -9,10 +10,11 @@
               <view style="float:right;margin-right:70rpx;">+{{item.value}}</view>
           </view>
         </view>
+    </scroll-view>
         <view class="nav">
             <view wx:for="{{nav}}"  catchtap="handleScorll({{item}})" wx:key="{{index}}">{{item}}</view>
         </view>
-    </scroll-view>
+    </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -30,7 +32,7 @@ export default class AreaCode extends wepy.page{
     methods = {
         handleBindPhone(value){
             var pages = getCurrentPages();
-            // wx.navigateBack()
+            console.log(pages)
             this.$apply()
         },
         handleScorll(id){
@@ -40,12 +42,12 @@ export default class AreaCode extends wepy.page{
     }
     onLoad(){
         this.cityData=cityData
-        var query = wx.createSelectorQuery();
-        setTimeout(() => {
-            query.select('.C').boundingClientRect(rect=>{
-                console.log(rect)
-            }).exec();
-        }, 300);
+        // var query = wx.createSelectorQuery();
+        // setTimeout(() => {
+        //     query.select('.C').boundingClientRect(rect=>{
+        //         console.log(rect)
+        //     }).exec();
+        // }, 300);
     }
 }
 </script>

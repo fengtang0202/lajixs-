@@ -1,0 +1,29 @@
+<template>
+    <view style='text-align:center'>
+        <!-- <image src='https://www.lajixs.com/noData.png' style="width:460rpx;height:460rpx" />   -->
+        <view style="font-size:36rpx;margin-top:100rpx">{{msg}}</view>
+    </view>  
+</template>
+<script>
+import wepy from 'wepy'
+export default class NoData extends  wepy.component{
+    data={
+        showNoData:true
+    }
+    props={
+        msg:{
+           type:String,
+           default:'' 
+        }
+    }
+    close(status){
+        this.showNoData=status
+    }
+    methods={
+        
+    }
+}
+</script>
+<style lang="less" scoped>
+
+</style>

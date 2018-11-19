@@ -7,14 +7,10 @@
                   <button class="login_btn"  open-type="getUserInfo" bindgetuserinfo="handleUserLogin"><image class='btn_img' src="../images/wxlogin.png"/></button> 
                   <text style="font-size:24rpx;">微信登录</text>  
                 </veiw>
-                <!-- <view>
-               <button class="login_btn"><image class='btn_img' src="../images/qqlogin.png"/></button> 
-                  <text style="font-size:24rpx;">QQ登录</text>  
-                </view> -->
             </view>
-            <view class='qt' catchtap="handleGoUserLogin">
+            <!-- <view class='qt' catchtap="handleGoUserLogin">
                 其他方式登录>>
-            </view>
+            </view> -->
          </view>
        </view>
    </view>   
@@ -24,7 +20,8 @@
     import {getAppid,wxLogin} from '../config/getData'
     export default class Login extends wepy.component{
         data = {
-            show:false
+            show:false,
+            code:''
         }
         methods = {
             handleGoUserLogin(){
@@ -36,46 +33,34 @@
             onClose(){
                 this.show=!this.show
             },
-            async  handleUserLogin(e){
-             await  wx.login({
+            async  handleUserLogin(e){ 
+                await  wx.login({
                 success:res=>{
-                if (res.code) {
-                getAppid(res.code).then(res=>{
-                    if (e.detail.userInfo) {
-                    let userInfo=e.detail.userInfo
-                    wx.setStorageSync("openId",res.openid)
-                    let object={}
-                    object.unionid=res.unionid
-                    object.terminal=4
-                    object.userCode=this.$parent.$parent.globalData.userCode
-                    object.province=userInfo.province
-                    object.nickname=userInfo.nickName
-                    object.sex =userInfo.gender
-                    object.headimgurl =userInfo.avatarUrl
-                    object.city=userInfo.city 
-                    let weChatServerJson=JSON.stringify(object)
-                    wxLogin(weChatServerJson).then(res=>{
-                        this.$parent.$parent.globalData=res
-                        this.$apply()
-                        wx.setStorageSync('cookie',res.token)
-                        wx.setStorageSync('userInfo',res)
-                        this.$emit('reload')
-                        wx.showToast({
-                            title:"登录成功~"
-                        })
-                    })
+                    this.code=res.code
+                    wx.getUserInfo({
+                        success:res=>{
+                            let object={}
+                            object.terminal=4
+                            object.userCode=this.$parent.$parent.globalData.userCode
+                            object.encryptedData=res.encryptedData
+                            object.iv=res.iv
+                            object.code=this.code
+                            let weChatServerJson=JSON.stringify(object)
+                            wxLogin(weChatServerJson).then(res=>{
+                                wx.setStorageSync('cookie',res.token)
+                                wx.setStorageSync('userInfo',res)
+                                wx.setStorageSync('openId',res.userPassword)
+                                this.$emit('reload')
+                                wx.showToast({
+                                    title:"登录成功~"
+                                        })
+                                    })
+                                 }
+                                })
+                                }
+                             })
+                            }
                         }
-                    })
-                    } else {
-                        console.log('登录失败！' + res.errMsg)
-                }
-            },
-            fail:function(res){
-                    console.log(res)
-                    }
-                });
-                }
-            }
     }
 </script>
 <style lang="less" scoped>
