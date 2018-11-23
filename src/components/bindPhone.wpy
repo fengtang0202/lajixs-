@@ -3,13 +3,13 @@
      <view class="login {{show?'active':''}}" bindtap="onClose"></view>    
        <view class="bindPhone_wrap" wx:if="{{show}}">
            <view style="height:513rpx;line-height:513rpx;">
-             <image class='img-x' src="../images/bindphone.png" />
+             <image class='img-x' src="https://www.lajixs.com/weChatImages/bindphone.png" />
             </view>
             <view class='bindPhone'>
                 <view style="height:138rpx;text-align:center;line-height:138rpx;font-size:40rpx;color:#FF4E61;font-weight:400">绑定手机</view>
                 <view class="input_box">
                     <text catchtap="handleGo">+{{areaCode}}</text>
-                    <image src="../images/Combine.png" style="margin:0 10rpx;width:28rpx;height:28rpx;margin-top:19rpx"/>
+                    <image src="https://www.lajixs.com/weChatImages/Combine.png" style="margin:0 10rpx;width:28rpx;height:28rpx;margin-top:19rpx"/>
                     <input bindinput="handlePhoneValue" style="width:250rpx;height:100%" type="text" placeholder='请输入手机号码'/>
                 </view>
                 <view class='input_box' style="margin-top:24rpx">

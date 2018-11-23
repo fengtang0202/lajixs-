@@ -5,12 +5,7 @@
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
-import { setStore } from 'wepy-redux'
-import configStore from './store'
 import {getAppid,updateUserInfo} from './config/getData'
-
-const store = configStore()
-setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [

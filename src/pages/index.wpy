@@ -17,12 +17,12 @@
            <!-- 小编推荐 -->
             <view class='floor_title'>
               <view class='floor_left'>
-                <image src='../images/recommend@3x.png' />
+                <image src='https://www.lajixs.com/weChatImages/recommend@3x.png' />
                 <text>小编推荐</text>
               </view>
               <view class='floor_right' bindtap ="handleGo('recommendBooks')">
                   <text>更多</text>
-                  <image src='../images/more@3x.png' />
+                  <image src='https://www.lajixs.com/weChatImages/more@3x.png' />
               </view>
            </view>
            <BookItem   :list.sync="HostXiaoBianRecommend"></BookItem>
@@ -33,7 +33,7 @@
            <!-- 限时免费 -->
            <view class='floor_title'>
               <view class='floor_left'>
-                <image src='../images/recommend@3x.png' />
+                <image src='https://www.lajixs.com/weChatImages/recommend@3x.png' />
                 <text>限时免费</text>
               </view>
               <!-- timer -->
@@ -64,7 +64,7 @@
            <!-- 最新小说 -->
            <view class='floor_title'>
               <view class='floor_left'>
-                <image src='../images/new@3x.png' />
+                <image src='https://www.lajixs.com/weChatImages/new@3x.png' />
                 <text>最新小说</text>
               </view>
            </view>
@@ -74,7 +74,7 @@
 </template>
 <script>
   import wepy from 'wepy'
-  import {getHomePageBooks,getBookClass,getFreeBook,getNewBooks,getSearchHotWords,searchBook} from '../config/getData'
+  import {getHomePageBooks,getFreeBook,getNewBooks} from '../config/getData'
   import BookItem from '../components/bookItem'
   import BookDetailItem from '../components/bookDetailItem'
   export default class Index extends wepy.page {
@@ -114,9 +114,9 @@
      labelList:[],
      booklableList:[],
      hotImg:[
-        '../images/Group 11@3x.png',
-        '../images/Group 15@3x.png',
-        '../images/Group 16@3x.png',
+        'https://www.lajixs.com/weChatImages/Group 11@3x.png',
+        'https://www.lajixs.com/weChatImages/Group 15@3x.png',
+        'https://www.lajixs.com/weChatImages/Group 16@3x.png',
       ],
      hots:[],
      lables:[],
@@ -249,15 +249,12 @@
         this.booklableList=this.homeInfo.booklableList
         this.labelList=this.getRandomArrayElements(this.homeInfo.booklableList,10)
         this.HostXiaoBianRecommend=this.homeInfo.HostXiaoBianRecommend
-        getFreeBook.then(data=>{
-          this.FreeBook=data.data
-          this.$apply()
-        })
-        getNewBooks(this.page,this.size).then(data=>{
-            this.newBooks=data.list
-            this.lastPage=data.pages
-            this.$apply()
-      })
+        let FreeBook = await getFreeBook
+        this.FreeBook = FreeBook.data
+        let NewBooks = await getNewBooks(this.page,this.size)
+        this.newBooks = NewBooks.list
+        this.lastPage = NewBooks.pages
+        this.$apply()
     }
   }
 </script>

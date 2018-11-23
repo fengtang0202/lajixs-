@@ -22,33 +22,33 @@
          </view>
          <view class='fans_wrap'> 
              <view class='fan' bindtap="handleGo('userFllow')" style='border-right:2rpx solid #EFEFEF'>
-                 <image src="../images/gz.png" />
+                 <image src="https://www.lajixs.com/weChatImages/gz.png" />
                  <text>关注</text>
                  <text>{{fllow}}</text>
              </view>
              <view class='fan' bindtap="handleGo('userFans')">
-                 <image src="../images/fs.png"/>
+                 <image src="https://www.lajixs.com/weChatImages/fs.png"/>
                  <text>粉丝</text>
                  <text>{{fans}}</text>
              </view>
          </view>
          <van-cell-group>
            <van-cell title="我的钱包"  is-link url="wallet">
-               <image slot="icon" class='list_nav' src="../images/qb.png"/>
+               <image slot="icon" class='list_nav' src="https://www.lajixs.com/weChatImages/qb.png"/>
            </van-cell>
            <van-cell title="阅读记录"  is-link url="readHistory">
-               <image slot="icon" class='list_nav' src="../images/readHistory.png"/>
+               <image slot="icon" class='list_nav' src="https://www.lajixs.com/weChatImages/readHistory.png"/>
            </van-cell>
            <van-cell title="我的消息"  is-link url="message">
-               <image slot="icon" class='list_nav' src="../images/mymessage.png"/>
+               <image slot="icon" class='list_nav' src="https://www.lajixs.com/weChatImages/mymessage.png"/>
            </van-cell>
            <van-cell title="联系客服"  is-link url="customerService">
-               <image slot="icon" class='list_nav' src="../images/lxkf.png"/>
+               <image slot="icon" class='list_nav' src="https://www.lajixs.com/weChatImages/lxkf.png"/>
            </van-cell>
         </van-cell-group>
            <!-- <view class='lianxi'>
                <button open-type="contact" class='btn_server'>
-                  <image slot="icon"  src="../images/lxkf.png"/>
+                  <image slot="icon"  src="https://www.lajixs.com/weChatImages/lxkf.png"/>
                   <text style="font-size:28rpx;color:#333 ;margin-left:20rpx">联系客服</text>
                </button>
            </view> -->
@@ -59,14 +59,8 @@
 </template>
 <script>
     import wepy from 'wepy'
-    import {connect} from "wepy-redux"
     import Login from '../components/login'
     import {FansAndFllowCount,loginOut} from '../config/getData'
-    @connect({
-        //state
-    },
-        // reducers
-    )
   export default class Person extends wepy.page {
        config = {
         navigationBarTitleText: '个人中心',

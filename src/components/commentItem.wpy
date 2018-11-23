@@ -2,7 +2,7 @@
         <block wx:for="{{commentList}}"  wx:key="{{item.id}}">
                         <view class='book_comment_item' data-id="{{item.id}}">
                                <image  bindtap="handleGoPerson({{item.userId}})" src='{{item.userHeadPortraitURL}}' class='comment_avatar'/>
-                               <image  wx:if="{{item.vipGrade>0}}" src="../images/crown@3x.png" class='vip'/>
+                               <image  wx:if="{{item.vipGrade>0}}" src="https://www.lajixs.com/weChatImages/crown@3x.png" class='vip'/>
                                <view class='comment_item'>
                                    <view style="overflow:hidden;">
                                         <view style="float:left">
@@ -23,12 +23,12 @@
                                     </view>
                                     <view class='btn_wrap' wx:if="{{is}}">
                                         <view class="reply" bindtap='handleGO({{item.id}})'>
-                                              <image src="../images/message@3x.png"/>
+                                              <image src="https://www.lajixs.com/weChatImages/message@3x.png"/>
                                               <text>{{item.replyCount}}</text>
                                         </view>
                                         <view class='zan' bindtap="handleLike({{item.id}})">
-                                            <image wx:if="{{item.isthumbs==0}}" src='../images/zan@3x.png'/>
-                                            <image wx:if="{{item.isthumbs==1}}" src='../images/goodzan@3x.png'/>
+                                            <image wx:if="{{item.isthumbs==0}}" src='https://www.lajixs.com/weChatImages/zan@3x.png'/>
+                                            <image wx:if="{{item.isthumbs==1}}" src='https://www.lajixs.com/weChatImages/goodzan@3x.png'/>
                                             <text>{{item.thumbsCount}}</text>                                            
                                         </view>
                                     </view>

@@ -44,9 +44,6 @@
             glodenCount:1,
             integer:true
         }
-        props={
-        
-        }
     methods = {
         handleAll(n){
             if(n==1){
@@ -65,6 +62,10 @@
         },
        async handleFeedmin(){
             let userInfo=wx.getStorageSync("userInfo")
+            if(userInfo.userPhone=='0'||userInfo.userPhone=='9527'){
+                Toast('绑定手机号码~')
+                return 
+            }
             let data= await RecommendationTicket(this.minCount,this.$parent.bookId,this.$parent.bookName,this.$parent.authorInfo.userId)
             if(data=="OK"){
                 Toast('投喂成功~')
@@ -103,12 +104,12 @@
             if (this.currentTab == key) {
                 return false;
                 }else{
-                    this.currentTab = key
+                this.currentTab = key
             }
         },
         bindChange(e){
-            this.currentTab = e.detail.current
-         }  
+                this.currentTab = e.detail.current
+           }  
         }
         events={
             

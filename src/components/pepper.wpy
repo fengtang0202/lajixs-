@@ -33,12 +33,12 @@
             pepperShow:false,
             greet:'',
             pepperList:[
-                {img:'../images/188.png',num:'188'},
-                {img:'../images/288.png',num:'288'},
-                {img:'../images/588.png',num:'588'},
-                {img:'../images/888.png',num:'888'},
-                {img:'../images/1888.png',num:'1888'},
-                {img:'../images/8888.png',num:'8888'}
+                {img:'https://www.lajixs.com/weChatImages/188.png',num:'188'},
+                {img:'https://www.lajixs.com/weChatImages/288.png',num:'288'},
+                {img:'https://www.lajixs.com/weChatImages/588.png',num:'588'},
+                {img:'https://www.lajixs.com/weChatImages/888.png',num:'888'},
+                {img:'https://www.lajixs.com/weChatImages/1888.png',num:'1888'},
+                {img:'https://www.lajixs.com/weChatImages/8888.png',num:'8888'}
             ],
             activeIndex:0,
             pepperCount:188,

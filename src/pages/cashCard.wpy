@@ -1,6 +1,6 @@
 <template>
     <view style="position:relative">
-        <image src="../images/ka.png" style="margin-left:25rpx;width:700rpx;height:370rpx"/>
+        <image src="https://www.lajixs.com/weChatImages/ka.png" style="margin-left:25rpx;width:700rpx;height:370rpx"/>
         <view style="position:absolute;bottom:142rpx;left:120rpx">
             <text style="font-size:30rpx;color:#fff;margin-right:30rpx" wx:for="{{code}}" wx:key="{{index}}">{{item}}</text>
         </view>

@@ -33,17 +33,17 @@
                         <view style="color:#999">更新于{{myWxs.getToString(item.lastUpdateTime,"-")}}</view>
                     </view>
                     <view  catchtap="handleClose({{index}})" style="height:100%;float:right;line-height:216rpx;width:120rpx;text-align:center">
-                    <image src="../images/point.png" style="width:36rpx;height:8rpx;"/>
+                    <image src="https://www.lajixs.com/weChatImages/point.png" style="width:36rpx;height:8rpx;"/>
                     </view>
                 </view>
                 <view class="del" catchtap="del" data-id="{{item.id}}" data-index="{{index}}">删除</view>
                 </view>
           </view>
           <view wx:if="{{showNoBook}}" class='noBook'>  
-                  <image src="../images/nobookReack.png" style="width:260rpx;height:264rpx;" />
+                  <image src="https://www.lajixs.com/weChatImages/nobookReack.png" style="width:260rpx;height:264rpx;" />
                  <view style="font-size:24rpx;">暂无书籍哦～</view>
                  <button class='addBook' bindtap='handleGoIndex'>
-                     <image src='../images/addBook.png' style="margin-right:8rpx;width:32rpx;height:32rpx;vertical-align:middle" />
+                     <image src='https://www.lajixs.com/weChatImages/addBook.png' style="margin-right:8rpx;width:32rpx;height:32rpx;vertical-align:middle" />
                     <text style="color:#F77583;font-size:32rpx">加点新书吧</text>
                  </button>
           </view>
@@ -52,17 +52,11 @@
 </template>
 <script>
   import wepy from 'wepy'
-  import { connect } from 'wepy-redux'
   import myWxs from '../filter/myWxs.wxs'
   import Touch from '../mixins/touch'
   import {userSiginState} from '../config/api'
   import Login from '../components/login'
   import {getPersonBookRack,updateUserInfo,delBookRack,userSignin,recommendPosition} from '../config/getData'
-    @connect({
-        //state
-    },
-        // reducers
-    )
   export default class Bookrack extends wepy.page {
                 config = {
                     navigationBarTitleText: '书架',
@@ -186,6 +180,7 @@
                 })
               }else{
                 this.items=[] 
+                this.showNoBook=true
                 // this.$invoke('Login', 'onClose')
               }
               this.initItems(this.items)
@@ -196,7 +191,7 @@
                 url:userSiginState,
                 header: {
                     'Content-Type': 'application/json',
-                    'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
+                    'token': wx.getStorageSync('cookie')
                 },
                  success:res=>{
                     var data=res.data
@@ -204,6 +199,7 @@
                         wx.removeStorageSync("userInfo")
                         wx.removeStorageSync("cookie")
                         this.isSignin=false
+
                         this.$apply()
                     }
                     if(data.returnCode==700){

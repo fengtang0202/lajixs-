@@ -8,13 +8,13 @@
          <view class='money_item' style="margin-right:{{(index+1)%2==0&&'0'}}" wx:for="{{payCategoryList}}" wx:key="{{index}}" bindtap="handlePay({{item.price}},{{item.gift}})">
             <view style='font-size:28rpx;margin-top:20rpx'>购买{{item.price}}元点卡 </view>
             <!-- <view style="margin:8rpx 0">             
-                <image src='../images/lj.png' style="width:14rpx;height:21rpx;margin-right:16rpx;vertical-align:middle;"/>
+                <image src='https://www.lajixs.com/weChatImages/lj.png' style="width:14rpx;height:21rpx;margin-right:16rpx;vertical-align:middle;"/>
                 <text>{{item.price*100}}</text>
             </view> -->
             <view style='color:#FE4D60;margin-top:20rpx'>
                 首充送{{item.gift}}辣椒券+免费小说
             </view>
-            <image  src="../images/sclb.png" class='zs'/>
+            <image  src="https://www.lajixs.com/weChatImages/sclb.png" class='zs'/>
          </view>
      </view>
      <view class='ts'>

@@ -5,7 +5,7 @@
             <view style='text-align:center;color:#fff;margin-top:88rpx'>
                 <text style="font-size:60rpx;">{{userMoney}}</text>
                 <text style="font-size:24rpx;margin-left:32rpx;">辣椒</text>
-                <image src='../images/lj.png' style='width:24rpx;height:36rpx;margin-left:14rpx'/>
+                <image src='https://www.lajixs.com/weChatImages/lj.png' style='width:24rpx;height:36rpx;margin-left:14rpx'/>
             </view>
             <view style='text-align:center;margin-top:60rpx;'>
                 <button class='payBtn' bindtap="handleGo('accountRecharge')">充值</button>
@@ -37,9 +37,9 @@
         data={
             userMoney:0,
             moneyList:[
-                {img:'../images/zj.png',price:0,type:'金椒',gift:'每充值12元送一张金椒',width:40},
-                {img:'../images/mj.png',price:0,type:'小米椒',gift:'每日登陆小米椒+1,隔天清零,快去送给你喜欢的作者吧！',width:44},
-                {img:'../images/juan@3x.png',price:0,type:'辣椒券',gift:'只用于作品订阅，阅读券优先于辣椒使用',width:38}
+                {img:'https://www.lajixs.com/weChatImages/zj.png',price:0,type:'金椒',gift:'每充值12元送一张金椒',width:40},
+                {img:'https://www.lajixs.com/weChatImages/mj.png',price:0,type:'小米椒',gift:'每日登陆小米椒+1,隔天清零,快去送给你喜欢的作者吧！',width:44},
+                {img:'https://www.lajixs.com/weChatImages/juan@3x.png',price:0,type:'辣椒券',gift:'只用于作品订阅，阅读券优先于辣椒使用',width:38}
             ],
         }
         methods={

@@ -6,8 +6,8 @@
         </view>
         <view style="margin-top:32rpx;text-align:center">
             <view>
-                <image wx:if="{{bookInfo.bookStatus==0}}" src="../images/lastPagePerson.png" style="width:336rpx;height:336rpx"/>
-                <image wx:if="{{bookInfo.bookStatus==1}}" src="../images/lastPagePerson2.png" style="width:336rpx;height:336rpx"/>
+                <image wx:if="{{bookInfo.bookStatus==0}}" src="https://www.lajixs.com/weChatImages/lastPagePerson.png" style="width:336rpx;height:336rpx"/>
+                <image wx:if="{{bookInfo.bookStatus==1}}" src="https://www.lajixs.com/weChatImages/lastPagePerson2.png" style="width:336rpx;height:336rpx"/>
             </view>
             <view>
                 <button class="jl">激励作者</button>
@@ -16,19 +16,19 @@
         <view class="reword_wrap">
             <view class="reword_1">
                 <view>
-                  <image src="../images/pmj.png"/>
+                  <image src="https://www.lajixs.com/weChatImages/pmj.png"/>
                   <view>
                       小米椒 {{bookRecommendCount}}
                   </view>
                 </view>
                 <view>
-                   <image src="../images/pjj.png"/>
+                   <image src="https://www.lajixs.com/weChatImages/pjj.png"/>
                    <view>
                       金椒 {{goldenTicket}}
                   </view>
                 </view>
                 <view>
-                   <image src="../images/pm.png"/>
+                   <image src="https://www.lajixs.com/weChatImages/pm.png"/>
                    <view >
                       评论 {{commentCount}}
                   </view>
@@ -48,7 +48,7 @@
                         </view>
                         <view style="float:right">
                             <text style="color:#F73D51;font-size:28rpx">{{item.fansCount}}</text>
-                            <image src="../images/fansCount.png" style="margin-left:38rpx;vertical-align:middle;width:60rpx;height:60rpx;"/>
+                            <image src="https://www.lajixs.com/weChatImages/fansCount.png" style="margin-left:38rpx;vertical-align:middle;width:60rpx;height:60rpx;"/>
                         </view>
                     </view>
                 </block>

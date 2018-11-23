@@ -2,18 +2,18 @@
    <view class="share">
        <image class="ShareBg" src="https://www.lajixs.com/shareBg.png"/>
         <view class="info">
-            <image wx:if="{{a==1}}" style="width:497rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="../images/InviteTitle.png"/>
-            <image wx:if="{{a==2}}" style="width:553rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="../images/shareTitle.png"/>            
+            <image wx:if="{{a==1}}" style="width:497rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="https://www.lajixs.com/weChatImages/InviteTitle.png"/>
+            <image wx:if="{{a==2}}" style="width:553rpx;height:53rpx;margin-top:97rpx;margin-left:60rpx" src="https://www.lajixs.com/weChatImages/shareTitle.png"/>            
             <view class="box authorMessage">
                 <view style="padding-left:70rpx">
                   {{a==1?'我最近在追这本小说，来了解一下？':'实不相瞒，我其实是个深藏不露的小说作者。'}}
                 </view>
                 <view style="text-align:right;margin-top:47rpx">——{{bookInfo.writerName}}</view>
             </view>
-            <image class="authorHeader" src="../images/shareHead.png"/>
+            <image class="authorHeader" src="https://www.lajixs.com/weChatImages/shareHead.png"/>
             <view style="text-align:center;margin-bottom:60rpx">
-                <image wx:if="{{a==1}}" src="../images/InviteCenterTitle.png" style="width:320rpx;height:33rpx"/>                
-                <image wx:if="{{a==2}}" src="../images/shareCenterTitle.png" style="width:230rpx;height:33rpx"/>
+                <image wx:if="{{a==1}}" src="https://www.lajixs.com/weChatImages/InviteCenterTitle.png" style="width:320rpx;height:33rpx"/>                
+                <image wx:if="{{a==2}}" src="https://www.lajixs.com/weChatImages/shareCenterTitle.png" style="width:230rpx;height:33rpx"/>
             </view>
             <view  style="display:flex;flex-direction:row;">
                 <view>
@@ -30,13 +30,13 @@
                 </view>
             </view>
             <view style="text-align:center;margin-top:44rpx;">
-                <image src="../images/jianjie.png" style="width:168rpx;height:62rpx"/>
+                <image src="https://www.lajixs.com/weChatImages/jianjie.png" style="width:168rpx;height:62rpx"/>
             </view>
             <view class="box" >
                 {{bookInfo.bookIntroduction}}
             </view>
             <view style="text-align:center;margin-top:44rpx;">
-                <image src="../images/zjsk.png" style="width:223rpx;height:62rpx"/>
+                <image src="https://www.lajixs.com/weChatImages/zjsk.png" style="width:223rpx;height:62rpx"/>
             </view>
              <view class="box" style="height:800rpx;">
                  <view style="text-align:center;height:63rpx;line-height:63rpx">
@@ -52,7 +52,7 @@
                 <view style="margin:0 auto;" bindtap="handleGoBookRead" class="btn">阅读正文</view>
             </view>
             <view style="text-align:center;margin-top:40rpx">
-                <image style="width:223rpx;height:62rpx;" src="../images/zzdh.png"/>
+                <image style="width:223rpx;height:62rpx;" src="https://www.lajixs.com/weChatImages/zzdh.png"/>
             </view>
             <view style="text-align:right;font-size:28rpx;color:#666666;height:78rpx;line-height:78rpx">
                 <text style="margin-right:34rpx;" bindtap='handleGoIndex'>返回首页></text>

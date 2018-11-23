@@ -10,7 +10,7 @@
           <view style="margin-bottom:14rpx;">{{writerName}}</view>
           <view style="color:#999;">{{writerMessage}}</view>
         </view>
-        <image src="../images/authorSaid.png" class="authorImg"/>
+        <image src="https://www.lajixs.com/weChatImages/authorSaid.png" class="authorImg"/>
       </view>
       <view wx:if="{{show}}" style="height:194rpx;padding:78rpx  42rpx 48rpx;">
         <view class='page' style="width:156rpx;margin-right:20rpx;" catchtap="getNextPreBookText(2)">上一章</view>
@@ -24,7 +24,7 @@
           <view style="width:100%;height:124rpx;background:linear-gradient(180deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,1) 100%);"></view>
           <view style="background:#fff;text-align:center">
               <view style="position:relative;">
-                 <image src='../images/readPerson.png' style="width:178rpx;height:292rpx"/>
+                 <image src='https://www.lajixs.com/weChatImages/readPerson.png' style="width:178rpx;height:292rpx"/>
               </view>
             <view bindtap="handleGoShare" style="font-size:24rpx;color:#4A90E2;margin-top:12rpx;">领券免费看>></view>
             <view style="font-size:28rpx;margin-top:32rpx;">价格:{{chapterPrice}}辣椒</view>
@@ -49,12 +49,12 @@
      <Login></Login>
       <view  class="reword_wrap {{isRewordShow&&'active'}}">
         <view style="float:left">
-          <block wx:for="{{topList}}" wx:key="{{index}}">
+          <!-- <block wx:for="{{topList}}" wx:key="{{index}}">
             <image class='pepper'  bindtap="handleShowReword({{index}})" style="width:{{index==1&&'142rpx'||index==2&&'114rpx'}}" src="{{item}}"/>
-          </block>
+          </block> -->
         </view>
         <view bindtap="handleShowDropDown" style="height:100%;width:128rpx;float:right;text-align:center;">
-          <image src="../images/dropdown.png" style="width:14rpx;height:46rpx;margin-top:41rpx"/>
+          <image src="https://www.lajixs.com/weChatImages/dropdown.png" style="width:14rpx;height:46rpx;margin-top:41rpx"/>
         </view>
       </view>
       <view class="set_wrap {{isRewordShow&&'active'}}">
@@ -137,7 +137,7 @@
           readMoney:0,
           isAutoBuyChapter:false,
           isRewordShow:false,
-          topList:['../images/dslj.png','../images/dsmj.png','../images/dsjj.png'],
+          topList:['https://www.lajixs.com/weChatImages/dslj.png','https://www.lajixs.com/weChatImages/dsmj.png','https://www.lajixs.com/weChatImages/dsjj.png'],
           colorList:[
             {bgcolor:'#ffffff',fontColor:'#333333'},
             {bgcolor:'#e5dfca',fontColor:'"#383222'},
@@ -354,7 +354,7 @@
           method:'POST',
           header: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Cookie': 'SESSION=' + wx.getStorageSync('cookie')
+                'token':wx.getStorageSync('cookie')
             },
           data:{
             chapterId: this.chapterId

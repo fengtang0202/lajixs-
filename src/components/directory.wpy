@@ -5,7 +5,7 @@
             <view class='chapter' style='font-size:32rpx;'>{{item.volumeName}}</view>
                 <view   class='chapter'  bindtap='handle({{item.id}})'  wx:for="{{item.resultList}}" wx:key='{{index}}' id="{{'a'+item.id}}" style="font-size:28rpx;position:relative;">
                     <text style="color:{{item.id==chapterId&&'#FB5E6F'||item.chapterIsvip&&'#999999'}}">{{item.chapterTitle}}</text>
-                    <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='../images/vip@3x.png'/>
+                    <image wx:if="{{item.chapterIsvip==1}}" class='vip' src='https://www.lajixs.com/weChatImages/vip@3x.png'/>
                     <text class='words'>{{item.chapterLength}}</text>
                 </view>
        </block>

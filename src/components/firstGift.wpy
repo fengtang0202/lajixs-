@@ -2,7 +2,7 @@
     <view wx:if="{{showFirst}}" class="login {{showFirst?'active':''}}" bindtap="onClose">
         <view class="gift_wrap">
             <view style="width:100%;text-align:center;">
-                <image class='img-x' src="../images/login.png" />
+                <image class='img-x' src="https://www.lajixs.com/weChatImages/login.png" />
             </view>
             <view class='login_wrap'>
                     <view style="font-size:32rpx;text-align:center;padding-top:20rpx">恭喜获得首充礼包哦～</view>

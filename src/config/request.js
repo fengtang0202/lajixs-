@@ -88,7 +88,6 @@ function request(method, requestHandler, isShowLoading = true) {
                 wx.showToast({
                     title: '网络断开',
                     icon: 'success',
-                    // image: '../style/images/toast_info.png',
                     duration: 1500
                 })
                 // reject(new Error('Network request failed'))

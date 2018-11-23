@@ -4,7 +4,7 @@
          <view class='login_wrap'>
              <view class='wq'>
                  <veiw style="margin:0 auto">
-                  <button class="login_btn"  open-type="getUserInfo" bindgetuserinfo="handleUserLogin"><image class='btn_img' src="../images/wxlogin.png"/></button> 
+                  <button class="login_btn"  open-type="getUserInfo" bindgetuserinfo="handleUserLogin"><image class='btn_img' src="https://www.lajixs.com/weChatImages/wxlogin.png"/></button> 
                   <text style="font-size:24rpx;">微信登录</text>  
                 </veiw>
             </view>

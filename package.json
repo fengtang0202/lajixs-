@@ -19,14 +19,10 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "js-md5": "^0.7.3",
-    "redux": "^3.7.2",
-    "redux-actions": "^2.2.1",
-    "redux-promise": "^0.5.3",
     "vant-weapp": "^0.2.0",
     "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",
-    "wepy-com-toast": "^1.0.2",
-    "wepy-redux": "^1.5.3"
+    "wepy-com-toast": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",
